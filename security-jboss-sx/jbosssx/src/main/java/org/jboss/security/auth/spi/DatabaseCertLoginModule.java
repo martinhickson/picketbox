@@ -21,7 +21,7 @@
 */
 package org.jboss.security.auth.spi;
 
-import java.security.acl.Group;
+import org.apache.cxf.common.security.GroupPrincipal;
 import java.util.Map;
 
 import javax.security.auth.Subject;
@@ -98,10 +98,10 @@ public class DatabaseCertLoginModule extends BaseCertLoginModule
    /**
     * @see org.jboss.security.auth.spi.DatabaseServerLoginModule#getRoleSets
     */
-   protected Group[] getRoleSets() throws LoginException
+   protected GroupPrincipal[ ] getRoleSets() throws LoginException
    {
       String username = getUsername();
-      Group[] roleSets = Util.getRoleSets(username, dsJndiName, txManagerJndiName, rolesQuery, this, suspendResume);
+      GroupPrincipal[ ] roleSets = Util.getRoleSets(username, dsJndiName, txManagerJndiName, rolesQuery, this, suspendResume);
       return roleSets;
    }
    

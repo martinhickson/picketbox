@@ -22,21 +22,21 @@
 package org.jboss.security.auth.spi;
 
 import java.security.Principal;
-import java.security.acl.Group;
+import org.apache.cxf.common.security.GroupPrincipal;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.jboss.security.SimpleGroup;
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimpleGroup;
+import org.apache.cxf.common.security.SimplePrincipal;
 
 /**
  * The XMLLoginModule users/roles object representation.
- * 
+ *
  * @author Scott.Stark@jboss.org
  * @version $Revision$
- */  
+ */
 public class Users
 {
    private HashMap<String,User> users = new HashMap<String,User>();
@@ -46,7 +46,7 @@ public class Users
       private String name;
       private String password;
       private String encoding;
-      private HashMap<String,Group> roleGroups = new HashMap<String,Group>();
+      private HashMap<String,GroupPrincipal> roleGroups = new HashMap<String,GroupPrincipal>();
 
       public User()
       {
@@ -80,10 +80,10 @@ public class Users
       {
          this.encoding = encoding;
       }
- 
-      public Group[] getRoleSets()
+
+      public GroupPrincipal[ ] getRoleSets()
       {
-         Group[] roleSets = new Group[roleGroups.size()];
+         GroupPrincipal[ ] roleSets = new GroupPrincipal[ roleGroups.size()];
          roleGroups.values().toArray(roleSets);
          return roleSets;
       }
@@ -93,7 +93,7 @@ public class Users
       }
       public String[] getRoleNames(String roleGroup)
       {
-         Group group = roleGroups.get(roleGroup);
+         GroupPrincipal group = roleGroups.get(roleGroup);
          String[] names = {};
          if( group != null )
          {
@@ -111,7 +111,7 @@ public class Users
       }
       public void addRole(String roleName, String roleGroup)
       {
-         Group group = roleGroups.get(roleGroup);
+         GroupPrincipal group = roleGroups.get(roleGroup);
          if( group == null )
          {
             group = new SimpleGroup(roleGroup);
@@ -129,7 +129,7 @@ public class Users
       {
          return "User{" +
             "name='" + name + "'" +
-            ", password=*" + 
+            ", password=*" +
             ", encoding='" + encoding + "'" +
             ", roleGroups=" + roleGroups +
             "}";

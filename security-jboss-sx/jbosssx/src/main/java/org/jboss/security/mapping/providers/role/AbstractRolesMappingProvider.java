@@ -2,7 +2,7 @@
  * JBoss, Home of Professional Open Source.
  * Copyright 2011, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
- * distribution for a full listing of individual contributors. 
+ * distribution for a full listing of individual contributors.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -22,7 +22,7 @@
 package org.jboss.security.mapping.providers.role;
 
 import java.security.Principal;
-import java.security.acl.Group;
+import org.apache.cxf.common.security.GroupPrincipal;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Set;
@@ -40,7 +40,7 @@ import org.jboss.security.mapping.MappingResult;
 public abstract class AbstractRolesMappingProvider implements MappingProvider<RoleGroup>
 {
    protected MappingResult<RoleGroup> result;
-    
+
    public boolean supports(Class<?> p)
    {
       if (RoleGroup.class.isAssignableFrom(p))
@@ -48,12 +48,12 @@ public abstract class AbstractRolesMappingProvider implements MappingProvider<Ro
 
       return false;
    }
-    
+
    public void setMappingResult(MappingResult<RoleGroup> result)
    {
       this.result = result;
    }
-   
+
    protected Principal getCallerPrincipal(Map<String, Object> map)
    {
       Principal principal = (Principal) map.get(SecurityConstants.PRINCIPAL_IDENTIFIER);
@@ -65,11 +65,11 @@ public abstract class AbstractRolesMappingProvider implements MappingProvider<Ro
          if (principals != null && !principals.isEmpty())
          {
             for (Principal p : principals) {
-               if (!(p instanceof Group) && principal == null) {
+               if (!(p instanceof GroupPrincipal) && principal == null) {
                   principal = p;
                }
-               if (p instanceof Group) {
-                  Group g = Group.class.cast(p);
+               if (p instanceof GroupPrincipal) {
+                  GroupPrincipal g = GroupPrincipal.class.cast(p);
                   if (g.getName().equals(SecurityConstants.CALLER_PRINCIPAL_GROUP) && callerPrincipal == null) {
                      Enumeration<? extends Principal> e = g.members();
                      if (e.hasMoreElements())

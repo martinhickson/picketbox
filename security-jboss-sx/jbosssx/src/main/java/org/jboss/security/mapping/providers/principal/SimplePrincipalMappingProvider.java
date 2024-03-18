@@ -25,7 +25,7 @@ import java.security.Principal;
 import java.util.Map;
 import java.util.Properties;
 
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimplePrincipal;
 import org.jboss.security.mapping.MappingResult;
 
 /**

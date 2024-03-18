@@ -21,7 +21,7 @@
 */
 package org.jboss.security.auth.spi;
 
-import java.security.acl.Group;
+import org.apache.cxf.common.security.GroupPrincipal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -251,19 +251,19 @@ public class DatabaseServerLoginModule extends UsernamePasswordLoginModule
    /** Execute the rolesQuery against the dsJndiName to obtain the roles for
     the authenticated user.
      
-    @return Group[] containing the sets of roles
+    @return GroupPrincipal[ ] containing the sets of roles
     */
-   protected Group[] getRoleSets() throws LoginException
+   protected GroupPrincipal[ ] getRoleSets() throws LoginException
    {
       if (rolesQuery != null)
       {
          String username = getUsername();
          PicketBoxLogger.LOGGER.traceExecuteQuery(rolesQuery, username);
-         Group[] roleSets = Util.getRoleSets(username, dsJndiName, txManagerJndiName, rolesQuery, this,
+         GroupPrincipal[ ] roleSets = Util.getRoleSets(username, dsJndiName, txManagerJndiName, rolesQuery, this,
                suspendResume);
          return roleSets;
       }
-      return new Group[0];
+      return new GroupPrincipal[ 0];
    }
    
    /** A hook to allow subclasses to convert a password from the database

@@ -2,7 +2,7 @@
  * JBoss, Home of Professional Open Source.
  * Copyright 2008, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
- * distribution for a full listing of individual contributors. 
+ * distribution for a full listing of individual contributors.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -22,7 +22,7 @@
 package org.jboss.security.auth.spi;
 
 import java.security.Principal;
-import java.security.acl.Group;
+import org.apache.cxf.common.security.GroupPrincipal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -39,7 +39,8 @@ import javax.transaction.TransactionManager;
 
 import org.jboss.security.PicketBoxLogger;
 import org.jboss.security.PicketBoxMessages;
-import org.jboss.security.SimpleGroup;
+import org.apache.cxf.common.security.GroupPrincipal;
+import org.apache.cxf.common.security.SimpleGroup;
 import org.jboss.security.plugins.TransactionManagerLocator;
 
 /**
@@ -51,20 +52,20 @@ class DbUtil
 {
    /** Execute the rolesQuery against the dsJndiName to obtain the roles for
    the authenticated user.
-    
-   @return Group[] containing the sets of roles
+
+   @return GroupPrincipal[ ] containing the sets of roles
    */
-  static Group[] getRoleSets(String username, String dsJndiName, String txManagerJndiName,
+  static GroupPrincipal[ ] getRoleSets(String username, String dsJndiName, String txManagerJndiName,
      String rolesQuery, AbstractServerLoginModule aslm, boolean suspendResume)
      throws LoginException
   {
      Connection conn = null;
-     HashMap<String,Group> setsMap = new HashMap<String,Group>();
+     HashMap<String,GroupPrincipal> setsMap = new HashMap<String,GroupPrincipal>();
      PreparedStatement ps = null;
      ResultSet rs = null;
-     
+
      TransactionManager tm = null;
-     
+
      if(suspendResume)
      {
         TransactionManagerLocator tml = new TransactionManagerLocator();
@@ -115,7 +116,7 @@ class DbUtil
            if( aslm.getUnauthenticatedIdentity() == null )
               throw PicketBoxMessages.MESSAGES.noMatchingUsernameFoundInRoles();
            /* We are running with an unauthenticatedIdentity so create an empty Roles set and return. */
-           Group[] roleSets = { new SimpleGroup("Roles") };
+           GroupPrincipal[ ] roleSets = { new SimpleGroup("Roles") };
            return roleSets;
         }
 
@@ -125,7 +126,7 @@ class DbUtil
            String groupName = rs.getString(2);
            if( groupName == null || groupName.length() == 0 )
               groupName = "Roles";
-           Group group = (Group) setsMap.get(groupName);
+           GroupPrincipal group = (GroupPrincipal) setsMap.get(groupName);
            if( group == null )
            {
               group = new SimpleGroup(groupName);
@@ -197,8 +198,8 @@ class DbUtil
            }
         }
      }
-     
-     Group[] roleSets = new Group[setsMap.size()];
+
+     GroupPrincipal[ ] roleSets = new GroupPrincipal[ setsMap.size()];
      setsMap.values().toArray(roleSets);
      return roleSets;
   }

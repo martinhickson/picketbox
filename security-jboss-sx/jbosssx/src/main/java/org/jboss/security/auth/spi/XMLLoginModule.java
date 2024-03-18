@@ -21,7 +21,7 @@
 */
 package org.jboss.security.auth.spi;
 
-import java.security.acl.Group;
+import org.apache.cxf.common.security.GroupPrincipal;
 import java.util.Map;
 
 import javax.security.auth.Subject;
@@ -118,13 +118,13 @@ public class XMLLoginModule extends UsernamePasswordLoginModule
    }
 
    /** Obtain the various groups of roles for the user
-    @return Group[] containing the sets of roles 
+    @return GroupPrincipal[ ] containing the sets of roles 
     */
-   protected Group[] getRoleSets() throws LoginException
+   protected GroupPrincipal[ ] getRoleSets() throws LoginException
    {
       String targetUser = getUsername();
       Users.User user = users.getUser(targetUser);
-      Group[] roleSets = {};
+      GroupPrincipal[ ] roleSets = {};
       if( user != null )
          roleSets = user.getRoleSets();
       

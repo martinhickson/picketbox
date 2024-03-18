@@ -36,7 +36,7 @@ import org.jboss.security.PicketBoxMessages;
 import org.jboss.security.SecurityConstants;
 import org.jboss.security.SecurityContext;
 import org.jboss.security.SecurityContextUtil;
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimplePrincipal;
 import org.jboss.security.identity.Identity;
 import org.jboss.security.identity.IdentityFactory;
 import org.jboss.security.identity.Role;

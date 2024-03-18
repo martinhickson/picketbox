@@ -22,7 +22,7 @@
 package org.jboss.security.auth.spi;
 
 import java.io.IOException;
-import java.security.acl.Group;
+import org.apache.cxf.common.security.GroupPrincipal;
 import java.util.Map;
 import java.util.Properties;
 
@@ -56,7 +56,7 @@ import org.jboss.security.util.StringPropertyReplacer;
 
  to define the sets of roles for valid usernames. The "username.XXX" form of
  property name is used to assign the username roles to a particular named
- group of roles where the XXX portion of the property name is the group name.
+ GroupPrincipal of roles where the XXX portion of the property name is the GroupPrincipal name.
  The "username=..." form is an abbreviation for "username.Roles=...".
  The following are therefore equivalent:
  jduke=TheDuke,AnimatedCharacter
@@ -94,7 +94,7 @@ public class UsersRolesLoginModule extends UsernamePasswordLoginModule
    private Properties users;
    /** The roles.properties mappings */
    private Properties roles;
-   /** The character used to seperate the role group name from the username
+   /** The character used to seperate the role GroupPrincipal name from the username
     * e.g., '.' in jduke.CallerPrincipal=...
     */
    private char roleGroupSeperator = '.';
@@ -107,7 +107,7 @@ public class UsersRolesLoginModule extends UsernamePasswordLoginModule
     rolesProperties: The name of the properties resource containing user/roles
     The default is "roles.properties".
 
-    roleGroupSeperator: The character used to seperate the role group name from
+    roleGroupSeperator: The character used to seperate the role GroupPrincipal name from
       the username e.g., '.' in jduke.CallerPrincipal=... . The default = '.'.
     defaultUsersProperties=string: The name of the properties resource containing
       the username to password mappings that will be used as the defaults
@@ -174,12 +174,12 @@ public class UsersRolesLoginModule extends UsernamePasswordLoginModule
    /** Create the set of roles the user belongs to by parsing the roles.properties
     data for username=role1,role2,... and username.XXX=role1,role2,...
     patterns.
-    @return Group[] containing the sets of roles 
+    @return GroupPrincipal[ ] containing the sets of roles 
     */
-   protected Group[] getRoleSets() throws LoginException
+   protected GroupPrincipal[ ] getRoleSets() throws LoginException
    {
       String targetUser = getUsername();
-      Group[] roleSets = Util.getRoleSets(targetUser, roles, roleGroupSeperator, this);
+      GroupPrincipal[ ] roleSets = Util.getRoleSets(targetUser, roles, roleGroupSeperator, this);
       return roleSets;
    }
 
@@ -252,10 +252,10 @@ public class UsersRolesLoginModule extends UsernamePasswordLoginModule
     *
     * @see #createIdentity(String)
     * 
-    * @param group - the Group to add the roles to.
+    * @param GroupPrincipal - the GroupPrincipal to add the roles to.
     * @param roles - the comma delimited role names.
     */ 
-   protected void parseGroupMembers(Group group, String roles)
+   protected void parseGroupMembers(GroupPrincipal group, String roles)
    {
       Util.parseGroupMembers(group, roles, this);
    }

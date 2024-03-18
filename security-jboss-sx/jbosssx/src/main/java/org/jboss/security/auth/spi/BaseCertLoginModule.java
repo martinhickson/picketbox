@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.Principal;
-import java.security.acl.Group;
+import org.apache.cxf.common.security.GroupPrincipal;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -266,9 +266,9 @@ public class BaseCertLoginModule extends AbstractServerLoginModule
     * @return
     * @throws LoginException
     */
-   protected Group[] getRoleSets() throws LoginException
+   protected GroupPrincipal[ ] getRoleSets() throws LoginException
    {
-      return new Group[0];
+      return new GroupPrincipal[ 0];
    }
 
    protected Principal getIdentity()

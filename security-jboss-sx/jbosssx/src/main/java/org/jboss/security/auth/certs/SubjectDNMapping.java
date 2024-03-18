@@ -26,7 +26,7 @@ import java.security.Principal;
 import java.security.cert.X509Certificate;
 
 import org.jboss.security.CertificatePrincipal;
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimplePrincipal;
 
 /** A CertificatePrincipal implementation that uses the client cert
  * SubjectDN as the principal.

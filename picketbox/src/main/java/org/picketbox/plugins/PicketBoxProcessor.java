@@ -2,7 +2,7 @@
  * JBoss, Home of Professional Open Source.
  * Copyright 2008, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
- * distribution for a full listing of individual contributors. 
+ * distribution for a full listing of individual contributors.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -35,12 +35,12 @@ import javax.security.auth.login.AppConfigurationEntry.LoginModuleControlFlag;
 import javax.security.auth.login.Configuration;
 import javax.security.auth.login.LoginException;
 
+import org.apache.cxf.common.security.SimplePrincipal;
 import org.jboss.security.AuthenticationManager;
 import org.jboss.security.AuthorizationManager;
 import org.jboss.security.PicketBoxMessages;
 import org.jboss.security.SecurityConstants;
 import org.jboss.security.SecurityContext;
-import org.jboss.security.SimplePrincipal;
 import org.jboss.security.annotation.Authentication;
 import org.jboss.security.annotation.Authorization;
 import org.jboss.security.annotation.Module;
@@ -83,39 +83,39 @@ public class PicketBoxProcessor
 
    private Principal principal = null;
    private Object credential = null;
-   
+
    public PicketBoxProcessor()
-   {   
-   } 
-   
+   {
+   }
+
    /**
     * <p>
     * Set the user name/ Credential
     * </p>
-    * 
+    *
     * <p>
     * In the case of X509 certificates, they can be passed
     * as the Credential into this method.
     * </p>
-    * 
+    *
     * @param userName
     * @param credential
     */
    public void setSecurityInfo(String userName, Object credential)
    {
       this.principal = new SimplePrincipal(userName);
-      this.credential = credential; 
+      this.credential = credential;
    }
-   
+
    /**
     * Get the authenticated principal
-    * @return 
-    * @throws PicketBoxProcessingException 
+    * @return
+    * @throws PicketBoxProcessingException
     */
    public Principal getCallerPrincipal() throws PicketBoxProcessingException
    {
       Principal principal = null;
-      
+
       SecurityContext securityContext = null;
       try
       {
@@ -126,19 +126,19 @@ public class PicketBoxProcessor
          throw new PicketBoxProcessingException(pae.getCause());
       }
       if(securityContext != null)
-         principal = securityContext.getUtil().getUserPrincipal(); 
+         principal = securityContext.getUtil().getUserPrincipal();
       return principal;
    }
-   
+
    /**
     * Get the caller roles
-    * @return 
-    * @throws PicketBoxProcessingException 
+    * @return
+    * @throws PicketBoxProcessingException
     */
    public RoleGroup getCallerRoles() throws PicketBoxProcessingException
    {
       RoleGroup roleGroup = null;
-      
+
       SecurityContext securityContext = null;
       try
       {
@@ -149,14 +149,14 @@ public class PicketBoxProcessor
          throw new PicketBoxProcessingException(pae.getCause());
       }
       if(securityContext != null)
-         roleGroup = securityContext.getUtil().getRoles(); 
+         roleGroup = securityContext.getUtil().getRoles();
       return roleGroup;
    }
-   
+
    /**
     * Get the caller subject
-    * @return 
-    * @throws PicketBoxProcessingException 
+    * @return
+    * @throws PicketBoxProcessingException
     */
    public Subject getCallerSubject() throws PicketBoxProcessingException
    {
@@ -174,19 +174,19 @@ public class PicketBoxProcessor
          subject = securityContext.getUtil().getSubject();
       return subject;
    }
-   
+
    /**
     * Process the POJO for security annotations
     * @param pojo
-    * @throws PicketBoxProcessingException 
+    * @throws PicketBoxProcessingException
     * @throws LoginException
     */
    public void process(Object pojo) throws LoginException, PicketBoxProcessingException
    {
       String securityDomain = SecurityConstants.DEFAULT_APPLICATION_POLICY;
-      
+
       Class<?> objectClass = pojo.getClass();
-      
+
       SecurityDomain securityDomainAnnotation = objectClass.getAnnotation(SecurityDomain.class);
       if(securityDomainAnnotation != null)
          securityDomain = securityDomainAnnotation.value();
@@ -195,80 +195,80 @@ public class PicketBoxProcessor
       try
       {
          boolean needAuthorization = false;
-         
+
          SecurityConfig securityConfig = objectClass.getAnnotation(SecurityConfig.class);
          Authentication authenticationAnnotation = objectClass.getAnnotation(Authentication.class);
-         
+
          if(securityConfig == null && authenticationAnnotation == null)
             throw PicketBoxMessages.MESSAGES.invalidSecurityAnnotationConfig();
 
          if(securityConfig != null)
-         { 
+         {
             PicketBoxConfiguration idtrustConfig = new PicketBoxConfiguration();
             idtrustConfig.load(securityConfig.fileName());
-         } 
+         }
          else
          {
             ApplicationPolicyRegistration apr = (ApplicationPolicyRegistration) Configuration.getConfiguration();
-            
+
             ApplicationPolicy aPolicy = new ApplicationPolicy(securityDomain);
             AuthenticationInfo authenticationInfo = getAuthenticationInfo(authenticationAnnotation, securityDomain);
             aPolicy.setAuthenticationInfo(authenticationInfo );
-            
+
             Authorization authorizationAnnotation = objectClass.getAnnotation(Authorization.class);
             SecurityAudit auditAnnotation = objectClass.getAnnotation(SecurityAudit.class);
             SecurityMapping mappingAnnotation = objectClass.getAnnotation(SecurityMapping.class);
-            
+
             if(authorizationAnnotation != null)
             {
                AuthorizationInfo authorizationInfo = getAuthorizationInfo(authorizationAnnotation, securityDomain);
                aPolicy.setAuthorizationInfo(authorizationInfo);
-               
+
                needAuthorization = true;
             }
-            
+
             if(auditAnnotation != null)
             {
                AuditInfo auditInfo = getAuditInfo(auditAnnotation, securityDomain);
                aPolicy.setAuditInfo(auditInfo);
             }
-            
+
             if(mappingAnnotation != null)
             {
                MappingInfo mappingInfo = getMappingInfo(mappingAnnotation, securityDomain);
-               
+
                List<MappingModuleEntry> entries = mappingInfo.getModuleEntries();
                for(MappingModuleEntry entry: entries)
                {
                   aPolicy.setMappingInfo(entry.getMappingModuleType(), mappingInfo);
-               } 
+               }
             }
-            
-            apr.addApplicationPolicy(securityDomain, aPolicy); 
-         }
-         
 
-         
+            apr.addApplicationPolicy(securityDomain, aPolicy);
+         }
+
+
+
          SecurityContext securityContext = SecurityActions.createSecurityContext(securityDomain);
          SecurityActions.setSecurityContext(securityContext);
-         
+
          AuthenticationManager authMgr = SecurityFactory.getAuthenticationManager(securityDomain);
-         
+
          Subject subject = new Subject();
          boolean valid = authMgr.isValid(principal, credential, subject);
          if(!valid)
             throw new LoginException(PicketBoxMessages.MESSAGES.authenticationFailedMessage());
 
-         SecurityActions.register(securityContext, principal, credential, subject); 
+         SecurityActions.register(securityContext, principal, credential, subject);
          AuthorizationManager authzMgr = SecurityFactory.getAuthorizationManager(securityDomain);
          SecurityContextCallbackHandler cbh = new SecurityContextCallbackHandler(securityContext);
-         
+
          //We try to get the roles of the current authenticated subject. This internally will also
          //apply the role mapping logic if it is configured at the security domain level
-         RoleGroup roles = authzMgr.getSubjectRoles(subject, cbh); 
+         RoleGroup roles = authzMgr.getSubjectRoles(subject, cbh);
          if(roles == null)
             throw new PicketBoxProcessingException(PicketBoxMessages.MESSAGES.nullRolesInSubjectMessage());
-         
+
          if(needAuthorization)
          {
             int permit =  authzMgr.authorize(new POJOResource(pojo), subject, roles);
@@ -283,7 +283,7 @@ public class PicketBoxProcessor
       catch (AuthorizationException e)
       {
          throw new PicketBoxProcessingException(e);
-      } 
+      }
       catch (Exception e)
       {
          throw new PicketBoxProcessingException(e);
@@ -291,52 +291,52 @@ public class PicketBoxProcessor
       finally
       {
          SecurityFactory.release();
-      } 
+      }
    }
-   
+
    private MappingInfo getMappingInfo(SecurityMapping mappingAnnotation, String securityDomain)
    {
       MappingInfo mappingInfo = new MappingInfo(securityDomain);
-      
+
       Module[] modules = mappingAnnotation.modules();
       if(modules != null)
       {
          for(Module module: modules)
          {
-            String code = module.code().getCanonicalName(); 
+            String code = module.code().getCanonicalName();
             String type = module.type();
-             
+
             Map<String,Object> map = new HashMap<String,Object>();
-            
+
             ModuleOption[] options = module.options();
             if(options != null)
             {
                for(ModuleOption option : options)
                {
                   String key = option.key();
-                  String value = option.value(); 
+                  String value = option.value();
                   VALUE_TYPE valueType = option.valueType();
-                  
+
                   if(key != null && key.length() > 0 && valueType == ModuleOption.VALUE_TYPE.JAVA_PROPERTIES)
                   {
                      StringTokenizer st = new StringTokenizer(value,"=");
-                     
+
                      String prop1 = st.nextToken();
                      String prop2 = st.nextToken();
-                     
+
                      Properties properties = new Properties();
-                     properties.put(prop1, prop2); 
-                     
+                     properties.put(prop1, prop2);
+
                      map.put(key, properties);
                   }
-                  else 
+                  else
                     if(key != null && key.length() > 0)
                        map.put(key, value);
                }
-            } 
-            
-            MappingModuleEntry entry = new MappingModuleEntry(code, map, type);  
-            mappingInfo.add(entry); 
+            }
+
+            MappingModuleEntry entry = new MappingModuleEntry(code, map, type);
+            mappingInfo.add(entry);
          }
       }
       return mappingInfo;
@@ -345,41 +345,41 @@ public class PicketBoxProcessor
    private AuditInfo getAuditInfo(SecurityAudit auditAnnotation, String securityDomain)
    {
       AuditInfo auditInfo = new AuditInfo(securityDomain);
-      
+
       Module[] modules = auditAnnotation.modules();
       if(modules != null)
       {
          for(Module module: modules)
          {
-            String code = module.code().getCanonicalName(); 
-             
+            String code = module.code().getCanonicalName();
+
             Map<String,Object> map = new HashMap<String,Object>();
-            
+
             ModuleOption[] options = module.options();
             if(options != null)
             {
                for(ModuleOption option : options)
                {
                   String key = option.key();
-                  String value = option.value(); 
+                  String value = option.value();
                   if(key != null && key.length() > 0)
                      map.put(key, value);
                }
-            } 
-            
-            AuditProviderEntry entry = new AuditProviderEntry(code, map); 
-            
-            auditInfo.add(entry); 
+            }
+
+            AuditProviderEntry entry = new AuditProviderEntry(code, map);
+
+            auditInfo.add(entry);
          }
       }
-      
+
       return auditInfo;
    }
 
    private AuthorizationInfo getAuthorizationInfo(Authorization authorizationAnnotation, String securityDomain)
    {
       AuthorizationInfo authorizationInfo = new AuthorizationInfo(securityDomain);
-      
+
       Module[] modules = authorizationAnnotation.modules();
       if(modules != null)
       {
@@ -387,35 +387,35 @@ public class PicketBoxProcessor
          {
             String code = module.code().getCanonicalName();
             String flag = module.flag();
-             
+
             Map<String,Object> map = new HashMap<String,Object>();
-            
+
             ModuleOption[] options = module.options();
             if(options != null)
             {
                for(ModuleOption option : options)
                {
                   String key = option.key();
-                  String value = option.value(); 
+                  String value = option.value();
                   if(key != null && key.length() > 0)
                      map.put(key, value);
                }
-            } 
-            
+            }
+
             AuthorizationModuleEntry entry = new AuthorizationModuleEntry(code, map);
             entry.setControlFlag(ControlFlag.valueOf(flag));
-            
-            authorizationInfo.add(entry); 
+
+            authorizationInfo.add(entry);
          }
       }
-      
+
       return authorizationInfo;
    }
 
    private AuthenticationInfo getAuthenticationInfo(Authentication auth, String securityDomainName)
    {
-      AuthenticationInfo authInfo = new AuthenticationInfo(securityDomainName); 
-      
+      AuthenticationInfo authInfo = new AuthenticationInfo(securityDomainName);
+
       Module[] modules = auth.modules();
       if(modules != null)
       {
@@ -423,30 +423,30 @@ public class PicketBoxProcessor
          {
             String code = module.code().getCanonicalName();
             String flag = module.flag();
-             
+
             Map<String,Object> map = new HashMap<String,Object>();
-            
+
             ModuleOption[] options = module.options();
             if(options != null)
             {
                for(ModuleOption option : options)
                {
                   String key = option.key();
-                  String value = option.value(); 
+                  String value = option.value();
                   if(key != null && key.length() > 0)
                      map.put(key, value);
                }
-            } 
+            }
 
             AppConfigurationEntry entry = new AppConfigurationEntry(code, getFlag(flag), map);
             authInfo.addAppConfigurationEntry(entry);
          }
       }
-      
+
       return authInfo;
    }
-    
-   
+
+
    private AppConfigurationEntry.LoginModuleControlFlag getFlag(String flag)
    {
       if("REQUIRED".equalsIgnoreCase(flag))

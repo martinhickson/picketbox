@@ -23,14 +23,14 @@ package org.jboss.security.mapping.providers;
 
 import java.lang.reflect.Constructor;
 import java.security.Principal;
-import java.security.acl.Group;
+import org.apache.cxf.common.security.GroupPrincipal;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.StringTokenizer;
 
 import org.jboss.security.PicketBoxLogger;
 import org.jboss.security.PicketBoxMessages;
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimplePrincipal;
  
 /**
  *  Utility class for Mapping Providers
@@ -46,7 +46,7 @@ public class MappingProviderUtil
     * @param en
     * @return
     */
-   public static Group addPrincipals(Group grp, Enumeration<? extends Principal> en)
+   public static GroupPrincipal addPrincipals(GroupPrincipal grp, Enumeration<? extends Principal> en)
    {
       while(en.hasMoreElements())
          grp.addMember(en.nextElement()); 
@@ -55,11 +55,11 @@ public class MappingProviderUtil
    
    /**
     * Add the roles into the Group
-    * @param roles Group of roles
+    * @param roles GroupPrincipal of roles
     * @param addRoles
-    * @return Group with the added roles
+    * @return GroupPrincipal with the added roles
     */
-   public static Group addRoles(Group roles, String[] addRoles)
+   public static GroupPrincipal addRoles(GroupPrincipal roles, String[] addRoles)
    {  
       Class<?> pClass = getPrincipalClass(roles); 
       for(String str:addRoles)
@@ -115,7 +115,7 @@ public class MappingProviderUtil
     * @param grp
     * @return
     */
-   public static Group removePrincipals(Group grp)
+   public static GroupPrincipal removePrincipals(GroupPrincipal grp)
    {
       HashSet<Principal> removeset = new HashSet<Principal>();
       Enumeration<? extends Principal> en = grp.members();
@@ -131,11 +131,11 @@ public class MappingProviderUtil
    
    /**
     * Remove the roles from the Group
-    * @param roles Group of roles
+    * @param roles GroupPrincipal of roles
     * @param removeRoles
-    * @return Group with roles removed
+    * @return GroupPrincipal with roles removed
     */
-   public static Group removeRoles(Group roles, String[] removeRoles)
+   public static GroupPrincipal removeRoles(GroupPrincipal roles, String[] removeRoles)
    {  
       //Assume that the roles all belong to the same principal class
       Class<?> pClass = getPrincipalClass(roles); 
@@ -147,17 +147,17 @@ public class MappingProviderUtil
    } 
    
    /**
-    * Replace the principals in first group with those in the second
+    * Replace the principals in first GroupPrincipal with those in the second
     * @param fg
     * @param sg
     * @return
     */
-   public static Group replacePrincipals(Group fg, Group sg)
+   public static GroupPrincipal replacePrincipals(GroupPrincipal fg, GroupPrincipal sg)
    { 
       return addPrincipals( removePrincipals(fg),sg.members());
    }
    
-   private static Class<?> getPrincipalClass(Group roles)
+   private static Class<?> getPrincipalClass(GroupPrincipal roles)
    {
       //Assume that the roles all belong to the same principal class 
       Class<?> principalClass = SimplePrincipal.class;

@@ -56,7 +56,7 @@ import org.jboss.security.plugins.ClassLoaderLocatorFactory;
 
 /**
  * {@link AuthenticationManager} implementation that uses {@code CacheableManager} as the cache provider.
- * 
+ *
  * @author <a href="mmoyses@redhat.com">Marcus Moyses</a>
  * @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
  * @author Scott.Stark@jboss.org
@@ -86,7 +86,7 @@ public class JBossCachedAuthenticationManager implements AuthenticationManager, 
 
    /**
     * Create a new JBossCachedAuthenticationManager.
-    * 
+    *
     * @param securityDomain name of the security domain
     * @param callbackHandler {@link CallbackHandler} implementation
     */
@@ -131,7 +131,7 @@ public class JBossCachedAuthenticationManager implements AuthenticationManager, 
    public boolean isValid(Principal principal, Object credential, Subject activeSubject)
    {
       // first check cache
-      DomainInfo cachedEntry = getCacheInfo(principal != null ? principal : new org.jboss.security.SimplePrincipal("null"));
+      DomainInfo cachedEntry = getCacheInfo(principal != null ? principal : new org.apache.cxf.common.security.SimplePrincipal("null"));
       if (PicketBoxLogger.LOGGER.isTraceEnabled())
       {
          PicketBoxLogger.LOGGER.traceBeginIsValid(principal, cachedEntry != null ? cachedEntry.toString() : null);
@@ -183,7 +183,7 @@ public class JBossCachedAuthenticationManager implements AuthenticationManager, 
          return domainCache.containsKey(key);
       return false;
    }
-   
+
    public Set<Principal> getCachedKeys()
    {
       if (domainCache != null)
@@ -192,9 +192,9 @@ public class JBossCachedAuthenticationManager implements AuthenticationManager, 
    }
 
    /**
-    * Flag to specify if deep copy of subject sets needs to be 
+    * Flag to specify if deep copy of subject sets needs to be
     * enabled
-    * 
+    *
     * @param flag
     */
    public void setDeepCopySubjectOption(Boolean flag)
@@ -204,7 +204,7 @@ public class JBossCachedAuthenticationManager implements AuthenticationManager, 
 
    /**
     * Retrieve on entry from the cache.
-    * 
+    *
     * @param principal entry's key
     * @return entry's value or null if not found
     */
@@ -293,7 +293,7 @@ public class JBossCachedAuthenticationManager implements AuthenticationManager, 
       return isValid;
    }
 
-   /** 
+   /**
     * Currently this simply calls defaultLogin() to do a JAAS login using the
     * security domain name as the login module configuration name.
     *
@@ -302,7 +302,7 @@ public class JBossCachedAuthenticationManager implements AuthenticationManager, 
     * @return false on failure, true on success.
     */
    private boolean authenticate(Principal principal, Object credential, Subject theSubject)
-   { 
+   {
 	   ApplicationPolicy theAppPolicy = SecurityConfiguration.getApplicationPolicy(securityDomain);
 	   if(theAppPolicy != null)
 	   {
@@ -332,14 +332,14 @@ public class JBossCachedAuthenticationManager implements AuthenticationManager, 
 	   }
 	   return proceedWithJaasLogin(principal, credential, theSubject, null);
    }
-   
+
 
    private boolean proceedWithJaasLogin(Principal principal, Object credential, Subject theSubject, ClassLoader contextClassLoader)
    {
 	   Subject subject = null;
 	   boolean authenticated = false;
 	   LoginException authException = null;
-	   try 
+	   try
 	   {
 		   // Validate the principal using the login configuration for this domain
 		   LoginContext lc = defaultLogin(principal, credential);
@@ -374,7 +374,7 @@ public class JBossCachedAuthenticationManager implements AuthenticationManager, 
 	   return authenticated;
    }
 
-   /** 
+   /**
     * Pass the security info to the login modules configured for
     * this security domain using our SecurityAssociationHandler.
     *
@@ -414,7 +414,7 @@ public class JBossCachedAuthenticationManager implements AuthenticationManager, 
    /**
     * Updates the cache either by inserting a new entry or by replacing
     * an invalid (expired) entry.
-    * 
+    *
     * @param loginContext {@link LoginContext} of the authentication
     * @param subject {@link Subject} resulted from JAAS login
     * @param principal {@link Principal} representing the user's identity
@@ -432,12 +432,12 @@ public class JBossCachedAuthenticationManager implements AuthenticationManager, 
       info.subject = new Subject();
       SubjectActions.copySubject(subject, info.subject, true, this.deepCopySubjectOption);
       info.credential = credential;
-      if (lcClassLoader == null) 
+      if (lcClassLoader == null)
       {
             lcClassLoader = java.security.AccessController.doPrivileged(new java.security.PrivilegedAction<ClassLoader>() {
                 public ClassLoader run() {
                     ClassLoader loader = Thread.currentThread().getContextClassLoader();
-                    if (loader == null) 
+                    if (loader == null)
                     {
                         loader = ClassLoader.getSystemClassLoader();
                     }
@@ -487,7 +487,7 @@ public class JBossCachedAuthenticationManager implements AuthenticationManager, 
 
       // If the user already exists another login is active. Currently
       // only one is allowed so remove the old and insert the new
-      domainCache.put(principal != null ? principal : new org.jboss.security.SimplePrincipal("null"), info);
+      domainCache.put(principal != null ? principal : new org.apache.cxf.common.security.SimplePrincipal("null"), info);
       if (PicketBoxLogger.LOGGER.isTraceEnabled())
       {
          PicketBoxLogger.LOGGER.traceInsertedCacheInfo(info.toString());
@@ -512,7 +512,7 @@ public class JBossCachedAuthenticationManager implements AuthenticationManager, 
 
    /**
     * A cache value. Holds information about the authentication process.
-    * 
+    *
     * @author <a href="mmoyses@redhat.com">Marcus Moyses</a>
     */
    public static class DomainInfo implements Serializable

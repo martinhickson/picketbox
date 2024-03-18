@@ -37,6 +37,7 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 
+import org.apache.cxf.common.security.SimplePrincipal;
 import org.jboss.logging.Logger;
 
 /** A simple implementation of LoginModule for use by JBoss clients for
@@ -44,7 +45,7 @@ import org.jboss.logging.Logger;
  the SecurityContext principal to the value of the NameCallback
  filled in by the CallbackHandler, and the SecurityContext credential
  to the value of the PasswordCallback filled in by the CallbackHandler.
- 
+
  It has the following options:
  <ul>
  <li>multi-threaded=[true|false]
@@ -63,7 +64,7 @@ import org.jboss.logging.Logger;
  prior to this one to establish a valid username and password that should be passed
  to JBoss.
  </ul>
- 
+
  @author <a href="mailto:on@ibis.odessa.ua">Oleg Nitz</a>
  @author Scott.Stark@jboss.org
  @author Anil.Saldhana@redhat.com
@@ -79,7 +80,7 @@ public class ClientLoginModule implements LoginModule
    private static final String[] ALL_VALID_OPTIONS =
    {
       MULTI_TREADED,RESTORE_LOGIN_IDENTITY,PASSWORD_STACKING,PRINCIPAL_CLASS,
-      
+
       SecurityConstants.SECURITY_DOMAIN_OPTION
    };
 
@@ -138,7 +139,7 @@ public class ClientLoginModule implements LoginModule
          */
          PicketBoxLogger.LOGGER.debugModuleOption(MULTI_TREADED, flag);
       }
-      
+
       /**
        * SECURITY-415: when the multi-threaded value is explictly set
        * at false, then get into the client mode.
@@ -284,7 +285,7 @@ public class ClientLoginModule implements LoginModule
       else
       {
          // Clear the entire security association stack
-         SecurityAssociationActions.clear();  
+         SecurityAssociationActions.clear();
       }
       Set<Principal> principals = subject.getPrincipals();
       principals.remove(loginPrincipal);

@@ -25,7 +25,7 @@ import java.math.BigInteger;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
-import java.security.acl.Group;
+import org.apache.cxf.common.security.GroupPrincipal;
 import java.util.Map;
 
 import javax.crypto.BadPaddingException;
@@ -40,7 +40,7 @@ import javax.security.auth.login.LoginException;
 
 import org.jboss.security.PicketBoxLogger;
 import org.jboss.security.PicketBoxMessages;
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimplePrincipal;
 
 /** An example of how one could encrypt the database password for a jca
   connection factory. The corresponding  
@@ -141,9 +141,9 @@ public class SecureIdentityLoginModule
       return principal;
    }
 
-   protected Group[] getRoleSets() throws LoginException
+   protected GroupPrincipal[ ] getRoleSets() throws LoginException
    {
-      return new Group[] {};
+      return new GroupPrincipal[ ] {};
    }
 
    private static String encode(String secret)

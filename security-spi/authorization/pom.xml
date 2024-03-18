@@ -2,7 +2,7 @@
     <parent>
         <groupId>org.picketbox</groupId>
         <artifactId>picketbox-spi-pom</artifactId>
-        <version>5.0.3.Beta1</version>
+        <version>5.0.3.jdk17.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -25,6 +25,11 @@
         <dependency>
             <groupId>org.picketbox</groupId>
             <artifactId>identity-spi</artifactId>
+        </dependency>
+        <dependency>
+        	<groupId>org.apache.cxf</groupId>
+        	<artifactId>cxf-core</artifactId>
+        	<version>3.3.6</version>
         </dependency>
     </dependencies>
 

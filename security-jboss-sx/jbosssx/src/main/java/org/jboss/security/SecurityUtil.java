@@ -21,7 +21,7 @@
  */
 package org.jboss.security;
 
-import java.security.acl.Group;
+import org.apache.cxf.common.security.GroupPrincipal;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -37,7 +37,7 @@ import org.jboss.security.mapping.MappingManager;
 
 /**
  * Security Utility Class
- * 
+ *
  * @author Anil.Saldhana@redhat.com
  * @since May 9, 2007
  * @version $Revision$
@@ -48,7 +48,7 @@ public class SecurityUtil
 
    /**
     * Strip the security domain of prefix (java:jaas or java:jbsx)
-    * 
+    *
     * @param securityDomain
     * @return
     */
@@ -71,21 +71,21 @@ public class SecurityUtil
    }
 
    /**
-    * Get the Subject roles by looking for a Group called 'Roles'
-    * 
+    * Get the Subject roles by looking for a GroupPrincipal called 'Roles'
+    *
     * @param theSubject - the Subject to search for roles
-    * @return the Group contain the subject roles if found, null otherwise
+    * @return the GroupPrincipal contain the subject roles if found, null otherwise
     */
-   public static Group getSubjectRoles(Subject theSubject)
+   public static GroupPrincipal getSubjectRoles(Subject theSubject)
    {
       if (theSubject == null)
          throw PicketBoxMessages.MESSAGES.invalidNullArgument("theSubject");
-      Set<Group> subjectGroups = theSubject.getPrincipals(Group.class);
-      Iterator<Group> iter = subjectGroups.iterator();
-      Group roles = null;
+      Set<GroupPrincipal> subjectGroups = theSubject.getPrincipals(GroupPrincipal.class);
+      Iterator<GroupPrincipal> iter = subjectGroups.iterator();
+      GroupPrincipal roles = null;
       while (iter.hasNext())
       {
-         Group grp = iter.next();
+         GroupPrincipal grp = iter.next();
          String name = grp.getName();
          if (name.equals("Roles"))
             roles = grp;
@@ -95,7 +95,7 @@ public class SecurityUtil
 
    /**
     * Obtain the Application Policy
-    * 
+    *
     * @param domainName Security Domain
     * @return
     */
@@ -106,7 +106,7 @@ public class SecurityUtil
 
    /**
     * Do a JNDI lookup to obtain the authentication manager
-    * 
+    *
     * @param securityDomain
     * @param baseContext the BaseContext for JNDI(Eg: "java:/jaas")
     * @return
@@ -134,7 +134,7 @@ public class SecurityUtil
 
    /**
     * Do a JNDI lookup to obtain the authorization manager
-    * 
+    *
     * @param securityDomain
     * @param baseContext the BaseContext for JNDI(Eg: "java:/jaas")
     * @return
@@ -162,7 +162,7 @@ public class SecurityUtil
 
    /**
     * Do a JNDI lookup to obtain the Audit Manager
-    * 
+    *
     * @param securityDomain
     * @param baseContext the BaseContext for JNDI(Eg: "java:/jaas")
     * @return
@@ -190,7 +190,7 @@ public class SecurityUtil
 
    /**
     * Do a JNDI lookup to obtain the IdentityTrust Manager
-    * 
+    *
     * @param securityDomain
     * @param baseContext the BaseContext for JNDI(Eg: "java:/jaas")
     * @return
@@ -218,7 +218,7 @@ public class SecurityUtil
 
    /**
     * Do a JNDI lookup to obtain the MappingManager
-    * 
+    *
     * @param securityDomain
     * @param baseContext the BaseContext for JNDI(Eg: "java:/jaas")
     * @return
@@ -248,7 +248,7 @@ public class SecurityUtil
     * <p>
     * Performs a JNDI lookup to retrieve the configured {@code PolicyRegistration}.
     * </p>
-    * 
+    *
     * @return a reference to the configured {@code PolicyRegistration} implementation, or {@code null} if the look up
     *         fails.
     */

@@ -26,6 +26,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.apache.cxf.common.security.SimpleGroup;
+import org.apache.cxf.common.security.SimplePrincipal;
 import org.jboss.security.identity.RoleGroup;
 import org.jboss.security.identity.plugins.SimpleRoleGroup;
 
@@ -37,7 +39,7 @@ import org.jboss.security.identity.plugins.SimpleRoleGroup;
  *
  * @author Thomas.Diesler@jboss.org
  * @author Scott.Stark@jboss.org
- * @author Anil.Saldhana@jboss.org 
+ * @author Anil.Saldhana@jboss.org
  * @version $Revision$
  */
 public class RunAsIdentity extends SimplePrincipal implements Cloneable, RunAs
@@ -46,8 +48,8 @@ public class RunAsIdentity extends SimplePrincipal implements Cloneable, RunAs
    private static final long serialVersionUID = -3236178735180485083L;
 
    /** The run-as role principals */
-   private HashSet<Principal> runAsRoles = new HashSet<Principal>(); 
-   private HashSet<Principal> principalsSet; 
+   private HashSet<Principal> runAsRoles = new HashSet<Principal>();
+   private HashSet<Principal> principalsSet;
 
    private static final String ANOYMOUS_PRINCIPAL = "anonymous";
 
@@ -92,16 +94,16 @@ public class RunAsIdentity extends SimplePrincipal implements Cloneable, RunAs
    {
       return new HashSet<Principal>(runAsRoles);
    }
-   
+
    /**
     * Return a RoleGroup of Run-As roles
     * @return
     */
    public RoleGroup getRunAsRolesAsRoleGroup()
    {
-      return new SimpleRoleGroup(runAsRoles); 
+      return new SimpleRoleGroup(runAsRoles);
    }
-    
+
    /**
     Return a set with the configured run-as principal and a Group("Roles")
     with the run-as roles
@@ -154,29 +156,29 @@ public class RunAsIdentity extends SimplePrincipal implements Cloneable, RunAs
    {
       return "[roles=" + runAsRoles + ",principal=" + getName() + "]";
    }
-   
+
    @SuppressWarnings("unchecked")
-   public synchronized Object clone() throws CloneNotSupportedException    
-   {  
-      RunAsIdentity clone = (RunAsIdentity) super.clone(); 
-      if(clone != null) 
-      { 
+   public synchronized Object clone() throws CloneNotSupportedException
+   {
+      RunAsIdentity clone = (RunAsIdentity) super.clone();
+      if(clone != null)
+      {
          clone.principalsSet = principalsSet != null ?
-                   (HashSet<Principal>)this.principalsSet.clone() : null; 
-         clone.runAsRoles = (HashSet<Principal>)this.runAsRoles.clone(); 
-      }  
-      return clone; 
+                   (HashSet<Principal>)this.principalsSet.clone() : null;
+         clone.runAsRoles = (HashSet<Principal>)this.runAsRoles.clone();
+      }
+      return clone;
    }
 
    @SuppressWarnings("unchecked")
    public <T> T getIdentity()
-   { 
+   {
       return (T) getName();
    }
 
    @SuppressWarnings("unchecked")
    public <T> T getProof()
-   { 
+   {
       return (T) SecurityConstants.JAVAEE;
-   } 
+   }
 }

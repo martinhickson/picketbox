@@ -216,7 +216,7 @@ public class JaasSecurityManagerBase
    }
 
    /** Does the current Subject have a role(a Principal) that equates to one
-    of the role names. This method obtains the Group named 'Roles' from
+    of the role names. This method obtains the GroupPrincipal named 'Roles' from
     the principal set of the currently authenticated Subject as determined
     by the SecurityAssociation.getSubject() method and then creates a
     SimplePrincipal for each name in roleNames. If the role is a member of the
@@ -229,7 +229,7 @@ public class JaasSecurityManagerBase
     the active user and assigned user roles.
     @param rolePrincipals - a Set of Principals for the roles to check.
     
-    @see java.security.acl.Group;
+    @see org.apache.cxf.common.security.GroupPrincipal;
     @see Subject#getPrincipals()
     */
    public boolean doesUserHaveRole(Principal principal, Set<Principal> rolePrincipals)

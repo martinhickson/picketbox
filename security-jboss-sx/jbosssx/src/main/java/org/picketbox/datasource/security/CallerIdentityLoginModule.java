@@ -22,7 +22,7 @@
 package org.picketbox.datasource.security;
 
 import java.security.Principal;
-import java.security.acl.Group;
+import org.apache.cxf.common.security.GroupPrincipal;
 import java.util.Map;
 import java.util.Set;
 
@@ -34,7 +34,7 @@ import javax.security.auth.login.LoginException;
 import org.jboss.security.PicketBoxLogger;
 import org.jboss.security.PicketBoxMessages;
 import org.jboss.security.RunAsIdentity;
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimplePrincipal;
 import org.jboss.security.vault.SecurityVaultException;
 import org.jboss.security.vault.SecurityVaultUtil;
 
@@ -219,9 +219,9 @@ public class CallerIdentityLoginModule
       return principal;
    }
 
-   protected Group[] getRoleSets() throws LoginException
+   protected GroupPrincipal[ ] getRoleSets() throws LoginException
    {
       PicketBoxLogger.LOGGER.traceBeginGetRoleSets();
-      return new Group[]{};
+      return new GroupPrincipal[ ]{};
    }
 }

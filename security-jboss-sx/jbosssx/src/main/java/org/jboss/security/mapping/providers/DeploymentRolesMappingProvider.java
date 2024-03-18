@@ -22,7 +22,7 @@
 package org.jboss.security.mapping.providers;
  
 import java.security.Principal;
-import java.security.acl.Group;
+import org.apache.cxf.common.security.GroupPrincipal;
 import java.util.Map;
 import java.util.Set;
 
@@ -90,7 +90,7 @@ public class DeploymentRolesMappingProvider implements MappingProvider<RoleGroup
       {
          for(Principal p: subjectPrincipals)
          {
-            if(p instanceof Group)
+            if(p instanceof GroupPrincipal)
                continue;
             mappedObject = mapGroup(p, principalRolesMap, mappedObject);
          } 

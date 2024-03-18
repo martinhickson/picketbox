@@ -24,7 +24,7 @@ package org.jboss.security.auth.spi;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
-import java.security.acl.Group;
+import org.apache.cxf.common.security.GroupPrincipal;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
@@ -49,7 +49,7 @@ import javax.security.auth.login.LoginException;
 
 import org.jboss.security.PicketBoxLogger;
 import org.jboss.security.PicketBoxMessages;
-import org.jboss.security.SimpleGroup;
+import org.apache.cxf.common.security.SimpleGroup;
 import org.jboss.security.Util;
 import org.jboss.security.vault.SecurityVaultUtil;
 
@@ -280,11 +280,11 @@ public class LdapExtLoginModule extends UsernamePasswordLoginModule
     Overridden by subclasses to return the Groups that correspond to the to the
     role sets assigned to the user. Subclasses should create at least a Group
     named "Roles" that contains the roles assigned to the user. A second common
-    group is "CallerPrincipal" that provides the application identity of the user
+    GroupPrincipal is "CallerPrincipal" that provides the application identity of the user
     rather than the security domain identity.
-    @return Group[] containing the sets of roles
+    @return GroupPrincipal[ ] containing the sets of roles
     */
-   protected Group[] getRoleSets() throws LoginException
+   protected GroupPrincipal[ ] getRoleSets() throws LoginException
    {
       // SECURITY-225: check if authentication was already done in a previous login module
       // and perform role mapping
@@ -305,7 +305,7 @@ public class LdapExtLoginModule extends UsernamePasswordLoginModule
          }
       }
 
-      Group[] roleSets = {userRoles};
+      GroupPrincipal[ ] roleSets = {userRoles};
       return roleSets;
    }
 

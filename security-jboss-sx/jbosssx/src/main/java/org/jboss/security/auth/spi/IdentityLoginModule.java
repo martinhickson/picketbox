@@ -22,7 +22,7 @@
 package org.jboss.security.auth.spi;
 
 import java.security.Principal;
-import java.security.acl.Group;
+import org.apache.cxf.common.security.GroupPrincipal;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -30,8 +30,8 @@ import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.login.LoginException;
 
-import org.jboss.security.SimpleGroup;
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimpleGroup;
+import org.apache.cxf.common.security.SimplePrincipal;
 
 /**
  * A simple login module that simply associates the principal specified
@@ -97,10 +97,10 @@ public class IdentityLoginModule extends AbstractServerLoginModule
       return principal;
    }
 
-   protected Group[] getRoleSets() throws LoginException
+   protected GroupPrincipal[ ] getRoleSets() throws LoginException
    {
       SimpleGroup roles = new SimpleGroup("Roles");
-      Group[] roleSets = {roles};
+      GroupPrincipal[ ] roleSets = {roles};
       if( roleNames != null )
       {
          StringTokenizer tokenizer = new StringTokenizer(roleNames, ",");

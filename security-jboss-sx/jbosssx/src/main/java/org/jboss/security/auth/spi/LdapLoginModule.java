@@ -22,7 +22,7 @@
 package org.jboss.security.auth.spi;
 
 import java.security.Principal;
-import java.security.acl.Group;
+import org.apache.cxf.common.security.GroupPrincipal;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Properties;
@@ -43,7 +43,7 @@ import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
 
 import org.jboss.security.PicketBoxLogger;
-import org.jboss.security.SimpleGroup;
+import org.apache.cxf.common.security.SimpleGroup;
 import org.jboss.security.vault.SecurityVaultUtil;
 
 /**
@@ -245,14 +245,14 @@ public class LdapLoginModule extends UsernamePasswordLoginModule
 
    /** Overridden by subclasses to return the Groups that correspond to the
     to the role sets assigned to the user. Subclasses should create at
-    least a Group named "Roles" that contains the roles assigned to the user.
-    A second common group is "CallerPrincipal" that provides the application
+    least a GroupPrincipal named "Roles" that contains the roles assigned to the user.
+    A second common GroupPrincipal is "CallerPrincipal" that provides the application
     identity of the user rather than the security domain identity.
-    @return Group[] containing the sets of roles
+    @return GroupPrincipal[ ] containing the sets of roles
     */
-   protected Group[] getRoleSets() throws LoginException
+   protected GroupPrincipal[ ] getRoleSets() throws LoginException
    {
-      Group[] roleSets = {userRoles};
+      GroupPrincipal[ ] roleSets = {userRoles};
       return roleSets;
    }
 
@@ -428,7 +428,7 @@ public class LdapLoginModule extends UsernamePasswordLoginModule
             boolean roleAttributeIsDN = Boolean.valueOf(roleAttributeIsDNOption).booleanValue();
 
             // If user's role attribute is a DN, what is the role's name attribute
-            // Default to 'name' (Group name attribute in Active Directory)
+            // Default to 'name' (GroupPrincipal name attribute in Active Directory)
             String roleNameAttributeID = (String) options.get(ROLE_NAME_ATTRIBUTE_ID_OPT);
             if (roleNameAttributeID == null)
                roleNameAttributeID = "name";

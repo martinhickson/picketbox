@@ -20,11 +20,11 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 package org.jboss.security.plugins;
- 
+
 import static org.jboss.security.SecurityConstants.ROLES_IDENTIFIER;
 
 import java.security.Principal;
-import java.security.acl.Group;
+import org.apache.cxf.common.security.GroupPrincipal;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -49,7 +49,7 @@ import org.jboss.security.SecurityConstants;
 import org.jboss.security.SecurityContext;
 import org.jboss.security.SecurityRolesAssociation;
 import org.jboss.security.SecurityUtil;
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimplePrincipal;
 import org.jboss.security.authorization.AuthorizationContext;
 import org.jboss.security.authorization.AuthorizationException;
 import org.jboss.security.authorization.Resource;
@@ -68,24 +68,24 @@ import org.jboss.security.plugins.authorization.JBossAuthorizationContext;
 /**
  *  Authorization Manager implementation
  *  @author <a href="mailto:Anil.Saldhana@jboss.org">Anil Saldhana</a>
- *  @since  Jan 3, 2006 
+ *  @since  Jan 3, 2006
  *  @version $Revision$
  */
-public class JBossAuthorizationManager 
-implements AuthorizationManager 
-{  
-   private final String securityDomain;  
-   
+public class JBossAuthorizationManager
+implements AuthorizationManager
+{
+   private final String securityDomain;
+
    private AuthorizationContext authorizationContext = null;
-   
+
    //Lock deals with synchronization of authorizationContext usage
    private final Lock lock = new ReentrantLock();
-   
+
    public JBossAuthorizationManager(String securityDomainName)
    {
       this.securityDomain = SecurityUtil.unprefixSecurityDomain( securityDomainName );
-   } 
-   
+   }
+
    /**
     * @see AuthorizationManager#authorize(Resource)
     */
@@ -95,7 +95,7 @@ implements AuthorizationManager
       Subject subject = SubjectActions.getActiveSubject();
       return internalAuthorization(resource,subject, null);
    }
-   
+
    /**
     * @see AuthorizationManager#authorize(Resource, Subject)
     */
@@ -104,9 +104,9 @@ implements AuthorizationManager
    {
       return internalAuthorization(resource, subject, null);
    }
-   
+
    /**
-    * @see AuthorizationManager#authorize(Resource, Subject, RoleGroup) 
+    * @see AuthorizationManager#authorize(Resource, Subject, RoleGroup)
     */
    public int authorize(Resource resource, Subject subject,
          RoleGroup role) throws AuthorizationException
@@ -116,17 +116,17 @@ implements AuthorizationManager
    }
 
    /**
-    * @see AuthorizationManager#authorize(Resource, Subject, Group)
+    * @see AuthorizationManager#authorize(Resource, Subject, GroupPrincipal)
     */
-   public int authorize(Resource resource, Subject subject, 
-         Group roleGroup) throws AuthorizationException
-   { 
+   public int authorize(Resource resource, Subject subject,
+         GroupPrincipal roleGroup) throws AuthorizationException
+   {
       this.validateResource(resource);
       return internalAuthorization(resource, subject, getRoleGroup(roleGroup));
    }
 
    /** Does the current Subject have a role(a Principal) that equates to one
-    of the role names. This method obtains the Group named 'Roles' from
+    of the role names. This method obtains the GroupPrincipal named 'Roles' from
     the principal set of the currently authenticated Subject as determined
     by the SecurityAssociation.getSubject() method and then creates a
     SimplePrincipal for each name in roleNames. If the role is a member of the
@@ -134,12 +134,12 @@ implements AuthorizationManager
     establish the correct SecurityAssociation subject prior to calling this
     method. In the past this was done as a side-effect of an isValid() call,
     but this is no longer the case.
-    
+
     @param principal - ignored. The current authenticated Subject determines
     the active user and assigned user roles.
     @param rolePrincipals - a Set of Principals for the roles to check.
-    
-    @see java.security.acl.Group;
+
+    @see org.apache.cxf.common.security.GroupPrincipal;
     @see Subject#getPrincipals()
     */
    public boolean doesUserHaveRole(Principal principal, Set<Principal> rolePrincipals)
@@ -162,12 +162,12 @@ implements AuthorizationManager
       }
       return hasRole;
    }
-   
+
    /** Does the current Subject have a role(a Principal) that equates to one
     of the role names.
-    
+
     @see #doesUserHaveRole(Principal, Set)
-    
+
     @param principal - ignored. The current authenticated Subject determines
     the active user and assigned user roles.
     @param role - the application domain role that the principal is to be
@@ -178,29 +178,29 @@ implements AuthorizationManager
    {
       boolean hasRole = false;
       RoleGroup roles = this.getCurrentRoles(principal);
-      hasRole = doesRoleGroupHaveRole(role, roles); 
+      hasRole = doesRoleGroupHaveRole(role, roles);
       return hasRole;
-   } 
-   
+   }
+
    /** Return the set of domain roles the current active Subject 'Roles' group
     found in the subject Principals set.
-    
+
     @param principal - ignored. The current authenticated Subject determines
     the active user and assigned user roles.
     @return The Set<Principal> for the application domain roles that the
     principal has been assigned.
     */
    public Set<Principal> getUserRoles(Principal principal)
-   { 
+   {
       RoleGroup userRoles = getCurrentRoles(principal);
-      return this.getRolesAsSet(userRoles); 
-   }  
-     
-   
+      return this.getRolesAsSet(userRoles);
+   }
+
+
    /** Check that the indicated application domain role is a member of the
     user's assigned roles. This handles the special AnybodyPrincipal and
-    NobodyPrincipal independent of the Group implementation.
-    
+    NobodyPrincipal independent of the GroupPrincipal implementation.
+
     @param role , the application domain role required for access
     @param userRoles , the set of roles assigned to the user
     @return true if role is in userRoles or an AnybodyPrincipal instance, false
@@ -211,17 +211,17 @@ implements AuthorizationManager
       // First check that role is not a NobodyPrincipal
       if (role instanceof NobodyPrincipal)
          return false;
-      
+
       // Check for inclusion in the user's role set
-      boolean isMember = userRoles.containsRole(new SimpleRole(role.getName())); 
+      boolean isMember = userRoles.containsRole(new SimpleRole(role.getName()));
       if (isMember == false)
       {   // Check the AnybodyPrincipal special cases
          isMember = (role instanceof AnybodyPrincipal);
       }
-      
+
       return isMember;
-   } 
-   
+   }
+
    @Override
    public String toString()
    {
@@ -230,8 +230,8 @@ implements AuthorizationManager
       buf.append(":").append(this.securityDomain).append(":");
       buf.append("]");
       return buf.toString();
-   } 
-   
+   }
+
    //Value added methods
    /**
     * Set the AuthorizationContext
@@ -247,7 +247,7 @@ implements AuthorizationManager
 
       lock.lock();
       try
-      { 
+      {
          this.authorizationContext = authorizationContext;
       }
       finally
@@ -255,17 +255,17 @@ implements AuthorizationManager
          lock.unlock();
       }
    }
-   
+
    public String getSecurityDomain()
    {
       return this.securityDomain;
    }
-   
+
 
    /**
     * @see AuthorizationManager#getTargetRoles(Principal, Map)
     */
-   public Group getTargetRoles(Principal targetPrincipal, Map<String,Object> contextMap)
+   public GroupPrincipal getTargetRoles(Principal targetPrincipal, Map<String,Object> contextMap)
    {
       throw new UnsupportedOperationException();
    }
@@ -281,10 +281,10 @@ implements AuthorizationManager
          for(Role r: rolesList)
          {
             userRoles.add(new SimplePrincipal(r.getRoleName()));
-         } 
+         }
       }
       return userRoles;
-   } 
+   }
 
    /**
     * @see AuthorizationManager#getSubjectRoles(Subject, CallbackHandler)
@@ -293,7 +293,7 @@ implements AuthorizationManager
    {
       if(authenticatedSubject == null)
          return null;
-      
+
       //Ask the CBH for the SecurityContext
       SecurityContextCallback scb = new SecurityContextCallback();
       try
@@ -303,44 +303,44 @@ implements AuthorizationManager
       catch (Exception e)
       {
          throw new RuntimeException(e);
-      } 
+      }
       SecurityContext sc = scb.getSecurityContext();
-      
+
       //Handle the case of Incoming RunAs
       Principal callerPrincipal = null;
       RunAs callerRunAs = sc.getIncomingRunAs();
       if(callerRunAs != null)
       {
-         callerPrincipal = new SimplePrincipal(callerRunAs.getName()); 
+         callerPrincipal = new SimplePrincipal(callerRunAs.getName());
       }
-      
+
       RoleGroup roles = this.getCurrentRoles(callerPrincipal, authenticatedSubject, sc);
       if(roles == null)
          roles = new SimpleRoleGroup(SecurityConstants.ROLES_IDENTIFIER);
-      return roles; 
-   }  
-   
+      return roles;
+   }
+
    /*
-    * Get the current role group from the security context or
+    * Get the current role GroupPrincipal from the security context or
     * the Subject
     * @param principal The Principal in question
     */
    private RoleGroup getCurrentRoles(Principal principal)
-   { 
+   {
       //Check that the caller is authenticated to the current thread
-      Subject subject = SubjectActions.getActiveSubject();  
-      
+      Subject subject = SubjectActions.getActiveSubject();
+
       //Deal with the security context
-      SecurityContext sc = SubjectActions.getSecurityContext(); 
+      SecurityContext sc = SubjectActions.getSecurityContext();
       if(sc == null)
       {
-         sc = new JBossSecurityContext(securityDomain); 
-         SubjectActions.setSecurityContext(sc);   
-      } 
-      
-      return getCurrentRoles(principal,subject,sc); 
-   } 
-   
+         sc = new JBossSecurityContext(securityDomain);
+         SubjectActions.setSecurityContext(sc);
+      }
+
+      return getCurrentRoles(principal,subject,sc);
+   }
+
    private RoleGroup getCurrentRoles(Principal principal, Subject subject, SecurityContext securityContext)
    {
       if(subject == null)
@@ -348,26 +348,26 @@ implements AuthorizationManager
       if(securityContext == null)
          throw PicketBoxMessages.MESSAGES.invalidNullArgument("securityContext");
 
-      Group subjectRoles = getGroupFromSubject(subject);
-      
+      GroupPrincipal subjectRoles = getGroupFromSubject(subject);
+
       boolean emptyContextRoles = false;
-      
+
       RoleGroup userRoles = securityContext.getUtil().getRoles();
       //Group userRoles = (Group)sc.getData().get(ROLES_IDENTIFIER);
       if(userRoles == null || "true".equalsIgnoreCase(SubjectActions.getRefreshSecurityContextRoles()))
          emptyContextRoles = true;
-      userRoles = copyGroups(userRoles, subjectRoles); 
-      
+      userRoles = copyGroups(userRoles, subjectRoles);
+
       /**
        * Update the roles in the SecurityContext and
        * allow mapping rules be applied only if the SC roles
        * and the subject roles are not the same
        */
       if(subjectRoles != userRoles || emptyContextRoles)
-      { 
+      {
          MappingManager mm = securityContext.getMappingManager();
          MappingContext<RoleGroup> mc = mm.getMappingContext(MappingType.ROLE.name());
-        
+
          RoleGroup mappedUserRoles = userRoles;
          if(mc != null && mc.hasModules())
          {
@@ -378,7 +378,7 @@ implements AuthorizationManager
             //Append any deployment role->principals configuration done by the user
             contextMap.put(SecurityConstants.DEPLOYMENT_PRINCIPAL_ROLES_MAP,
                   SecurityRolesAssociation.getSecurityRoles());
-            
+
             //Append the principals also
             contextMap.put(SecurityConstants.PRINCIPALS_SET_IDENTIFIER, subject.getPrincipals());
             if (PicketBoxLogger.LOGGER.isTraceEnabled())
@@ -388,7 +388,7 @@ implements AuthorizationManager
 
             if(userRoles == null)
                userRoles = this.getEmptyRoleGroup();
-            
+
             mc.performMapping(contextMap, userRoles);
             mappedUserRoles = mc.getMappingResult().getMappedObject();
             if (PicketBoxLogger.LOGGER.isTraceEnabled())
@@ -397,70 +397,70 @@ implements AuthorizationManager
             }
          }
          securityContext.getData().put(ROLES_IDENTIFIER, mappedUserRoles);
-      } 
-      
+      }
+
       //Ensure that the security context has the roles
       if(securityContext.getUtil().getRoles() == null)
          securityContext.getUtil().setRoles(userRoles);
 
       //Send the final processed (mapping applied) roles
-      return userRoles;   
+      return userRoles;
    }
-   
+
    /**
-    * Copy the principals from the second group into the first.
-    * If the first group is null and the second group is not, the
-    * first group will be made equal to the second group
+    * Copy the principals from the second GroupPrincipal into the first.
+    * If the first GroupPrincipal is null and the second GroupPrincipal is not, the
+    * first GroupPrincipal will be made equal to the second group
     * @param source
     * @param toCopy
     */
-   private RoleGroup copyGroups(RoleGroup source, Group toCopy)
+   private RoleGroup copyGroups(RoleGroup source, GroupPrincipal toCopy)
    {
       if(toCopy == null)
          return source;
-      if(source == null && toCopy != null) 
+      if(source == null && toCopy != null)
          source = this.getEmptyRoleGroup();
       Enumeration<? extends Principal> en = toCopy.members();
       while(en.hasMoreElements())
       {
-         source.addRole(new SimpleRole(en.nextElement().getName())); 
+         source.addRole(new SimpleRole(en.nextElement().getName()));
       }
-       
+
       return source;
    }
-   
+
    private int internalAuthorization(final Resource resource, Subject subject,
          RoleGroup role)
    throws AuthorizationException
    {
       if(this.authorizationContext == null)
          this.setAuthorizationContext( new JBossAuthorizationContext(this.securityDomain) );
-       return this.authorizationContext.authorize(resource, subject, role); 
+       return this.authorizationContext.authorize(resource, subject, role);
    }
-   
+
    /**
-    * Get the Subject roles by looking for a Group called 'Roles'
+    * Get the Subject roles by looking for a GroupPrincipal called 'Roles'
     * @param theSubject - the Subject to search for roles
-    * @return the Group contain the subject roles if found, null otherwise
+    * @return the GroupPrincipal contain the subject roles if found, null otherwise
     */
-   private Group getGroupFromSubject(Subject theSubject)
+   private GroupPrincipal getGroupFromSubject(Subject theSubject)
    {
       if(theSubject == null)
          throw PicketBoxMessages.MESSAGES.invalidNullArgument("theSubject");
-      Set<Group> subjectGroups = theSubject.getPrincipals(Group.class);
-      Iterator<Group> iter = subjectGroups.iterator();
-      Group roles = null;
+      Set<GroupPrincipal> subjectGroups = theSubject.getPrincipals(GroupPrincipal.class);
+      Iterator<GroupPrincipal> iter = subjectGroups.iterator();
+      GroupPrincipal roles = null;
       while( iter.hasNext() )
       {
-         Group grp = iter.next();
+         GroupPrincipal grp = iter.next();
          String name = grp.getName();
          if( name.equals(ROLES_IDENTIFIER) )
             roles = grp;
       }
       return roles;
-   } 
-   
-   private RoleGroup getRoleGroup(Group roleGroup)
+   }
+
+   private RoleGroup getRoleGroup(GroupPrincipal roleGroup)
    {
       if(roleGroup == null)
          throw PicketBoxMessages.MESSAGES.invalidNullArgument("roleGroup");
@@ -470,9 +470,9 @@ implements AuthorizationManager
       {
          srg.addRole(new SimpleRole(principals.nextElement().getName()));
       }
-      return srg;  
+      return srg;
    }
-   
+
 
    private void validateResource(Resource resource)
    {
@@ -481,7 +481,7 @@ implements AuthorizationManager
       if(resource.getMap() == null)
          throw PicketBoxMessages.MESSAGES.invalidNullArgument("resource.contextMap");
    }
-   
+
    private RoleGroup getEmptyRoleGroup()
    {
       return new SimpleRoleGroup(SecurityConstants.ROLES_IDENTIFIER);

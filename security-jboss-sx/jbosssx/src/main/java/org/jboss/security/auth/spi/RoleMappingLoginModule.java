@@ -22,7 +22,7 @@
 package org.jboss.security.auth.spi;
 
 import java.security.Principal;
-import java.security.acl.Group;
+import org.apache.cxf.common.security.GroupPrincipal;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Map;
@@ -40,7 +40,7 @@ import org.jboss.security.util.StringPropertyReplacer;
 //$Id$
 
 /**
- *  JBAS-3323: Role Mapping Login Module that maps application role to 
+ *  JBAS-3323: Role Mapping Login Module that maps application role to
  *  declarative role
  *  - You will need to provide a properties file name with the option "rolesProperties"
  *    which has the role to be replaced as the key and a comma-separated role names
@@ -61,19 +61,19 @@ public class RoleMappingLoginModule extends AbstractServerLoginModule
    {
 	   REPLACE_ROLE_OPT,ROLES_PROPERTIES
    };
-   
+
    /**
     * Should the matching role be replaced
     */
    protected boolean REPLACE_ROLE = false;
-    
+
    public void initialize(Subject subject, CallbackHandler callbackHandler,
       Map<String,?> sharedState, Map<String,?> options)
    {
       addValidOptions(ALL_VALID_OPTIONS);
       super.initialize(subject, callbackHandler, sharedState, options);
    }
-   
+
    /**
     * @see LoginModule#login()
     */
@@ -81,22 +81,22 @@ public class RoleMappingLoginModule extends AbstractServerLoginModule
    {
       if( super.login() == true )
          return true;
- 
+
       super.loginOk = true;
       return true;
-   } 
-   
+   }
+
    /**
-    * @see AbstractServerLoginModule#getIdentity() 
+    * @see AbstractServerLoginModule#getIdentity()
     */
    protected Principal getIdentity()
-   { 
+   {
       //We have an authenticated subject
       Iterator<? extends Principal> iter = subject.getPrincipals().iterator();
       while(iter.hasNext())
       {
          Principal p = iter.next();
-         if(p instanceof Group == false)
+         if(p instanceof GroupPrincipal == false)
             return p;
       }
       return null;
@@ -105,12 +105,12 @@ public class RoleMappingLoginModule extends AbstractServerLoginModule
    /**
     * @see AbstractServerLoginModule#getRoleSets()
     */
-   protected Group[] getRoleSets() throws LoginException
-   { 
+   protected GroupPrincipal[ ] getRoleSets() throws LoginException
+   {
       String rep = (String)options.get(REPLACE_ROLE_OPT);
       if("true".equalsIgnoreCase(rep))
          this.REPLACE_ROLE = true;
-      
+
       //Get the properties file name from the options
       String propFileName = (String)options.get(ROLES_PROPERTIES);
       if(propFileName == null)
@@ -118,14 +118,14 @@ public class RoleMappingLoginModule extends AbstractServerLoginModule
 
       // Replace any system property references like ${x}
       propFileName = StringPropertyReplacer.replaceProperties(propFileName);
-      Group group = getExistingRolesFromSubject();
+      GroupPrincipal group = getExistingRolesFromSubject();
       if(propFileName != null)
-      { 
+      {
          Properties props = new Properties();
          try
-         { 
+         {
             props = Util.loadProperties(propFileName);
-         }  
+         }
          catch( Exception  e)
          {
             PicketBoxLogger.LOGGER.debugFailureToLoadPropertiesFile(propFileName, e);
@@ -134,39 +134,39 @@ public class RoleMappingLoginModule extends AbstractServerLoginModule
          {
             processRoles(group, props);
          }
-      } 
-      
-      return new Group[] {group};
-   } 
-   
+      }
+
+      return new GroupPrincipal[ ] {group};
+   }
+
    /**
-    * Get the Group called as "Roles" from the authenticated subject
-    * 
-    * @return Group representing Roles
+    * Get the GroupPrincipal called as "Roles" from the authenticated subject
+    *
+    * @return GroupPrincipal representing Roles
     */
-   private Group getExistingRolesFromSubject()
+   private GroupPrincipal getExistingRolesFromSubject()
    {
       Iterator<? extends Principal> iter = subject.getPrincipals().iterator();
       while(iter.hasNext())
       {
          Principal p = iter.next();
-         if(p instanceof Group)
+         if(p instanceof GroupPrincipal)
          {
-           Group g = (Group) p;
+           GroupPrincipal g = (GroupPrincipal) p;
            if("Roles".equals(g.getName()))
               return g;
-         } 
+         }
       }
       return null;
    }
 
    /**
-    * Process the group with the roles that are mapped in the 
+    * Process the GroupPrincipal with the roles that are mapped in the
     * properies file
-    * @param group Group that needs to be processed
+    * @param GroupPrincipal Group that needs to be processed
     * @param props Properties file
     */
-   private void processRoles(Group group,Properties props) //throws Exception
+   private void processRoles(GroupPrincipal group,Properties props) //throws Exception
    {
       Enumeration<?> enumer = props.propertyNames();
       while(enumer.hasMoreElements())

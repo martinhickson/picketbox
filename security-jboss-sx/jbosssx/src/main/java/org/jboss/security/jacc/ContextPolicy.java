@@ -26,7 +26,7 @@ import java.security.PermissionCollection;
 import java.security.Permissions;
 import java.security.Principal;
 import java.security.ProtectionDomain;
-import java.security.acl.Group;
+import org.apache.cxf.common.security.GroupPrincipal;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -107,9 +107,9 @@ public class ContextPolicy
       for(int n = 0; n < length; n ++)
       {
          Principal p = principals[n];
-         if( p instanceof Group )
+         if( p instanceof GroupPrincipal )
          {
-            Group g = (Group) p;
+            GroupPrincipal g = (GroupPrincipal) p;
             Enumeration<? extends Principal> iter = g.members();
             while( iter.hasMoreElements() )
             {

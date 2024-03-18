@@ -22,12 +22,12 @@
 package org.jboss.security.auth.spi;
 
 import java.security.Principal;
-import java.security.acl.Group;
+import org.apache.cxf.common.security.GroupPrincipal;
 
 import javax.security.auth.login.LoginException;
 
-import org.jboss.security.SimpleGroup;
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimpleGroup;
+import org.apache.cxf.common.security.SimplePrincipal;
 
 /**
  * A simple server login module useful to quick setup of security for testing
@@ -73,9 +73,9 @@ public class SimpleServerLoginModule extends UsernamePasswordLoginModule
       return isValid;
    }
 
-   protected Group[] getRoleSets() throws LoginException
+   protected GroupPrincipal[ ] getRoleSets() throws LoginException
    {
-      Group[] roleSets = {new SimpleGroup("Roles")};
+      GroupPrincipal[ ] roleSets = {new SimpleGroup("Roles")};
       if( guestOnly == false )
          roleSets[0].addMember(new SimplePrincipal("user"));
       roleSets[0].addMember(new SimplePrincipal("guest"));
@@ -90,7 +90,7 @@ public class SimpleServerLoginModule extends UsernamePasswordLoginModule
    @Override
    public boolean logout() throws LoginException
    {
-      Group[] groups = this.getRoleSets();
+      GroupPrincipal[ ] groups = this.getRoleSets();
       subject.getPrincipals().remove(groups[0]); 
       return super.logout();
    }  

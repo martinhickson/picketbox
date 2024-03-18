@@ -137,9 +137,9 @@ public class Util
     * data for username=role1,role2,...
     * 
     * @param username - name of user
-    * @param roleGroup - group containing the user's roles
+    * @param roleGroup - GroupPrincipal containing the user's roles
     * @param roles - the Properties containing the user=roles mappings
-    * @return Group[] containing the sets of roles
+    * @return GroupPrincipal[ ] containing the sets of roles
     */
    static void addRolesToGroup(String username, RoleGroup roleGroup, Properties roles)
    {
@@ -173,7 +173,7 @@ public class Util
     * Create the set of roles the user belongs to by querying a database
     * 
     * @param username - name of the user
-    * @param roleGroup - group containing the user's roles
+    * @param roleGroup - GroupPrincipal containing the user's roles
     * @param dsJndiName - JNDI name of the datasource
     * @param rolesQuery - prepared statement to query
     * @param suspendResume - flag to indicate if transactions should be suspended/resumed

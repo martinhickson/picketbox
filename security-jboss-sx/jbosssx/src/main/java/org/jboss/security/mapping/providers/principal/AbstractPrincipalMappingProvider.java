@@ -2,7 +2,7 @@
  * JBoss, Home of Professional Open Source.
  * Copyright 2008, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
- * distribution for a full listing of individual contributors. 
+ * distribution for a full listing of individual contributors.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -22,28 +22,28 @@
 package org.jboss.security.mapping.providers.principal;
 
 import java.security.Principal;
-import java.security.acl.Group;
+import org.apache.cxf.common.security.GroupPrincipal;
 
 import org.jboss.security.mapping.MappingProvider;
 
 /**
  * Abstract class for Principal mapping providers
- * <b>Group Principal (java.security.acl.Group) is not supported.</b>
+ * <b>Group Principal (org.apache.cxf.common.security.GroupPrincipal) is not supported.</b>
  * @author Anil.Saldhana@redhat.com
  */
 public abstract class AbstractPrincipalMappingProvider implements MappingProvider<Principal>
-{   
+{
    /**
     * @see MappingProvider#supports(Class)
     */
    public boolean supports(Class<?> p)
    {
-      if(Group.class.isAssignableFrom(p))
+      if(GroupPrincipal.class.isAssignableFrom(p))
          return false;
-      
+
       if(Principal.class.isAssignableFrom(p))
          return true;
-      
+
       return false;
    }
 }

@@ -25,7 +25,7 @@ import java.security.AccessController;
 import java.security.Principal;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
-import java.security.acl.Group;
+import org.apache.cxf.common.security.GroupPrincipal;
 import java.util.Map;
 
 import javax.management.MBeanServer;
@@ -36,7 +36,7 @@ import javax.security.auth.login.LoginException;
 
 import org.jboss.security.PicketBoxLogger;
 import org.jboss.security.PicketBoxMessages;
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimplePrincipal;
 
 /** A login module for statically defining a data source username and password
  that uses a password that has been ecrypted by a JaasSecurityDomain. The
@@ -172,9 +172,9 @@ public class JaasSecurityDomainIdentityLoginModule
       return principal;
    }
 
-   protected Group[] getRoleSets() throws LoginException
+   protected GroupPrincipal[ ] getRoleSets() throws LoginException
    {
-      Group[] empty = new Group[0];
+      GroupPrincipal[ ] empty = new GroupPrincipal[ 0];
       return empty;
    }
 

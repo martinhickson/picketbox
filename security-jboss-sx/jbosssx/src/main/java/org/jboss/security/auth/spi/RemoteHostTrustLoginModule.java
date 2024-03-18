@@ -21,7 +21,7 @@
  */
 package org.jboss.security.auth.spi;
 
-import java.security.acl.Group;
+import org.apache.cxf.common.security.GroupPrincipal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -31,8 +31,8 @@ import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.login.LoginException;
 
 import org.jboss.security.PicketBoxLogger;
-import org.jboss.security.SimpleGroup;
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimpleGroup;
+import org.apache.cxf.common.security.SimplePrincipal;
 import org.jboss.security.plugins.HostThreadLocal;
 
 
@@ -110,10 +110,10 @@ public class RemoteHostTrustLoginModule extends UsernamePasswordLoginModule
       return HostThreadLocal.get();
    }
 
-   protected Group[] getRoleSets() throws LoginException
+   protected GroupPrincipal[ ] getRoleSets() throws LoginException
    {
       SimpleGroup roles = new SimpleGroup("Roles");
-      Group[] roleSets = {roles};
+      GroupPrincipal[ ] roleSets = {roles};
       if( roleNames != null )
       {
          String[] tokens = roleNames.split(",");

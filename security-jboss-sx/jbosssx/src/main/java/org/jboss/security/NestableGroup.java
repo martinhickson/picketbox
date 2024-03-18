@@ -22,19 +22,21 @@
 package org.jboss.security;
 
 import java.security.Principal;
-import java.security.acl.Group;
+import org.apache.cxf.common.security.GroupPrincipal;
+import org.apache.cxf.common.security.SimplePrincipal;
+
 import java.util.Enumeration;
 import java.util.LinkedList;
 
 //$Id$
 
-/** An implementation of Group that allows that acts as a stack of Groups
-with a single Group member active at any time.
-When one adds a Group to a NestableGroup the Group is pushed onto
-the active Group stack and any of the Group methods operate as though the
-NestableGroup contains only the Group. When removing the Group that
-corresponds to the active Group, the active Group is popped from the stack and
-the new active Group is set to the new top of the stack.
+/** An implementation of GroupPrincipal that allows that acts as a stack of Groups
+with a single GroupPrincipal member active at any time.
+When one adds a GroupPrincipal to a NestableGroup the GroupPrincipal is pushed onto
+the active GroupPrincipal stack and any of the GroupPrincipal methods operate as though the
+NestableGroup contains only the Group. When removing the GroupPrincipal that
+corresponds to the active Group, the active GroupPrincipal is popped from the stack and
+the new active GroupPrincipal is set to the new top of the stack.
 
 The typical usage of this class is when doing a JAAS LoginContext login
 to runAs a new Principal with a new set of roles that should be added
@@ -43,7 +45,7 @@ without destroying the current identity and roles.
 @author  Scott.Stark@jboss.org
 @version $Revision$
 */
-public class NestableGroup extends SimplePrincipal implements Group, Cloneable 
+public class NestableGroup extends SimplePrincipal implements GroupPrincipal, Cloneable
 {
     /** The serialVersionUID */
    private static final long serialVersionUID = 1752783303935807441L;
@@ -60,7 +62,7 @@ public class NestableGroup extends SimplePrincipal implements Group, Cloneable
         rolesStack = new LinkedList<Principal>();
     }
 
-// --- Begin Group interface methods
+// --- Begin GroupPrincipal interface methods
     /** Returns an enumeration that contains the single active Principal.
     @return an Enumeration of the single active Principal.
     */
@@ -72,7 +74,7 @@ public class NestableGroup extends SimplePrincipal implements Group, Cloneable
     /** Removes the first occurence of user from the Principal stack.
 
     @param user the principal to remove from this group.
-    @return true if the principal was removed, or 
+    @return true if the principal was removed, or
      * false if the principal was not a member.
     */
     public boolean removeMember(Principal user)
@@ -80,25 +82,25 @@ public class NestableGroup extends SimplePrincipal implements Group, Cloneable
         return rolesStack.remove(user);
     }
 
-    /** Pushes the group onto the Group stack and makes it the active
+    /** Pushes the GroupPrincipal onto the GroupPrincipal stack and makes it the active
         Group.
-    @param group the instance of Group that contains the roles to set as the
+    @param GroupPrincipal the instance of GroupPrincipal that contains the roles to set as the
         active Group.
-    @exception IllegalArgumentException thrown if group is not an instance of Group.
+    @exception IllegalArgumentException thrown if GroupPrincipal is not an instance of Group.
     @return true always.
     */
     public boolean addMember(Principal group) throws IllegalArgumentException
     {
-        if( (group instanceof Group) == false )
-            throw PicketBoxMessages.MESSAGES.invalidType(Group.class.getName());
+        if( (group instanceof GroupPrincipal) == false )
+            throw PicketBoxMessages.MESSAGES.invalidType(GroupPrincipal.class.getName());
 
         rolesStack.addFirst(group);
         return true;
     }
 
     /** Returns true if the passed principal is a member of the active group.
-        This method does a recursive search, so if a principal belongs to a 
-        group which is a member of this group, true is returned.
+        This method does a recursive search, so if a principal belongs to a
+        GroupPrincipal which is a member of this group, true is returned.
 
      @param member the principal whose membership is to be checked.
 
@@ -108,7 +110,7 @@ public class NestableGroup extends SimplePrincipal implements Group, Cloneable
     {
         if( rolesStack.size() == 0 )
             return false;
-        Group activeGroup = (Group) rolesStack.getFirst();
+        GroupPrincipal activeGroup = (GroupPrincipal) rolesStack.getFirst();
         boolean isMember = activeGroup.isMember(member);
         return isMember;
     }
@@ -126,17 +128,17 @@ public class NestableGroup extends SimplePrincipal implements Group, Cloneable
       tmp.setCharAt(tmp.length()-1, ')');
       return tmp.toString();
    }
-   
+
    @SuppressWarnings("unchecked")
-   public synchronized Object clone() throws CloneNotSupportedException   
-   {  
-      NestableGroup clone = (NestableGroup) super.clone(); 
-      if(clone != null) 
-        clone.rolesStack = (LinkedList<Principal>)this.rolesStack.clone();  
-      return clone; 
+   public synchronized Object clone() throws CloneNotSupportedException
+   {
+      NestableGroup clone = (NestableGroup) super.clone();
+      if(clone != null)
+        clone.rolesStack = (LinkedList<Principal>)this.rolesStack.clone();
+      return clone;
    }
-   
-// --- End Group interface methods
+
+// --- End GroupPrincipal interface methods
 
     private class IndexEnumeration<T extends Principal> implements Enumeration<Principal>
     {
@@ -146,7 +148,7 @@ public class NestableGroup extends SimplePrincipal implements Group, Cloneable
         {
             if( rolesStack.size() > 0 )
             {
-                Group grp = (Group) rolesStack.get(0);
+                GroupPrincipal grp = (GroupPrincipal) rolesStack.get(0);
                 iter = grp.members();
             }
         }

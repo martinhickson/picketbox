@@ -2,7 +2,7 @@
  * JBoss, Home of Professional Open Source.
  * Copyright 2008, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
- * distribution for a full listing of individual contributors. 
+ * distribution for a full listing of individual contributors.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -24,7 +24,7 @@ package org.jboss.security.auth.spi.otp;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
-import java.security.acl.Group;
+import org.apache.cxf.common.security.GroupPrincipal;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -46,7 +46,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.jboss.security.PicketBoxLogger;
 import org.jboss.security.PicketBoxMessages;
 import org.jboss.security.SecurityConstants;
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimplePrincipal;
 import org.jboss.security.otp.TimeBasedOTP;
 import org.jboss.security.otp.TimeBasedOTPUtil;
 
@@ -54,7 +54,7 @@ import org.jboss.security.otp.TimeBasedOTPUtil;
  * <p>
  * Login Module that can be configured to validate a Time based OTP.
  * </p>
- * 
+ *
  * <p>
  * Usage:
  * This login module needs to be configured along with one of the other JBoss login modules such
@@ -78,7 +78,7 @@ import org.jboss.security.otp.TimeBasedOTPUtil;
  * }
  * </pre>
  * </p>
- * 
+ *
  * <p>
  * Configurable Options:
  * </p>
@@ -90,12 +90,12 @@ import org.jboss.security.otp.TimeBasedOTPUtil;
  * separate with a comma</li>
  * </ul>
  * </p>
- * 
+ *
  * <p>
  * This login module requires the presence of "otp-users.properties" on the class path with the format:
  * username=key
  * </p>
- * 
+ *
  * <p>
  * An example of otp-users.properties is:
  * </p>
@@ -104,25 +104,25 @@ import org.jboss.security.otp.TimeBasedOTPUtil;
     admin=35cae61d6d51a7b3af
    </pre>
  * </p>
- * 
- * 
+ *
+ *
  * @author Anil.Saldhana@redhat.com
  * @since Sep 21, 2010
  */
 public class JBossTimeBasedOTPLoginModule implements LoginModule
-{  
+{
    // see AbstractServerLoginModule
    private static final String PASSWORD_STACKING = "password-stacking";
    private static final String USE_FIRST_PASSWORD = "useFirstPass";
    private static final String NUM_OF_DIGITS_OPT = "numOfDigits";
    private static final String ALGORITHM = "algorithm";
    private static final String ADDITIONAL_ROLES = "additionalRoles";
-   
+
    private static final String[] ALL_VALID_OPTIONS =
    {
 	   PASSWORD_STACKING,USE_FIRST_PASSWORD,NUM_OF_DIGITS_OPT,ALGORITHM,ADDITIONAL_ROLES
    };
-   
+
    public static final String TOTP = "totp";
 
    private Map<String,Object> lmSharedState = new HashMap<String,Object>();
@@ -132,9 +132,9 @@ public class JBossTimeBasedOTPLoginModule implements LoginModule
 
    //This is the number of digits in the totp
    private int NUMBER_OF_DIGITS = 6;
-   
+
    private String additionalRoles = null;
-   
+
    /**
     * Default algorithm is HMAC_SHA1
     */
@@ -153,7 +153,7 @@ public class JBossTimeBasedOTPLoginModule implements LoginModule
     	 if (!validOptions.contains(key))
              PicketBoxLogger.LOGGER.warnInvalidModuleOption(key);
       }
-	  
+
       this.subject = subject;
       this.callbackHandler = callbackHandler;
       this.lmSharedState.putAll( sharedState );
@@ -166,12 +166,12 @@ public class JBossTimeBasedOTPLoginModule implements LoginModule
       String passwordStacking = (String) options.get(PASSWORD_STACKING);
       if( passwordStacking != null && passwordStacking.equalsIgnoreCase(USE_FIRST_PASSWORD) )
          useFirstPass = true;
-      
+
       //Option for number of digits
       String numDigitString = (String) options.get(NUM_OF_DIGITS_OPT);
       if( numDigitString != null && numDigitString.length() > 0 )
          NUMBER_OF_DIGITS = Integer.parseInt( numDigitString );
-      
+
       //Algorithm
       String algorithmStr = (String) options.get(ALGORITHM);
       if( algorithmStr != null && !algorithmStr.isEmpty())
@@ -181,8 +181,8 @@ public class JBossTimeBasedOTPLoginModule implements LoginModule
          if( algorithmStr.equalsIgnoreCase( TimeBasedOTP.HMAC_SHA512 ))
             algorithm = TimeBasedOTP.HMAC_SHA512;
       }
-      
-      additionalRoles = (String) options.get(ADDITIONAL_ROLES); 
+
+      additionalRoles = (String) options.get(ADDITIONAL_ROLES);
    }
 
    /**
@@ -191,14 +191,14 @@ public class JBossTimeBasedOTPLoginModule implements LoginModule
    public boolean login() throws LoginException
    {
       String username;
-       
+
 
       if(useFirstPass)
       {
-         username = (String) lmSharedState.get("javax.security.auth.login.name");  
+         username = (String) lmSharedState.get("javax.security.auth.login.name");
       }
       else
-      { 
+      {
          NameCallback nc = new NameCallback(PicketBoxMessages.MESSAGES.enterUsernameMessage(), "guest");
          Callback[] callbacks = { nc };
          try
@@ -210,15 +210,15 @@ public class JBossTimeBasedOTPLoginModule implements LoginModule
             LoginException le = new LoginException();
             le.initCause(e);
             throw le;
-         } 
+         }
 
          username = nc.getName();
       }
-      
+
       //Load the otp-users.properties file
       ClassLoader tcl = SecurityActions.getContextClassLoader();
       InputStream is = null;
-      
+
       Properties otp = new Properties();
       try
       {
@@ -235,7 +235,7 @@ public class JBossTimeBasedOTPLoginModule implements LoginModule
       {
     	  safeClose(is);
       }
-      
+
       String seed = otp.getProperty( username );
 
       String submittedTOTP = this.getTimeBasedOTPFromRequest();
@@ -243,49 +243,49 @@ public class JBossTimeBasedOTPLoginModule implements LoginModule
       {
          throw new LoginException();
       }
-  
+
       try
       {
          boolean result =  false;
-         
+
          if( algorithm.equals( TimeBasedOTP.HMAC_SHA1 ))
          {
-            result =  TimeBasedOTPUtil.validate( submittedTOTP, seed.getBytes() , NUMBER_OF_DIGITS ); 
+            result =  TimeBasedOTPUtil.validate( submittedTOTP, seed.getBytes() , NUMBER_OF_DIGITS );
          }
          else if( algorithm.equals( TimeBasedOTP.HMAC_SHA256 ))
          {
-            result =  TimeBasedOTPUtil.validate256( submittedTOTP, seed.getBytes() , NUMBER_OF_DIGITS ); 
+            result =  TimeBasedOTPUtil.validate256( submittedTOTP, seed.getBytes() , NUMBER_OF_DIGITS );
          }
          else if( algorithm.equals( TimeBasedOTP.HMAC_SHA512 ))
          {
-            result =  TimeBasedOTPUtil.validate512( submittedTOTP, seed.getBytes() , NUMBER_OF_DIGITS ); 
+            result =  TimeBasedOTPUtil.validate512( submittedTOTP, seed.getBytes() , NUMBER_OF_DIGITS );
          }
-         
+
          if(!result)
             throw new LoginException();
-         
+
          //add in roles if needed
-         Set<Group> groupPrincipals  = subject.getPrincipals( Group.class );
+         Set<GroupPrincipal> groupPrincipals  = subject.getPrincipals( GroupPrincipal.class );
          if( groupPrincipals != null && groupPrincipals.size() > 0 )
          {
             appendRoles( groupPrincipals.iterator().next() );
          }
-         
-         return result; 
+
+         return result;
       }
       catch (GeneralSecurityException e)
       {
          LoginException le = new LoginException();
          le.initCause(e);
          throw le;
-      } 
+      }
    }
 
    /**
     * @see {@code LoginModule#commit()}
     */
    public boolean commit() throws LoginException
-   { 
+   {
       return true;
    }
 
@@ -293,7 +293,7 @@ public class JBossTimeBasedOTPLoginModule implements LoginModule
     * @see {@code LoginModule#abort()}
     */
    public boolean abort() throws LoginException
-   { 
+   {
       return true;
    }
 
@@ -301,15 +301,15 @@ public class JBossTimeBasedOTPLoginModule implements LoginModule
     * @see {@code LoginModule#logout()}
     */
    public boolean logout() throws LoginException
-   { 
+   {
       return true;
-   } 
+   }
 
    private String getTimeBasedOTPFromRequest()
    {
       String totp = null;
 
-      //This is JBoss AS specific mechanism 
+      //This is JBoss AS specific mechanism
       String WEB_REQUEST_KEY = "javax.servlet.http.HttpServletRequest";
 
       try
@@ -321,20 +321,20 @@ public class JBossTimeBasedOTPLoginModule implements LoginModule
       {
          PicketBoxLogger.LOGGER.debugErrorGettingRequestFromPolicyContext(e);
       }
-      return totp; 
+      return totp;
    }
-   
-   private void appendRoles( Group group )
+
+   private void appendRoles( GroupPrincipal group )
    {
       if( ! group.getName().equals( SecurityConstants.ROLES_IDENTIFIER ) )
         return;
-        
+
       if(additionalRoles != null && !additionalRoles.isEmpty())
-      {   
+      {
          StringTokenizer st = new StringTokenizer( additionalRoles , "," );
          while(st.hasMoreTokens())
          {
-            group.addMember( new SimplePrincipal( st.nextToken().trim() ) ); 
+            group.addMember( new SimplePrincipal( st.nextToken().trim() ) );
          }
       }
    }

@@ -24,18 +24,18 @@ package org.picketbox.datasource.security;
 import java.security.AccessController;
 import java.security.Principal;
 import java.security.PrivilegedAction;
-import java.security.acl.Group;
+import org.apache.cxf.common.security.GroupPrincipal;
 import java.util.Iterator;
 import java.util.Set;
 
 import javax.resource.spi.security.PasswordCredential;
 import javax.security.auth.Subject;
 
-import org.jboss.security.SimpleGroup;
+import org.apache.cxf.common.security.SimpleGroup;
 
 /**
  * Common package privileged actions.
- * 
+ *
  * @author Scott.Stark@jboss.org
  * @version $Revision: 71545 $
  */
@@ -142,24 +142,24 @@ class SubjectActions
       }
       else
       {
-         AddRolesActions.NON_PRIVILEGED.addRoles(subject, runAsRoles);         
+         AddRolesActions.NON_PRIVILEGED.addRoles(subject, runAsRoles);
       }
    }
 
-   private static Group addSubjectRoles(Subject theSubject, Set<Principal> roles)
+   private static GroupPrincipal addSubjectRoles(Subject theSubject, Set<Principal> roles)
    {
-      Set<Group> subjectGroups = theSubject.getPrincipals(Group.class);
-      Iterator<Group> iter = subjectGroups.iterator();
-      Group roleGrp = null;
+      Set<GroupPrincipal> subjectGroups = theSubject.getPrincipals(GroupPrincipal.class);
+      Iterator<GroupPrincipal> iter = subjectGroups.iterator();
+      GroupPrincipal roleGrp = null;
       while (iter.hasNext())
       {
-         Group grp = iter.next();
+         GroupPrincipal grp = iter.next();
          String name = grp.getName();
          if (name.equals("Roles"))
             roleGrp = grp;
       }
 
-      // Create the Roles group if it was not found
+      // Create the Roles GroupPrincipal if it was not found
       if (roleGrp == null)
       {
          roleGrp = new SimpleGroup("Roles");

@@ -31,7 +31,10 @@ import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 import java.lang.reflect.Constructor;
 import java.security.Principal;
-import java.security.acl.Group;
+import org.apache.cxf.common.security.GroupPrincipal;
+import org.apache.cxf.common.security.SimpleGroup;
+import org.apache.cxf.common.security.SimplePrincipal;
+
 import java.util.*;
 
 /**
@@ -76,18 +79,18 @@ public abstract class AbstractServerLoginModule implements LoginModule
    private static final String PRINCIPAL_CLASS_MODULE = "principalClassModule";
    private static final String UNAUTHENTICATED_IDENTITY = "unauthenticatedIdentity";
    private static final String MODULE = "module";
-  
+
    private static final String[] ALL_VALID_OPTIONS =
    {
 	   PASSWORD_STACKING,PRINCIPAL_CLASS,PRINCIPAL_CLASS_MODULE,UNAUTHENTICATED_IDENTITY,MODULE,
 	   SecurityConstants.SECURITY_DOMAIN_OPTION
    };
-   
+
    private HashSet<String> validOptions;
-   
+
    protected Subject subject;
-   protected CallbackHandler callbackHandler; 
-   protected Map sharedState; 
+   protected CallbackHandler callbackHandler;
+   protected Map sharedState;
    protected Map options;
 
    /** Flag indicating if the shared credential should be used */
@@ -121,7 +124,7 @@ public abstract class AbstractServerLoginModule implements LoginModule
     *   taking a String argument for the princpal name.
     * @option unauthenticatedIdentity: the name of the principal to asssign
     * and authenticate when a null username and password are seen.
-    * 
+    *
     * @param subject the Subject to update after a successful login.
     * @param callbackHandler the CallbackHandler that will be used to obtain the
     *    the user identity and credentials.
@@ -144,7 +147,7 @@ public abstract class AbstractServerLoginModule implements LoginModule
     	  // otherwise, add our own and check all options against the "valid" list
          addValidOptions(ALL_VALID_OPTIONS);
          checkOptions();
-      }      
+      }
       /* Check for password sharing options. Any non-null value for
          password_stacking sets useFirstPass as this module has no way to
          validate any shared password.
@@ -213,11 +216,11 @@ public abstract class AbstractServerLoginModule implements LoginModule
    /** Method to commit the authentication process (phase 2). If the login
     method completed successfully as indicated by loginOk == true, this
     method adds the getIdentity() value to the subject getPrincipals() Set.
-    It also adds the members of each Group returned by getRoleSets()
+    It also adds the members of each GroupPrincipal returned by getRoleSets()
     to the subject getPrincipals() Set.
-    
+
     @see javax.security.auth.Subject;
-    @see java.security.acl.Group;
+    @see org.apache.cxf.common.security.GroupPrincipal;
     @return true always.
     */
    public boolean commit() throws LoginException
@@ -230,12 +233,12 @@ public abstract class AbstractServerLoginModule implements LoginModule
       Principal identity = getIdentity();
       principals.add(identity);
       // add role groups returned by getRoleSets.
-      Group[] roleSets = getRoleSets();
+      GroupPrincipal[ ] roleSets = getRoleSets();
       for(int g = 0; g < roleSets.length; g ++)
       {
-         Group group = roleSets[g];
+         GroupPrincipal group = roleSets[g];
          String name = group.getName();
-         Group subjectGroup = createGroup(name, principals);
+         GroupPrincipal subjectGroup = createGroup(name, principals);
          if( subjectGroup instanceof NestableGroup )
          {
             /* A NestableGroup only allows Groups to be added to it so we
@@ -245,7 +248,7 @@ public abstract class AbstractServerLoginModule implements LoginModule
             subjectGroup.addMember(tmp);
             subjectGroup = tmp;
          }
-         // Copy the group members to the Subject group
+         // Copy the GroupPrincipal members to the Subject group
          Enumeration<? extends Principal> members = group.members();
          while( members.hasMoreElements() )
          {
@@ -253,8 +256,8 @@ public abstract class AbstractServerLoginModule implements LoginModule
             subjectGroup.addMember(role);
          }
       }
-       // add the CallerPrincipal group if none has been added in getRoleSets
-       Group callerGroup = getCallerPrincipalGroup(principals);
+       // add the CallerPrincipal GroupPrincipal if none has been added in getRoleSets
+       GroupPrincipal callerGroup = getCallerPrincipalGroup(principals);
        if (callerGroup == null)
        {
            callerGroup = new SimpleGroup(SecurityConstants.CALLER_PRINCIPAL_GROUP);
@@ -272,7 +275,7 @@ public abstract class AbstractServerLoginModule implements LoginModule
       PicketBoxLogger.LOGGER.traceBeginAbort(loginOk);
       return loginOk;
    }
-   
+
    /** Remove the user identity and roles added to the Subject during commit.
     @return true always.
     */
@@ -283,29 +286,29 @@ public abstract class AbstractServerLoginModule implements LoginModule
       Principal identity = getIdentity();
       Set<Principal> principals = subject.getPrincipals();
       principals.remove(identity);
-      Group callerGroup = getCallerPrincipalGroup(principals);
+      GroupPrincipal callerGroup = getCallerPrincipalGroup(principals);
       if (callerGroup != null)
          principals.remove(callerGroup);
       // Remove any added Groups...
       return true;
    }
    //--- End LoginModule interface methods
-   
+
    // --- Protected methods
-   
+
    /** Overriden by subclasses to return the Principal that corresponds to
     the user primary identity.
     */
    abstract protected Principal getIdentity();
    /** Overriden by subclasses to return the Groups that correspond to the
     to the role sets assigned to the user. Subclasses should create at
-    least a Group named "Roles" that contains the roles assigned to the user.
-    A second common group is "CallerPrincipal" that provides the application
+    least a GroupPrincipal named "Roles" that contains the roles assigned to the user.
+    A second common GroupPrincipal is "CallerPrincipal" that provides the application
     identity of the user rather than the security domain identity.
-    @return Group[] containing the sets of roles
+    @return GroupPrincipal[ ] containing the sets of roles
     */
-   abstract protected Group[] getRoleSets() throws LoginException;
-   
+   abstract protected GroupPrincipal[ ] getRoleSets() throws LoginException;
+
    protected boolean getUseFirstPass()
    {
       return useFirstPass;
@@ -315,27 +318,27 @@ public abstract class AbstractServerLoginModule implements LoginModule
       return unauthenticatedIdentity;
    }
 
-   /** Find or create a Group with the given name. Subclasses should use this
-    method to locate the 'Roles' group or create additional types of groups.
-    @return A named Group from the principals set.
+   /** Find or create a GroupPrincipal with the given name. Subclasses should use this
+    method to locate the 'Roles' GroupPrincipal or create additional types of groups.
+    @return A named GroupPrincipal from the principals set.
     */
-   protected Group createGroup(String name, Set<Principal> principals)
+   protected GroupPrincipal createGroup(String name, Set<Principal> principals)
    {
-      Group roles = null;
+      GroupPrincipal roles = null;
       Iterator<Principal> iter = principals.iterator();
       while( iter.hasNext() )
       {
          Object next = iter.next();
-         if( (next instanceof Group) == false )
+         if( (next instanceof GroupPrincipal) == false )
             continue;
-         Group grp = (Group) next;
+         GroupPrincipal grp = (GroupPrincipal) next;
          if( grp.getName().equals(name) )
          {
             roles = grp;
             break;
          }
       }
-      // If we did not find a group create one
+      // If we did not find a GroupPrincipal create one
       if( roles == null )
       {
          roles = new SimpleGroup(name);
@@ -352,7 +355,7 @@ public abstract class AbstractServerLoginModule implements LoginModule
     * @param username the name of the principal
     * @return the principal instance
     * @throws java.lang.Exception thrown if the custom principal type cannot be created.
-    */ 
+    */
    @SuppressWarnings("unchecked")
    protected Principal createIdentity(String username)
       throws Exception
@@ -372,15 +375,15 @@ public abstract class AbstractServerLoginModule implements LoginModule
       }
       return p;
    }
-   
-   protected Group getCallerPrincipalGroup(Set<Principal> principals)
+
+   protected GroupPrincipal getCallerPrincipalGroup(Set<Principal> principals)
    {
-      Group callerGroup = null;
+      GroupPrincipal callerGroup = null;
       for (Principal principal : principals)
       {
-         if (principal instanceof Group)
+         if (principal instanceof GroupPrincipal)
          {
-            Group group = Group.class.cast(principal);
+            GroupPrincipal group = GroupPrincipal.class.cast(principal);
             if (group.getName().equals(SecurityConstants.CALLER_PRINCIPAL_GROUP))
             {
                callerGroup = group;
@@ -394,7 +397,7 @@ public abstract class AbstractServerLoginModule implements LoginModule
    /**
     * Each subclass should call this from within their initialize method BEFORE calling super.initialize()
     * The base class will then check the options
-    * 
+    *
     * @param moduleValidOptions : the list of options the subclass supports
     */
    protected void addValidOptions(final String[] moduleValidOptions)
@@ -405,7 +408,7 @@ public abstract class AbstractServerLoginModule implements LoginModule
       }
      validOptions.addAll(Arrays.asList(moduleValidOptions));
    }
-   
+
    /**
     * checks the collected valid options against the options passed in
     * Override when there are special needs like for the SimpleUsersLoginModule

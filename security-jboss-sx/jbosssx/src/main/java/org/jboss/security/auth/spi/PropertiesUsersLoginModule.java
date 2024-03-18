@@ -22,7 +22,7 @@
 package org.jboss.security.auth.spi;
 
 import java.io.IOException;
-import java.security.acl.Group;
+import org.apache.cxf.common.security.GroupPrincipal;
 import java.util.Map;
 import java.util.Properties;
 
@@ -38,9 +38,9 @@ public class PropertiesUsersLoginModule extends UsersRolesLoginModule
 {
 
    @Override
-   protected Group[] getRoleSets() throws LoginException
+   protected GroupPrincipal[ ] getRoleSets() throws LoginException
    {
-      return new Group[0];
+      return new GroupPrincipal[ 0];
    }
 
    @Override

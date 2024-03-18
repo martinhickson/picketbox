@@ -29,7 +29,7 @@ import javax.naming.ldap.LdapName;
 import javax.naming.ldap.Rdn;
 
 import org.jboss.security.CertificatePrincipal;
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimplePrincipal;
 
 /** A CertificatePrincipal implementation that uses the client cert
  * SubjectDN CN='...' element as the principal.

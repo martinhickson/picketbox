@@ -34,7 +34,7 @@ import javax.security.auth.message.MessagePolicy;
 import javax.security.auth.message.module.ClientAuthModule;
 
 import org.jboss.security.PicketBoxMessages;
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimplePrincipal;
 
 /**
  *  A simple implementation of an username/password based 

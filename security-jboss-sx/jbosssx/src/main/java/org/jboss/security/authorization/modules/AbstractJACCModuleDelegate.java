@@ -28,7 +28,7 @@ import java.util.Set;
 
 import javax.security.auth.Subject;
 
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimplePrincipal;
 import org.jboss.security.authorization.Resource;
 import org.jboss.security.identity.Role;
 import org.jboss.security.identity.RoleGroup;

@@ -22,7 +22,7 @@
 package org.jboss.security.auth.spi;
 
 import java.io.IOException;
-import java.security.acl.Group;
+import org.apache.cxf.common.security.GroupPrincipal;
 import java.util.Map;
 import java.util.Properties;
 
@@ -66,7 +66,7 @@ public class CertRolesLoginModule extends BaseCertLoginModule
     * The roles.properties mappings
     */
    private Properties roles;
-   /** The character used to seperate the role group name from the username
+   /** The character used to seperate the role GroupPrincipal name from the username
     * e.g., '.' in jduke.CallerPrincipal=...
     */
    private char roleGroupSeperator = '.'; 
@@ -77,7 +77,7 @@ public class CertRolesLoginModule extends BaseCertLoginModule
     * @param options - the login module option map. Supported options include:
     rolesProperties: The name of the properties resource containing user/roles
       the default is "roles.properties".
-    roleGroupSeperator: The character used to seperate the role group name from
+    roleGroupSeperator: The character used to seperate the role GroupPrincipal name from
       the username e.g., '.' in jduke.CallerPrincipal=... . The default = '.'.
   
     defaultRolesProperties=string: The name of the properties resource containing
@@ -133,10 +133,10 @@ public class CertRolesLoginModule extends BaseCertLoginModule
     * This method is pretty much straight from the UsersRolesLoginModule.
     * @see org.jboss.security.auth.spi.UsersRolesLoginModule#getRoleSets
     */
-   protected Group[] getRoleSets() throws LoginException
+   protected GroupPrincipal[ ] getRoleSets() throws LoginException
    {
       String targetUser = getUsername();
-      Group[] roleSets = Util.getRoleSets(targetUser, roles, roleGroupSeperator, this);
+      GroupPrincipal[ ] roleSets = Util.getRoleSets(targetUser, roles, roleGroupSeperator, this);
       return roleSets;
    }
 

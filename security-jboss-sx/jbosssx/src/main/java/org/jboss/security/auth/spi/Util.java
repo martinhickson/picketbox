@@ -31,7 +31,7 @@ import java.net.URLClassLoader;
 import java.security.MessageDigest;
 import java.security.Principal;
 import java.security.PrivilegedActionException;
-import java.security.acl.Group;
+import org.apache.cxf.common.security.GroupPrincipal;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Properties;
@@ -44,11 +44,11 @@ import org.jboss.security.Base64Encoder;
 import org.jboss.security.Base64Utils;
 import org.jboss.security.PicketBoxLogger;
 import org.jboss.security.PicketBoxMessages;
-import org.jboss.security.SimpleGroup;
+import org.apache.cxf.common.security.SimpleGroup;
 
 /**
  * Common login module utility methods
- * 
+ *
  * @author Scott.Stark@jboss.org
  * @version $Revision$
  */
@@ -62,24 +62,24 @@ public class Util
     */
    private static char[] MD5_HEX = "0123456789abcdef".toCharArray();
 
-   
-   
+
+
    /** Create the set of roles the user belongs to by parsing the roles.properties
     data for username=role1,role2,... and username.XXX=role1,role2,...
     patterns.
-    * 
+    *
     * @param targetUser - the username to obtain roles for
     * @param roles - the Properties containing the user=roles mappings
     * @param roleGroupSeperator - the character that seperates a username
-    *    from a group name, e.g., targetUser[.GroupName]=roles
+    *    from a GroupPrincipal name, e.g., targetUser[.GroupName]=roles
     * @param aslm - the login module to use for Principal creation
-    * @return Group[] containing the sets of roles
-    */ 
-   static Group[] getRoleSets(String targetUser, Properties roles, char roleGroupSeperator, AbstractServerLoginModule aslm)
+    * @return GroupPrincipal[ ] containing the sets of roles
+    */
+   static GroupPrincipal[ ] getRoleSets(String targetUser, Properties roles, char roleGroupSeperator, AbstractServerLoginModule aslm)
    {
       Enumeration<?> users = roles.propertyNames();
       SimpleGroup rolesGroup = new SimpleGroup("Roles");
-      ArrayList<Group> groups = new ArrayList<Group>();
+      ArrayList<GroupPrincipal> groups = new ArrayList<GroupPrincipal>();
       groups.add(rolesGroup);
       while (users.hasMoreElements() && targetUser != null)
       {
@@ -120,17 +120,17 @@ public class Util
             parseGroupMembers(rolesGroup, value, aslm);
          }
       }
-      Group[] roleSets = new Group[groups.size()];
+      GroupPrincipal[ ] roleSets = new GroupPrincipal[ groups.size()];
       groups.toArray(roleSets);
       return roleSets;
    }
 
    /** Execute the rolesQuery against the dsJndiName to obtain the roles for
     the authenticated user.
-     
-    @return Group[] containing the sets of roles
+
+    @return GroupPrincipal[ ] containing the sets of roles
     */
-   static Group[] getRoleSets(String username, String dsJndiName, String txManagerJndiName,
+   static GroupPrincipal[ ] getRoleSets(String username, String dsJndiName, String txManagerJndiName,
       String rolesQuery, AbstractServerLoginModule aslm)
       throws LoginException
    {
@@ -139,10 +139,10 @@ public class Util
 
    /** Execute the rolesQuery against the dsJndiName to obtain the roles for
     the authenticated user.
-     
-    @return Group[] containing the sets of roles
+
+    @return GroupPrincipal[ ] containing the sets of roles
     */
-   static Group[] getRoleSets(String username, String dsJndiName, String txManagerJndiName,
+   static GroupPrincipal[ ] getRoleSets(String username, String dsJndiName, String txManagerJndiName,
       String rolesQuery, AbstractServerLoginModule aslm, boolean suspendResume)
       throws LoginException
    {
@@ -162,7 +162,7 @@ public class Util
     * @param propertiesName - the name of the properties file resource
     * @return the loaded properties file if found
     * @exception java.io.IOException thrown if the properties file cannot be found
-    *    or loaded 
+    *    or loaded
     */
    static Properties loadProperties(String defaultsName, String propertiesName)
       throws IOException
@@ -261,7 +261,7 @@ public class Util
     * @param propertiesName - the name of the properties file resource
     * @return the loaded properties file if found
     * @exception java.io.IOException thrown if the properties file cannot be found
-    *    or loaded 
+    *    or loaded
     */
    static Properties loadProperties(String propertiesName) throws IOException
    {
@@ -342,11 +342,11 @@ public class Util
     * the createIdentity method.
     *
     * @see AbstractServerLoginModule#createIdentity(String)
-    * 
-    * @param group - the Group to add the roles to.
+    *
+    * @param GroupPrincipal - the GroupPrincipal to add the roles to.
     * @param roles - the comma delimited role names.
-    */ 
-   static void parseGroupMembers(Group group, String roles, AbstractServerLoginModule aslm)
+    */
+   static void parseGroupMembers(GroupPrincipal group, String roles, AbstractServerLoginModule aslm)
    {
       StringTokenizer tokenizer = new StringTokenizer(roles, ",");
       while (tokenizer.hasMoreTokens())
@@ -363,7 +363,7 @@ public class Util
          }
       }
    }
-   
+
    /**
     * Calculate a password hash using a MessageDigest.
     *
@@ -399,7 +399,7 @@ public class Util
      *    to occur. The preDigest method is called before the password is added
      *    and the postDigest method is called after the password has been added.
      * @return the hashed string if successful, null if there is a digest exception
-     */ 
+     */
     public static String createPasswordHash(String hashAlgorithm, String hashEncoding,
        String hashCharset, String username, String password, DigestCallback callback)
     {
@@ -453,7 +453,7 @@ public class Util
        }
        return passwordHash;
     }
-    
+
     /**
     3.1.3 Representation of digest values
 
@@ -468,7 +468,7 @@ public class Util
     familiar hexadecimal notation from the characters 0123456789abcdef. That is,
     binary 0000 getInfos represented by the character '0', 0001, by '1', and so
     on up to the representation of 1111 as 'f'.
-    
+
     @param data - the raw MD5 hash data
     @return the encoded MD5 representation
     */
@@ -483,8 +483,8 @@ public class Util
          hash[i * 2 + 1] = MD5_HEX[j];
       }
       return new String(hash);
-   } 
-   
+   }
+
     /**
      * Hex encoding of hashes, as used by Catalina. Each byte is converted to
      * the corresponding two hex characters.
@@ -530,20 +530,20 @@ public class Util
        }
        return base64;
     }
-    
+
     // These functions assume that the byte array has MSB at 0, LSB at end.
     // Reverse the byte array (not the String) if this is not the case.
     // All base64 strings are in natural order, least significant digit last.
     public static String tob64(byte[] buffer)
     {
-       return Base64Utils.tob64(buffer);  
+       return Base64Utils.tob64(buffer);
     }
 
     public static byte[] fromb64(String str) throws NumberFormatException
     {
-       return Base64Utils.fromb64(str); 
+       return Base64Utils.fromb64(str);
     }
-    
+
     private static void safeClose(InputStream fis)
     {
        try

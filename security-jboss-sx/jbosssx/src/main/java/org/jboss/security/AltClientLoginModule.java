@@ -37,6 +37,8 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 
+import org.apache.cxf.common.security.SimplePrincipal;
+
 /** A simple implementation of LoginModule for use by JBoss clients for
  the establishment of the caller identity and credentials. This simply sets
  the SecurityAssociation principal to the value of the NameCallback
@@ -58,7 +60,7 @@ import javax.security.auth.spi.LoginModule;
  prior to this one to establish a valid username and password that should be passed
  to JBoss.
  </ul>
- 
+
  @author Scott.Stark@jboss.org
  @version $Revision$
  */
@@ -72,7 +74,7 @@ public class AltClientLoginModule implements LoginModule
    private static final String[] ALL_VALID_OPTIONS =
    {
       MULTI_TREADED,PASSWORD_STACKING,PRINCIPAL_CLASS,
-      
+
       SecurityConstants.SECURITY_DOMAIN_OPTION
    };
 
@@ -114,13 +116,13 @@ public class AltClientLoginModule implements LoginModule
       // Check for multi-threaded option
       String mt = (String) options.get(MULTI_TREADED);
       if( Boolean.valueOf(mt).booleanValue() == true )
-      { 
+      {
 	 /* Turn on the server mode which uses thread local storage for
 	    the principal information.
          */
          PicketBoxLogger.LOGGER.debugModuleOption(MULTI_TREADED, mt);
       }
-      
+
         /* Check for password sharing options. Any non-null value for
             password_stacking sets useFirstPass as this module has no way to
             validate any shared password.
@@ -154,7 +156,7 @@ public class AltClientLoginModule implements LoginModule
       try
       {
          char[] tmpPassword;
-         
+
          callbackHandler.handle(callbacks);
          username = nc.getName();
          tmpPassword = pc.getPassword();
@@ -186,7 +188,7 @@ public class AltClientLoginModule implements LoginModule
     * username obtained from the callback handler is used to build the
     * SimplePrincipal. Both may be overriden if the resulting authenticated
     * Subject principals set it not empty.
-    * 
+    *
     */
    public boolean commit() throws LoginException
    {

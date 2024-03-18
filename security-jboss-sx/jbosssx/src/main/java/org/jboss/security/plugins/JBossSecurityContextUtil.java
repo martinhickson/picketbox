@@ -26,7 +26,7 @@ import static org.jboss.security.SecurityConstants.ROLES_IDENTIFIER;
 import static org.jboss.security.SecurityConstants.RUNAS_IDENTITY_IDENTIFIER;
 
 import java.security.Principal;
-import java.security.acl.Group;
+import org.apache.cxf.common.security.GroupPrincipal;
 import java.util.Map;
 
 import javax.security.auth.Subject;
@@ -46,20 +46,20 @@ import org.jboss.security.identity.extensions.CredentialIdentity;
 /**
  *  Utility class for JBossSecurityContext implementation
  *  @author <a href="mailto:Anil.Saldhana@jboss.org">Anil Saldhana</a>
- *  @since  Jan 5, 2007 
+ *  @since  Jan 5, 2007
  *  @version $Revision$
  */
 public class JBossSecurityContextUtil extends SecurityContextUtil
-{  
+{
    public JBossSecurityContextUtil(SecurityContext sc)
    {
       this.securityContext = sc;
    }
-   
+
    @SuppressWarnings("unchecked")
    @Override
    public <T> T get(String key)
-   { 
+   {
       validateSecurityContext();
       if(RUNAS_IDENTITY_IDENTIFIER.equals(key))
          return (T)securityContext.getOutgoingRunAs();
@@ -69,16 +69,16 @@ public class JBossSecurityContextUtil extends SecurityContextUtil
 
    @Override
    public String getUserName()
-   {  
+   {
       Principal p = getUserPrincipal();
       return p != null ? p.getName() : null;
    }
 
    @Override
    public Principal getUserPrincipal()
-   {  
-      validateSecurityContext(); 
-      Principal p = null; 
+   {
+      validateSecurityContext();
+      Principal p = null;
       SubjectInfo subjectInfo = this.securityContext.getSubjectInfo();
       if(subjectInfo != null)
       {
@@ -87,10 +87,10 @@ public class JBossSecurityContextUtil extends SecurityContextUtil
       }
       return p;
    }
-   
+
    public Object getCredential()
    {
-      validateSecurityContext(); 
+      validateSecurityContext();
       Object cred = null;
       SubjectInfo subjectInfo = this.securityContext.getSubjectInfo();
       if(subjectInfo != null)
@@ -98,12 +98,12 @@ public class JBossSecurityContextUtil extends SecurityContextUtil
          CredentialIdentity<?> cIdentity = subjectInfo.getIdentity(CredentialIdentity.class);
          cred = cIdentity != null ? cIdentity.getCredential(): null;
       }
-      return cred; 
+      return cred;
    }
-   
+
    public Subject getSubject()
    {
-      validateSecurityContext(); 
+      validateSecurityContext();
       Subject s = null;
       SubjectInfo subjectInfo = this.securityContext.getSubjectInfo();
       if(subjectInfo != null)
@@ -115,7 +115,7 @@ public class JBossSecurityContextUtil extends SecurityContextUtil
 
    @Override
    public <T> void set(String key, T obj)
-   {   
+   {
       validateSecurityContext();
       if(key == null)
          throw PicketBoxMessages.MESSAGES.invalidNullArgument("key");
@@ -123,78 +123,78 @@ public class JBossSecurityContextUtil extends SecurityContextUtil
       {
          if(RUNAS_IDENTITY_IDENTIFIER.equals(key) && obj instanceof RunAsIdentity == false)
             throw PicketBoxMessages.MESSAGES.invalidType(RunAsIdentity.class.getName());
-         if(ROLES_IDENTIFIER.equals(key) &&  obj instanceof Group == false)
-            throw PicketBoxMessages.MESSAGES.invalidType(Group.class.getName());
+         if(ROLES_IDENTIFIER.equals(key) &&  obj instanceof GroupPrincipal == false)
+            throw PicketBoxMessages.MESSAGES.invalidType(GroupPrincipal.class.getName());
       }
       if(RUNAS_IDENTITY_IDENTIFIER.equals(key))
          setRunAsIdentity( (RunAsIdentity) obj);
       else
          securityContext.getData().put(key, obj);
-   } 
+   }
 
    @SuppressWarnings("unchecked")
    @Override
    public <T> T remove(String key)
-   { 
+   {
       if(key == null)
          throw PicketBoxMessages.MESSAGES.invalidNullArgument("key");
       Map<String,Object> contextMap = securityContext.getData();
       if(RUNAS_IDENTITY_IDENTIFIER.equals(key))
       {
          RunAs runAs = securityContext.getOutgoingRunAs();
-         //Move the caller RAI to current RAI 
+         //Move the caller RAI to current RAI
          securityContext.setOutgoingRunAs((RunAs) contextMap.get(CALLER_RAI_IDENTIFIER));
-         
+
          //Clear the Caller RAI
-         contextMap.remove(CALLER_RAI_IDENTIFIER); 
+         contextMap.remove(CALLER_RAI_IDENTIFIER);
          return (T) runAs;
       }
       return (T) contextMap.remove(key);
-   } 
+   }
 
    @Override
    public void setRoles(RoleGroup roles)
    {
-      validateSecurityContext(); 
-      securityContext.getSubjectInfo().setRoles(roles);  
+      validateSecurityContext();
+      securityContext.getSubjectInfo().setRoles(roles);
    }
 
-   
+
    @Override
    public void setSecurityIdentity(SecurityIdentity sidentity)
    {
       createSubjectInfo(sidentity.getPrincipal(), sidentity.getCredential(),
-            sidentity.getSubject());  
+            sidentity.getSubject());
       securityContext.setOutgoingRunAs(sidentity.getOutgoingRunAs());
-      securityContext.setIncomingRunAs(sidentity.getIncomingRunAs()); 
+      securityContext.setIncomingRunAs(sidentity.getIncomingRunAs());
    }
 
    @Override
    public SecurityIdentity getSecurityIdentity()
    {
-      return new SecurityIdentity(securityContext.getSubjectInfo(), 
+      return new SecurityIdentity(securityContext.getSubjectInfo(),
             securityContext.getOutgoingRunAs(), securityContext.getIncomingRunAs());
    }
-   
-   
-   //PRIVATE METHODS 
+
+
+   //PRIVATE METHODS
    private void setRunAsIdentity(RunAsIdentity rai)
    {
       Map<String,Object> contextMap = securityContext.getData();
-      
+
       //Move the current RAI on the sc into the caller rai
-      RunAs currentRA = securityContext.getOutgoingRunAs(); 
+      RunAs currentRA = securityContext.getOutgoingRunAs();
       contextMap.put(CALLER_RAI_IDENTIFIER, currentRA);
-      
-      securityContext.setOutgoingRunAs(rai); 
+
+      securityContext.setOutgoingRunAs(rai);
    }
-   
-   
+
+
    @Override
    public RoleGroup getRoles()
    {
       validateSecurityContext();
-      return securityContext.getSubjectInfo().getRoles(); 
+      return securityContext.getSubjectInfo().getRoles();
    }
 
    // Private Methods

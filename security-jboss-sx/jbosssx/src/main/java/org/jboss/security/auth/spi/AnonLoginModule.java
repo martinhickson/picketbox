@@ -21,11 +21,10 @@
 */
 package org.jboss.security.auth.spi;
 
-import java.security.acl.Group;
+import org.apache.cxf.common.security.GroupPrincipal;
+import org.apache.cxf.common.security.SimpleGroup;
 
 import javax.security.auth.login.LoginException;
-
-import org.jboss.security.SimpleGroup;
 
 /**
  * A simple login module that simply allows for the specification of the
@@ -40,10 +39,10 @@ public class AnonLoginModule extends UsernamePasswordLoginModule
     * Override to return an empty Roles set.
     * @return an array comtaning an empty 'Roles' Group.
     */
-   protected Group[] getRoleSets() throws LoginException
+   protected GroupPrincipal[ ] getRoleSets() throws LoginException
    {
       SimpleGroup roles = new SimpleGroup("Roles");
-      Group[] roleSets = {roles};
+      GroupPrincipal[ ] roleSets = {roles};
       return roleSets;
    }
 
