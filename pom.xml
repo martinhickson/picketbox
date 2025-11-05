@@ -2,7 +2,7 @@
     <parent>
         <groupId>org.jboss</groupId>
         <artifactId>jboss-parent</artifactId>
-        <version>24</version>
+        <version>5.0.3.jakarta.bravura.1</version>
         <relativePath />
     </parent>
 
@@ -26,7 +26,7 @@
         <connection>scm:git:git@github.com:picketbox/picketbox.git</connection>
         <developerConnection>scm:git:git@github.com:picketbox/picketbox.git</developerConnection>
         <url>https://github.com/picketbox/picketbox</url>
-      <tag>5.0.3.Beta1</tag>
+      <tag>5.0.3.jakarta.bravura.1</tag>
   </scm>
 
     <modules>
@@ -146,84 +146,84 @@
             <dependency>
                 <groupId>org.picketbox</groupId>
                 <artifactId>acl-spi</artifactId>
-                <version>${project.version}</version>
+                <version>5.0.3.jakarta.bravura.1</version>
             </dependency>
             <dependency>
                 <groupId>org.picketbox</groupId>
                 <artifactId>authorization-spi</artifactId>
-                <version>${project.version}</version>
+                <version>5.0.3.jakarta.bravura.1</version>
             </dependency>
             <dependency>
                 <groupId>org.picketbox</groupId>
                 <artifactId>common-spi</artifactId>
-                <version>${project.version}</version>
+                <version>5.0.3.jakarta.bravura.1</version>
             </dependency>
             <dependency>
                 <groupId>org.picketbox</groupId>
                 <artifactId>identity-spi</artifactId>
-                <version>${project.version}</version>
+                <version>5.0.3.jakarta.bravura.1</version>
             </dependency>
             <dependency>
                 <groupId>org.picketbox</groupId>
                 <artifactId>jboss-security-spi</artifactId>
-                <version>${project.version}</version>
+                <version>5.0.3.jakarta.bravura.1</version>
             </dependency>
             <dependency>
                 <groupId>org.picketbox</groupId>
                 <artifactId>jbosssx</artifactId>
-                <version>${project.version}</version>
+                <version>5.0.3.jakarta.bravura.1</version>
             </dependency>
             <dependency>
                 <groupId>org.picketbox</groupId>
                 <artifactId>jbosssx-bare</artifactId>
-                <version>${project.version}</version>
+                <version>5.0.3.jakarta.bravura.1</version>
             </dependency>
             <dependency>
                 <groupId>org.picketbox</groupId>
                 <artifactId>jbosssx-client</artifactId>
-                <version>${project.version}</version>
+                <version>5.0.3.jakarta.bravura.1</version>
             </dependency>
             <dependency>
                 <groupId>org.picketbox</groupId>
                 <artifactId>jbosssx-pom</artifactId>
                 <type>pom</type>
-                <version>${project.version}</version>
+                <version>5.0.3.jakarta.bravura.1</version>
             </dependency>
             <dependency>
                 <groupId>org.picketbox</groupId>
                 <artifactId>picketbox</artifactId>
-                <version>${project.version}</version>
+                <version>5.0.3.jakarta.bravura.1</version>
             </dependency>
             <dependency>
                 <groupId>org.picketbox</groupId>
                 <artifactId>picketbox-bare</artifactId>
-                <version>${project.version}</version>
+                <version>5.0.3.jakarta.bravura.1</version>
             </dependency>
             <dependency>
                 <groupId>org.picketbox</groupId>
                 <artifactId>picketbox-acl-impl</artifactId>
-                <version>${project.version}</version>
+                <version>5.0.3.jakarta.bravura.1</version>
             </dependency>
             <dependency>
                 <groupId>org.picketbox</groupId>
                 <artifactId>picketbox-identity-impl</artifactId>
-                <version>${project.version}</version>
+                <version>5.0.3.jakarta.bravura.1</version>
             </dependency>
             <dependency>
                 <groupId>org.picketbox</groupId>
                 <artifactId>picketbox-infinispan</artifactId>
-                <version>${project.version}</version>
+                <version>5.0.3.jakarta.bravura.1</version>
             </dependency>
             <dependency>
                 <groupId>org.picketbox</groupId>
                 <artifactId>picketbox-spi-bare</artifactId>
-                <version>${project.version}</version>
+                <version>5.0.3.jakarta.bravura.1</version>
             </dependency>
             <dependency>
                 <groupId>org.picketbox</groupId>
                 <artifactId>picketbox-spi-pom</artifactId>
                 <type>pom</type>
-                <version>${project.version}</version>
+                <version>5.0.3.jakarta.bravura.1</version>
             </dependency>
 
             <!-- External dependencies -->
