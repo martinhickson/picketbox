@@ -7,9 +7,9 @@ import org.jboss.security.jacc.JBossPolicyConfigurationFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
-import javax.security.jacc.PolicyConfiguration;
-import javax.security.jacc.PolicyContext;
-import javax.security.jacc.WebResourcePermission;
+import jakarta.security.jacc.PolicyConfiguration;
+import jakarta.security.jacc.PolicyContext;
+import jakarta.security.jacc.WebResourcePermission;
 import java.security.Permission;
 import java.security.Policy;
 import java.security.Principal;

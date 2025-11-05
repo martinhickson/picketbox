@@ -28,14 +28,14 @@ import java.security.PrivilegedAction;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
-import javax.security.jacc.PolicyContext;
+import jakarta.security.jacc.PolicyContext;
 
 import org.jboss.security.PicketBoxLogger;
 import org.jboss.security.SecurityConstants;
 
 /** The SecurityService installs a java.security.Policy implementation that
  * handles the JACC permission checks. The Policy provider can be done using the
- * standard javax.security.jacc.policy.provider system property, or by setting
+ * standard jakarta.security.jacc.policy.provider system property, or by setting
  * the PolicyName attribute to an mbean which supports a Policy attribute of
  * type java.security.Policy.
  *
@@ -45,7 +45,7 @@ import org.jboss.security.SecurityConstants;
 public class SecurityService
 {
    /** The system property name for the Policy implementation class */
-   private static final String JACC_POLICY_PROVIDER = "javax.security.jacc.policy.provider";
+   private static final String JACC_POLICY_PROVIDER = "jakarta.security.jacc.policy.provider";
 
    /** The startup Policy.getPolicy() value */
    private Policy oldPolicy;

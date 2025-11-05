@@ -29,7 +29,7 @@ import java.util.Set;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.message.MessageInfo;
+import jakarta.security.auth.message.MessageInfo;
 
 import org.jboss.security.AnybodyPrincipal;
 import org.jboss.security.AuthenticationManager;

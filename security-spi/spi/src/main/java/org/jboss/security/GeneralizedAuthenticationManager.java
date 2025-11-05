@@ -21,7 +21,7 @@
   */
 package org.jboss.security;
  
-import javax.security.auth.message.config.ServerAuthContext;
+import jakarta.security.auth.message.config.ServerAuthContext;
  
 //$Id$
 

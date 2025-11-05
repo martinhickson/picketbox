@@ -26,7 +26,7 @@ import java.security.Principal;
 import org.apache.cxf.common.security.GroupPrincipal;
 import java.util.Map;
 
-import javax.resource.spi.security.PasswordCredential;
+import jakarta.resource.spi.security.PasswordCredential;
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.login.LoginException;

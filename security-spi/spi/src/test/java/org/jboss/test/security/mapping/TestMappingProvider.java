@@ -22,9 +22,9 @@
 package org.jboss.test.security.mapping;
 
 import java.security.Principal;
-import java.security.acl.Group;
 import java.util.Map;
 
+import org.apache.cxf.common.security.SimpleGroup;
 import org.jboss.security.mapping.MappingProvider;
 import org.jboss.security.mapping.MappingResult;
 
@@ -49,7 +49,7 @@ public class TestMappingProvider implements MappingProvider<Principal>
    public boolean supports(Class<?> p)
    {
       //Do not support group principal
-      if(Group.class.isAssignableFrom(p))
+      if(SimpleGroup.class.isAssignableFrom(p))
          return false;
       
       //Support Principal

@@ -22,8 +22,8 @@
 package org.jboss.security.auth.callback;
 
 import javax.security.auth.callback.CallbackHandler;
-import javax.security.jacc.PolicyContextException;
-import javax.security.jacc.PolicyContextHandler;
+import jakarta.security.jacc.PolicyContextException;
+import jakarta.security.jacc.PolicyContextHandler;
 
 import org.jboss.security.SecurityConstants;
 
@@ -47,7 +47,7 @@ public class CallbackHandlerPolicyContextHandler implements PolicyContextHandler
     * @param key - "org.jboss.security.auth.spi.CallbackHandler"
     * @param data currently unused
     * @return The active CallbackHandler
-    * @throws javax.security.jacc.PolicyContextException
+    * @throws jakarta.security.jacc.PolicyContextException
     */
    public Object getContext(String key, Object data)
       throws PolicyContextException

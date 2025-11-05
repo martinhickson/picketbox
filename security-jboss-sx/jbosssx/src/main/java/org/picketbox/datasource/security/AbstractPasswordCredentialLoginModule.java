@@ -29,7 +29,7 @@ import org.jboss.security.auth.spi.AbstractServerLoginModule;
 /** 
  * A base login module that handles {@code PasswordCredential}s
  * 
- * @see javax.resource.spi.security.PasswordCredential
+ * @see jakarta.resource.spi.security.PasswordCredential
  *
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author Scott.Stark@jboss.org

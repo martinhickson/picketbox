@@ -25,7 +25,7 @@ import java.security.Principal;
 import java.util.Map;
 
 import javax.naming.NamingException;
-import javax.transaction.TransactionManager;
+import jakarta.transaction.TransactionManager;
 
 import org.jboss.security.PicketBoxMessages;
 import org.jboss.security.identity.RoleGroup;

@@ -25,7 +25,7 @@ import java.security.Principal;
 import java.util.HashMap;
 
 import javax.security.auth.Subject;
-import javax.security.jacc.PolicyContext;
+import jakarta.security.jacc.PolicyContext;
 
 import junit.framework.TestCase;
 

@@ -100,7 +100,7 @@ public interface SecurityConstants
 
     /** Policy Context Constants **/
     String SUBJECT_CONTEXT_KEY = "javax.security.auth.Subject.container";
-    String WEB_REQUEST_KEY = "javax.servlet.http.HttpServletRequest";
+    String WEB_REQUEST_KEY = "jakarta.servlet.http.HttpServletRequest";
     String CALLBACK_HANDLER_KEY = "org.jboss.security.auth.spi.CallbackHandler";
 
     /**

@@ -24,11 +24,11 @@ package org.jboss.security.auth.message.config;
 import java.util.Iterator;
 
 import javax.security.auth.Subject;
-import javax.security.auth.message.AuthException;
-import javax.security.auth.message.AuthStatus;
-import javax.security.auth.message.MessageInfo;
-import javax.security.auth.message.config.ClientAuthContext;
-import javax.security.auth.message.module.ClientAuthModule;
+import jakarta.security.auth.message.AuthException;
+import jakarta.security.auth.message.AuthStatus;
+import jakarta.security.auth.message.MessageInfo;
+import jakarta.security.auth.message.config.ClientAuthContext;
+import jakarta.security.auth.message.module.ClientAuthModule;
 
 import org.jboss.security.PicketBoxMessages;
 
@@ -57,7 +57,7 @@ public class JBossClientAuthContext implements ClientAuthContext
    }
    
    /**
-    * @see ClientAuthContext#cleanSubject(javax.security.auth.message.MessageInfo, javax.security.auth.Subject)
+    * @see ClientAuthContext#cleanSubject(jakarta.security.auth.message.MessageInfo, javax.security.auth.Subject)
     */
    @SuppressWarnings({"rawtypes"})
    public void cleanSubject(MessageInfo messageInfo, Subject subject) 
@@ -71,7 +71,7 @@ public class JBossClientAuthContext implements ClientAuthContext
    }
    
    /**
-    * @see ClientAuthContext#secureRequest(javax.security.auth.message.MessageInfo, javax.security.auth.Subject
+    * @see ClientAuthContext#secureRequest(jakarta.security.auth.message.MessageInfo, javax.security.auth.Subject
     */ 
    @SuppressWarnings("rawtypes")
    public AuthStatus secureRequest(MessageInfo messageInfo, Subject clientSubject) throws AuthException
@@ -88,7 +88,7 @@ public class JBossClientAuthContext implements ClientAuthContext
    }
    
    /**
-    * @see ClientAuthContext#validateResponse(javax.security.auth.message.MessageInfo, javax.security.auth.Subject, javax.security.auth.Subject)
+    * @see ClientAuthContext#validateResponse(jakarta.security.auth.message.MessageInfo, javax.security.auth.Subject, javax.security.auth.Subject)
     */ 
    @SuppressWarnings("rawtypes")
    public AuthStatus validateResponse(MessageInfo messageInfo, Subject clientSubject, 

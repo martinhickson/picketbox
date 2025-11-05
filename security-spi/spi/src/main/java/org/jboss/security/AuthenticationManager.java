@@ -73,7 +73,7 @@ public interface AuthenticationManager extends BaseSecurityManager
     in favor of the JACC PolicyContextHandler getContext(key, data) method.
 
     @deprecated Use the JACC PolicyContextHandler using key "javax.security.auth.Subject.container"
-    @see javax.security.jacc.PolicyContextHandler#getContext(String, Object)
+    @see jakarta.security.jacc.PolicyContextHandler#getContext(String, Object)
 
     @return The previously authenticated Subject if isValid succeeded, null if
         isValid failed or has not been called for the active thread.

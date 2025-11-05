@@ -22,10 +22,11 @@
 package org.picketbox.util;
 
 import java.security.Principal;
-import java.security.acl.Group;
 import java.util.Set;
 
 import javax.security.auth.Subject;
+
+import org.apache.cxf.common.security.SimpleGroup;
 
 import org.jboss.security.SecurityConstants;
 import org.jboss.security.identity.RoleGroup;
@@ -46,10 +47,10 @@ public class PicketBoxUtil
     */
    public static RoleGroup getRolesFromSubject(Subject subject)
    {
-      Set<Group> groupPrincipals = subject.getPrincipals(Group.class);
+      Set<SimpleGroup> groupPrincipals = subject.getPrincipals(SimpleGroup.class);
       if(groupPrincipals!= null)
       {
-         for(Group groupPrincipal: groupPrincipals)
+         for(SimpleGroup groupPrincipal: groupPrincipals)
          {
             if(SecurityConstants.ROLES_IDENTIFIER.equals(groupPrincipal.getName()))
                   return new SimpleRoleGroup(groupPrincipal);  
@@ -70,7 +71,7 @@ public class PicketBoxUtil
       {
          for(Principal p: principals)
          {
-            if(p instanceof Group != false)
+            if(!(p instanceof SimpleGroup))
                return p; 
          }
       }

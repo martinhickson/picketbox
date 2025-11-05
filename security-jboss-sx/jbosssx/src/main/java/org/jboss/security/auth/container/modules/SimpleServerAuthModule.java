@@ -27,10 +27,10 @@ import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.NameCallback;
 import javax.security.auth.callback.PasswordCallback;
-import javax.security.auth.message.AuthException;
-import javax.security.auth.message.AuthStatus;
-import javax.security.auth.message.MessageInfo;
-import javax.security.auth.message.module.ServerAuthModule;
+import jakarta.security.auth.message.AuthException;
+import jakarta.security.auth.message.AuthStatus;
+import jakarta.security.auth.message.MessageInfo;
+import jakarta.security.auth.message.module.ServerAuthModule;
 
 /**
  *  A simple implementation of an username/password based 
@@ -55,7 +55,7 @@ public class SimpleServerAuthModule extends AbstractServerAuthModule
  
 
    /**
-    * @see ServerAuthModule#secureResponse(javax.security.auth.message.MessageInfo, javax.security.auth.Subject)
+    * @see ServerAuthModule#secureResponse(jakarta.security.auth.message.MessageInfo, javax.security.auth.Subject)
     */
    public AuthStatus secureResponse(MessageInfo param, Subject source) throws AuthException
    {  

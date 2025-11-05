@@ -26,8 +26,8 @@ import java.util.HashMap;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.message.MessageInfo;
-import javax.security.auth.message.config.AuthConfigFactory;
+import jakarta.security.auth.message.MessageInfo;
+import jakarta.security.auth.message.config.AuthConfigFactory;
 
 import org.jboss.security.SecurityConstants;
 import org.jboss.security.SecurityContext;

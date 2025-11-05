@@ -39,9 +39,9 @@ import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.NameCallback;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
-import javax.security.jacc.PolicyContext;
-import javax.security.jacc.PolicyContextException;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.security.jacc.PolicyContext;
+import jakarta.security.jacc.PolicyContextException;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.jboss.security.PicketBoxLogger;
 import org.jboss.security.PicketBoxMessages;
@@ -310,7 +310,7 @@ public class JBossTimeBasedOTPLoginModule implements LoginModule
       String totp = null;
 
       //This is JBoss AS specific mechanism
-      String WEB_REQUEST_KEY = "javax.servlet.http.HttpServletRequest";
+      String WEB_REQUEST_KEY = "jakarta.servlet.http.HttpServletRequest";
 
       try
       {

@@ -27,11 +27,11 @@ import java.util.Map;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.message.AuthException;
-import javax.security.auth.message.MessageInfo;
-import javax.security.auth.message.config.AuthConfig;
-import javax.security.auth.message.config.ClientAuthConfig;
-import javax.security.auth.message.config.ClientAuthContext;
+import jakarta.security.auth.message.AuthException;
+import jakarta.security.auth.message.MessageInfo;
+import jakarta.security.auth.message.config.AuthConfig;
+import jakarta.security.auth.message.config.ClientAuthConfig;
+import jakarta.security.auth.message.config.ClientAuthContext;
 
 //$Id$
 

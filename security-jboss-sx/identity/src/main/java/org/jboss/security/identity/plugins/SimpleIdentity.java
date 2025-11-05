@@ -22,8 +22,8 @@
 package org.jboss.security.identity.plugins;
 
 import java.security.Principal;
-import java.security.acl.Group;
 
+import org.apache.cxf.common.security.SimpleGroup;
 import org.jboss.security.identity.Identity;
 import org.jboss.security.identity.Role;
 
@@ -59,11 +59,11 @@ public class SimpleIdentity implements Identity
       this.role = role;
    }
 
-   public Group asGroup()
+   public SimpleGroup asGroup()
    {
       try
       {
-         Group gp = IdentityFactory.createGroup("Roles");
+         SimpleGroup gp = IdentityFactory.createGroup("Roles");
          gp.addMember(IdentityFactory.createPrincipal(role.getRoleName()));
          return gp;
       }

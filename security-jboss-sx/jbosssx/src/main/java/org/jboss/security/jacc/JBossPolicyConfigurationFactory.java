@@ -26,9 +26,9 @@ import java.security.Policy;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import javax.security.jacc.PolicyConfiguration;
-import javax.security.jacc.PolicyConfigurationFactory;
-import javax.security.jacc.PolicyContextException;
+import jakarta.security.jacc.PolicyConfiguration;
+import jakarta.security.jacc.PolicyConfigurationFactory;
+import jakarta.security.jacc.PolicyContextException;
 
 import org.jboss.security.PicketBoxMessages;
 import org.jboss.security.util.state.StateMachine;
@@ -86,6 +86,27 @@ public class JBossPolicyConfigurationFactory extends PolicyConfigurationFactory
       }
       pc.initPolicyConfiguration(remove);
       return pc;
+   }
+   
+   @Override
+   public PolicyConfiguration getPolicyConfiguration()
+   {
+      // Jakarta EE 10 API - return null as default implementation
+      // Context-specific configuration should use getPolicyConfiguration(String, boolean)
+      return null;
+   }
+   
+   @Override
+   public PolicyConfiguration getPolicyConfiguration(String contextID)
+   {
+      try
+      {
+         return getPolicyConfiguration(contextID, false);
+      }
+      catch (PolicyContextException e)
+      {
+         return null;
+      }
    }
 
    public boolean inService(String contextID)

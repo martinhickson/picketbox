@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.security.auth.Subject;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import junit.framework.TestCase;
 

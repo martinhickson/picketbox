@@ -24,7 +24,7 @@ package org.jboss.security.auth.message;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.security.auth.message.MessageInfo;
+import jakarta.security.auth.message.MessageInfo;
  
 
 /**
@@ -41,7 +41,7 @@ public class GenericMessageInfo implements MessageInfo
    protected Object request = null;
    protected Object response = null;
 
-   private Map<Object,Object> map = new HashMap<Object,Object>(); 
+   private Map<String,Object> map = new HashMap<String,Object>(); 
 
    public GenericMessageInfo()
    {   
@@ -88,7 +88,7 @@ public class GenericMessageInfo implements MessageInfo
    }
 
 
-   public Map<Object,Object> getMap()
+   public Map<String,Object> getMap()
    { 
       return this.map ;
    } 

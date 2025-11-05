@@ -24,9 +24,9 @@ package org.jboss.test.authentication;
 import java.net.URL;
 
 import javax.security.auth.Subject;
-import javax.security.auth.message.MessageInfo;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.security.auth.message.MessageInfo;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.jboss.security.SecurityContextAssociation;
 import org.jboss.security.ServerAuthenticationManager;

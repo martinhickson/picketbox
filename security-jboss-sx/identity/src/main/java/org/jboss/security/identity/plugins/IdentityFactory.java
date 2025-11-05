@@ -23,8 +23,8 @@ package org.jboss.security.identity.plugins;
 
 import java.lang.reflect.Constructor;
 import java.security.Principal;
-import java.security.acl.Group;
 
+import org.apache.cxf.common.security.SimpleGroup;
 import org.jboss.security.identity.Identity;
 import org.jboss.security.identity.Role;
 
@@ -49,9 +49,9 @@ public class IdentityFactory
       return (Principal) loadClass(PRINCIPAL_CLASS, name);
    }
 
-   public static Group createGroup(String name) throws Exception
+   public static SimpleGroup createGroup(String name) throws Exception
    {
-      return (Group) loadClass(GROUP_CLASS, name);
+      return (SimpleGroup) loadClass(GROUP_CLASS, name);
    }
 
    public static Identity createIdentity(String name) throws Exception

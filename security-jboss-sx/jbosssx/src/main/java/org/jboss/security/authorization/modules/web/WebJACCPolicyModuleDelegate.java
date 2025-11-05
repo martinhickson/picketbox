@@ -31,10 +31,10 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.security.auth.Subject;
-import javax.security.jacc.WebResourcePermission;
-import javax.security.jacc.WebRoleRefPermission;
-import javax.security.jacc.WebUserDataPermission;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.security.jacc.WebResourcePermission;
+import jakarta.security.jacc.WebRoleRefPermission;
+import jakarta.security.jacc.WebUserDataPermission;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.jboss.security.PicketBoxLogger;
 import org.jboss.security.PicketBoxMessages;

@@ -27,11 +27,11 @@ import java.util.Map;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.message.AuthException;
-import javax.security.auth.message.AuthStatus;
-import javax.security.auth.message.MessageInfo;
-import javax.security.auth.message.MessagePolicy;
-import javax.security.auth.message.module.ServerAuthModule;
+import jakarta.security.auth.message.AuthException;
+import jakarta.security.auth.message.AuthStatus;
+import jakarta.security.auth.message.MessageInfo;
+import jakarta.security.auth.message.MessagePolicy;
+import jakarta.security.auth.message.module.ServerAuthModule;
 import javax.security.auth.spi.LoginModule;
 
 //$Id$
@@ -64,7 +64,7 @@ public abstract class AbstractServerAuthModule implements ServerAuthModule
    protected ArrayList<Class> supportedTypes = new ArrayList<Class>();
    
    /**
-    * @see ServerAuthModule#initialize(javax.security.auth.message.MessagePolicy, javax.security.auth.message.MessagePolicy, javax.security.auth.callback.CallbackHandler, java.util.Map)
+    * @see ServerAuthModule#initialize(jakarta.security.auth.message.MessagePolicy, jakarta.security.auth.message.MessagePolicy, javax.security.auth.callback.CallbackHandler, java.util.Map)
     */ 
    public void initialize(MessagePolicy requestPolicy, MessagePolicy responsePolicy, 
          CallbackHandler handler, Map options )

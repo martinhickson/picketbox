@@ -27,7 +27,7 @@ import java.security.PrivilegedAction;
 
 import javax.security.auth.Subject;
 import javax.security.auth.login.Configuration;
-import javax.security.jacc.PolicyContext;
+import jakarta.security.jacc.PolicyContext;
 
 //$Id$
 

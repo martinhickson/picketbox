@@ -28,7 +28,7 @@ import org.apache.cxf.common.security.GroupPrincipal;
 import java.util.Iterator;
 import java.util.Set;
 
-import javax.resource.spi.security.PasswordCredential;
+import jakarta.resource.spi.security.PasswordCredential;
 import javax.security.auth.Subject;
 
 import org.apache.cxf.common.security.SimpleGroup;

@@ -29,9 +29,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import javax.security.auth.message.config.AuthConfigFactory;
-import javax.security.auth.message.config.AuthConfigProvider;
-import javax.security.auth.message.config.RegistrationListener;
+import jakarta.security.auth.message.config.AuthConfigFactory;
+import jakarta.security.auth.message.config.AuthConfigProvider;
+import jakarta.security.auth.message.config.RegistrationListener;
 
 import org.jboss.security.PicketBoxMessages;
 
@@ -77,7 +77,7 @@ public class JBossAuthConfigFactory extends AuthConfigFactory
 
    /*
     * (non-Javadoc)
-    * @see javax.security.auth.message.config.AuthConfigFactory#detachListener(javax.security.auth.message.config.RegistrationListener, java.lang.String, java.lang.String)
+    * @see jakarta.security.auth.message.config.AuthConfigFactory#detachListener(jakarta.security.auth.message.config.RegistrationListener, java.lang.String, java.lang.String)
     */
    public String[] detachListener(RegistrationListener listener, String layer, String appContext)
    { 
@@ -115,7 +115,7 @@ public class JBossAuthConfigFactory extends AuthConfigFactory
 
    /*
     * (non-Javadoc)
-    * @see javax.security.auth.message.config.AuthConfigFactory#getConfigProvider(java.lang.String, java.lang.String, javax.security.auth.message.config.RegistrationListener)
+    * @see jakarta.security.auth.message.config.AuthConfigFactory#getConfigProvider(java.lang.String, java.lang.String, jakarta.security.auth.message.config.RegistrationListener)
     */
    public AuthConfigProvider getConfigProvider(String layer, String appContext, RegistrationListener listener)
    {
@@ -149,7 +149,7 @@ public class JBossAuthConfigFactory extends AuthConfigFactory
 
    /*
     * (non-Javadoc)
-    * @see javax.security.auth.message.config.AuthConfigFactory#getRegistrationContext(java.lang.String)
+    * @see jakarta.security.auth.message.config.AuthConfigFactory#getRegistrationContext(java.lang.String)
     */
    public RegistrationContext getRegistrationContext(String registrationID)
    {
@@ -158,7 +158,7 @@ public class JBossAuthConfigFactory extends AuthConfigFactory
 
    /*
     * (non-Javadoc)
-    * @see javax.security.auth.message.config.AuthConfigFactory#getRegistrationIDs(javax.security.auth.message.config.AuthConfigProvider)
+    * @see jakarta.security.auth.message.config.AuthConfigFactory#getRegistrationIDs(jakarta.security.auth.message.config.AuthConfigProvider)
     */
    public String[] getRegistrationIDs(AuthConfigProvider provider)
    {
@@ -183,7 +183,7 @@ public class JBossAuthConfigFactory extends AuthConfigFactory
 
    /*
     * (non-Javadoc)
-    * @see javax.security.auth.message.config.AuthConfigFactory#refresh()
+    * @see jakarta.security.auth.message.config.AuthConfigFactory#refresh()
     */
    public void refresh()
    {
@@ -191,7 +191,7 @@ public class JBossAuthConfigFactory extends AuthConfigFactory
 
    /*
     * (non-Javadoc)
-    * @see javax.security.auth.message.config.AuthConfigFactory#registerConfigProvider(java.lang.String, java.util.Map, java.lang.String, java.lang.String, java.lang.String)
+    * @see jakarta.security.auth.message.config.AuthConfigFactory#registerConfigProvider(java.lang.String, java.util.Map, java.lang.String, java.lang.String, java.lang.String)
     */
    public String registerConfigProvider(String className, Map properties, String layer, String appContext,
          String description)
@@ -240,7 +240,7 @@ public class JBossAuthConfigFactory extends AuthConfigFactory
 
    /*
     * (non-Javadoc)
-    * @see javax.security.auth.message.config.AuthConfigFactory#registerConfigProvider(javax.security.auth.message.config.AuthConfigProvider, java.lang.String, java.lang.String, java.lang.String)
+    * @see jakarta.security.auth.message.config.AuthConfigFactory#registerConfigProvider(jakarta.security.auth.message.config.AuthConfigProvider, java.lang.String, java.lang.String, java.lang.String)
     */
    public String registerConfigProvider(AuthConfigProvider provider, String layer, String appContext, String description)
    {
@@ -271,7 +271,7 @@ public class JBossAuthConfigFactory extends AuthConfigFactory
 
    /*
     * (non-Javadoc)
-    * @see javax.security.auth.message.config.AuthConfigFactory#removeRegistration(java.lang.String)
+    * @see jakarta.security.auth.message.config.AuthConfigFactory#removeRegistration(java.lang.String)
     */
    public boolean removeRegistration(String registrationID)
    {
@@ -347,5 +347,36 @@ public class JBossAuthConfigFactory extends AuthConfigFactory
        {
           this.isPersistent = isPersistent;
        }
-   }       
+   }
+   
+   @Override
+   public void removeServerAuthModule(Object registrationID)
+   {
+      // Remove the registration if it exists
+      if (registrationID != null && registrationID instanceof String)
+      {
+         String key = (String) registrationID;
+         keyToAuthConfigProviderMap.remove(key);
+         keyToRegistrationListenerMap.remove(key);
+         keyToRegistrationContextMap.remove(key);
+      }
+   }
+   
+   @Override
+   public String registerServerAuthModule(jakarta.security.auth.message.module.ServerAuthModule serverAuthModule, Object registrationID)
+   {
+      // Jakarta EE 10 API - register a ServerAuthModule
+      // Return the registration ID (can be the same as input or a new one)
+      String regId;
+      if (registrationID == null || !(registrationID instanceof String))
+      {
+         regId = "serverAuthModule_" + System.currentTimeMillis();
+      }
+      else
+      {
+         regId = (String) registrationID;
+      }
+      // Store the module if needed - this is a simplified implementation
+      return regId;
+   }
 }

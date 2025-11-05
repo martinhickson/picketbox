@@ -26,7 +26,6 @@ import static org.junit.Assert.fail;
 
 import java.security.GeneralSecurityException;
 import java.security.Principal;
-import java.security.acl.Group;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -34,10 +33,11 @@ import java.util.Set;
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.login.LoginException;
-import javax.security.jacc.PolicyContext;
-import javax.security.jacc.PolicyContextException;
-import javax.security.jacc.PolicyContextHandler;
+import jakarta.security.jacc.PolicyContext;
+import jakarta.security.jacc.PolicyContextException;
+import jakarta.security.jacc.PolicyContextHandler;
 
+import org.apache.cxf.common.security.GroupPrincipal;
 import org.jboss.security.SimpleGroup;
 import org.jboss.security.SimplePrincipal;
 import org.jboss.security.auth.callback.JBossCallbackHandler;
@@ -55,7 +55,7 @@ public class JBossTimeBasedOTPLoginModuleUnitTestCase
 {
    static String seed = "3132333435363738393031323334353637383930";
 
-   static final String WEB_REQUEST_KEY = "javax.servlet.http.HttpServletRequest";
+   static final String WEB_REQUEST_KEY = "jakarta.servlet.http.HttpServletRequest";
    
    @Test
    public void testTOTP() throws Exception
@@ -129,16 +129,16 @@ public class JBossTimeBasedOTPLoginModuleUnitTestCase
       options.put( "additionalRoles", "RoleA,RoleB" );
       
       //Add in a subject group principal
-      Group group = new SimpleGroup( "Roles" );
+      GroupPrincipal group = new SimpleGroup( "Roles" );
       subject.getPrincipals().add( group );
       
       JBossTimeBasedOTPLoginModule jtp = new JBossTimeBasedOTPLoginModule();
       jtp.initialize(subject, callbackHandler, sharedState, options); 
       jtp.login();
       
-      Set<Group> groups = subject.getPrincipals( Group.class );
+      Set<GroupPrincipal> groups = subject.getPrincipals( GroupPrincipal.class );
       assertTrue( "set has 1 group", groups.size() == 1 );
-      Group retrievedGroup = groups.iterator().next();
+      GroupPrincipal retrievedGroup = groups.iterator().next();
       assertTrue( retrievedGroup.isMember( new SimplePrincipal( "RoleA" )));
       assertTrue( retrievedGroup.isMember( new SimplePrincipal( "RoleB" )));
    }  

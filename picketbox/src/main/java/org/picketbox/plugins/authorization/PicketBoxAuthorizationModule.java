@@ -22,8 +22,9 @@
 package org.picketbox.plugins.authorization;
 
 import java.security.Principal;
-import java.security.acl.Group;
 import java.util.Enumeration;
+
+import org.apache.cxf.common.security.SimpleGroup;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -87,9 +88,9 @@ public class PicketBoxAuthorizationModule implements AuthorizationModule
       Set<Principal> principals = subject.getPrincipals();
       for(Principal p: principals)
       {
-         if(p instanceof Group)
+         if(p instanceof SimpleGroup)
          {
-            Group group = (Group) p;
+            SimpleGroup group = (SimpleGroup) p;
             if(group.getName().equalsIgnoreCase("Roles"))
             {
                Enumeration<? extends Principal> roles = group.members();

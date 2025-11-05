@@ -23,9 +23,12 @@ package org.jboss.security.jacc;
 
 import java.security.Permission;
 import java.security.PermissionCollection;
+import java.security.Permissions;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.security.jacc.PolicyConfiguration;
-import javax.security.jacc.PolicyContextException;
+import jakarta.security.jacc.PolicyConfiguration;
+import jakarta.security.jacc.PolicyContextException;
 
 import org.jboss.security.PicketBoxLogger;
 import org.jboss.security.PicketBoxMessages;
@@ -199,6 +202,51 @@ public class JBossPolicyConfiguration implements PolicyConfiguration
       catch(IllegalTransitionException e)
       {
          throw new PolicyContextException(PicketBoxMessages.MESSAGES.operationNotAllowedMessage(), e);
+      }
+   }
+   
+   @Override
+   public PermissionCollection getExcludedPermissions()
+   {
+      // Jakarta EE 10 API - return excluded permissions for this context
+      try
+      {
+         validateState("getExcludedPermissions");
+         return policy.getExcludedPermissions(contextID);
+      }
+      catch (PolicyContextException e)
+      {
+         return new Permissions();
+      }
+   }
+   
+   @Override
+   public PermissionCollection getUncheckedPermissions()
+   {
+      // Jakarta EE 10 API - return unchecked permissions for this context
+      try
+      {
+         validateState("getUncheckedPermissions");
+         return policy.getUncheckedPermissions(contextID);
+      }
+      catch (PolicyContextException e)
+      {
+         return new Permissions();
+      }
+   }
+   
+   @Override
+   public Map<String, PermissionCollection> getPerRolePermissions()
+   {
+      // Jakarta EE 10 API - return per-role permissions for this context
+      try
+      {
+         validateState("getPerRolePermissions");
+         return policy.getPerRolePermissions(contextID);
+      }
+      catch (PolicyContextException e)
+      {
+         return new HashMap<String, PermissionCollection>();
       }
    }
 }

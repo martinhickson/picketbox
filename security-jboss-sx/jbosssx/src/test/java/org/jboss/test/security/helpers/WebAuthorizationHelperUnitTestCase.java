@@ -28,9 +28,9 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.security.auth.Subject;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
 
 import junit.framework.TestCase;
 

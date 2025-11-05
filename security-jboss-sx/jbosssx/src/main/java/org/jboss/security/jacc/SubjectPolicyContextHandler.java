@@ -30,8 +30,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.security.auth.Subject;
-import javax.security.jacc.PolicyContextException;
-import javax.security.jacc.PolicyContextHandler;
+import jakarta.security.jacc.PolicyContextException;
+import jakarta.security.jacc.PolicyContextHandler;
 
 import org.jboss.security.RunAsIdentity;
 import org.jboss.security.SecurityContext;

@@ -26,7 +26,7 @@ import java.lang.reflect.Method;
 import javax.naming.InitialContext;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
-import javax.transaction.TransactionManager;
+import jakarta.transaction.TransactionManager;
 
 import org.jboss.logging.Logger;
 import org.jboss.security.PicketBoxLogger;

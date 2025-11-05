@@ -32,10 +32,10 @@ import org.jboss.security.jacc.DelegatingPolicy;
 import org.jboss.security.jacc.SubjectPolicyContextHandler;
 
 import javax.security.auth.Subject;
-import javax.security.jacc.EJBMethodPermission;
-import javax.security.jacc.PolicyConfiguration;
-import javax.security.jacc.PolicyConfigurationFactory;
-import javax.security.jacc.PolicyContext;
+import jakarta.security.jacc.EJBMethodPermission;
+import jakarta.security.jacc.PolicyConfiguration;
+import jakarta.security.jacc.PolicyConfigurationFactory;
+import jakarta.security.jacc.PolicyContext;
 import java.lang.reflect.Constructor;
 import java.security.*;
 import java.util.Set;

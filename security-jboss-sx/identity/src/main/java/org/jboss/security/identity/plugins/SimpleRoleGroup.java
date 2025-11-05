@@ -28,8 +28,9 @@ import java.io.ObjectOutputStream;
 import java.io.ObjectOutputStream.PutField;
 import java.io.ObjectStreamField;
 import java.security.Principal;
-import java.security.acl.Group;
 import java.util.ArrayList;
+
+import org.apache.cxf.common.security.SimpleGroup;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -74,7 +75,7 @@ public class SimpleRoleGroup extends SimpleRole implements RoleGroup
       addAll(roles);
    }
 
-   public SimpleRoleGroup(Group rolesGroup)
+   public SimpleRoleGroup(SimpleGroup rolesGroup)
    {
       super(rolesGroup.getName());
       Enumeration<? extends Principal> principals = rolesGroup.members();

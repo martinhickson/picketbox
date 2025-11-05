@@ -22,10 +22,10 @@
 package org.jboss.security.auth.container.modules;
 
 import javax.security.auth.Subject;
-import javax.security.auth.message.AuthException;
-import javax.security.auth.message.AuthStatus;
-import javax.security.auth.message.MessageInfo;
-import javax.security.auth.message.module.ServerAuthModule;
+import jakarta.security.auth.message.AuthException;
+import jakarta.security.auth.message.AuthStatus;
+import jakarta.security.auth.message.MessageInfo;
+import jakarta.security.auth.message.module.ServerAuthModule;
 
 /**
  * Server Auth Module that sends a AuthStatus.FAILURE

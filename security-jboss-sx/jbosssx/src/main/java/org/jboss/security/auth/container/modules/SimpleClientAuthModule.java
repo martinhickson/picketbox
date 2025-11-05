@@ -26,12 +26,12 @@ import java.util.Set;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.message.AuthException;
-import javax.security.auth.message.AuthStatus;
-import javax.security.auth.message.ClientAuth;
-import javax.security.auth.message.MessageInfo;
-import javax.security.auth.message.MessagePolicy;
-import javax.security.auth.message.module.ClientAuthModule;
+import jakarta.security.auth.message.AuthException;
+import jakarta.security.auth.message.AuthStatus;
+import jakarta.security.auth.message.ClientAuth;
+import jakarta.security.auth.message.MessageInfo;
+import jakarta.security.auth.message.MessagePolicy;
+import jakarta.security.auth.message.module.ClientAuthModule;
 
 import org.jboss.security.PicketBoxMessages;
 import org.apache.cxf.common.security.SimplePrincipal;
@@ -64,7 +64,7 @@ public class SimpleClientAuthModule implements ClientAuthModule
    } 
 
    /**
-    * @see ClientAuthModule#initialize(javax.security.auth.message.MessagePolicy, javax.security.auth.message.MessagePolicy, javax.security.auth.callback.CallbackHandler, java.util.Map)
+    * @see ClientAuthModule#initialize(jakarta.security.auth.message.MessagePolicy, jakarta.security.auth.message.MessagePolicy, javax.security.auth.callback.CallbackHandler, java.util.Map)
     */
    public void initialize(MessagePolicy requestPolicy, MessagePolicy responsePolicy, 
          CallbackHandler handler, Map options)
@@ -77,7 +77,7 @@ public class SimpleClientAuthModule implements ClientAuthModule
    }
 
    /**
-    * @see ClientAuthModule#secureRequest(javax.security.auth.message.MessageInfo, javax.security.auth.Subject)
+    * @see ClientAuthModule#secureRequest(jakarta.security.auth.message.MessageInfo, javax.security.auth.Subject)
     */
    public AuthStatus secureRequest(MessageInfo param, Subject source) 
    throws AuthException
@@ -88,7 +88,7 @@ public class SimpleClientAuthModule implements ClientAuthModule
    }
 
    /**
-    * @see ClientAuthModule#validateResponse(javax.security.auth.message.MessageInfo, javax.security.auth.Subject, javax.security.auth.Subject)
+    * @see ClientAuthModule#validateResponse(jakarta.security.auth.message.MessageInfo, javax.security.auth.Subject, javax.security.auth.Subject)
     */
    public AuthStatus validateResponse(MessageInfo messageInfo, Subject source, Subject recipient) throws AuthException
    {  
@@ -112,7 +112,7 @@ public class SimpleClientAuthModule implements ClientAuthModule
    }
 
    /**
-    * @see ClientAuth#cleanSubject(javax.security.auth.message.MessageInfo, javax.security.auth.Subject)
+    * @see ClientAuth#cleanSubject(jakarta.security.auth.message.MessageInfo, javax.security.auth.Subject)
     */
    public void cleanSubject(MessageInfo messageInfo, Subject subject) throws AuthException
    { 

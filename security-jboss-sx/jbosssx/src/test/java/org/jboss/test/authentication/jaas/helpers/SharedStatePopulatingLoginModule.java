@@ -22,13 +22,13 @@
 package org.jboss.test.authentication.jaas.helpers;
 
 import java.security.Principal;
-import java.security.acl.Group;
 
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.NameCallback;
 import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.login.LoginException;
 
+import org.apache.cxf.common.security.GroupPrincipal;
 import org.jboss.security.SimpleGroup;
 import org.jboss.security.SimplePrincipal;
 import org.jboss.security.auth.spi.UsernamePasswordLoginModule;
@@ -76,10 +76,10 @@ extends UsernamePasswordLoginModule
    }
 
    @Override
-   protected Group[] getRoleSets()
+   protected GroupPrincipal[] getRoleSets()
    {
       SimpleGroup roles = new SimpleGroup("Roles");
-      Group[] roleSets = {roles};
+      GroupPrincipal[] roleSets = {roles};
       roles.addMember(new SimplePrincipal("TestRole"));
       roles.addMember(new SimplePrincipal("Role2"));
       return roleSets;

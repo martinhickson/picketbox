@@ -28,8 +28,8 @@ import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 
 import javax.security.auth.callback.CallbackHandler;
-import javax.security.jacc.PolicyContext;
-import javax.security.jacc.PolicyContextException;
+import jakarta.security.jacc.PolicyContext;
+import jakarta.security.jacc.PolicyContextException;
 
 import org.jboss.security.SecurityConstants;
 import org.jboss.security.SecurityContext;

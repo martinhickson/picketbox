@@ -21,11 +21,10 @@
  */
 package org.jboss.test.security.mapping;
 
-import java.security.acl.Group;
-
 import javax.naming.InitialContext;
 import javax.security.auth.x500.X500Principal;
 
+import org.apache.cxf.common.security.SimpleGroup;
 import org.jboss.security.mapping.MappingType;
 
 import junit.framework.TestCase;
@@ -43,7 +42,7 @@ public class MappingUnitTestCase extends TestCase
       //Support Principal
       assertTrue(tmp.supports(X500Principal.class));
       //Do not support group principal
-      assertFalse(tmp.supports(Group.class));
+      assertFalse(tmp.supports(SimpleGroup.class));
       //Do not support arbitrary JDK class
       assertFalse(tmp.supports(InitialContext.class));
       assertFalse(tmp.supports(MappingUnitTestCase.class));

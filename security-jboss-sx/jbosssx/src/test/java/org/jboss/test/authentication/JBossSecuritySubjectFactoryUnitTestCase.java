@@ -23,8 +23,9 @@ package org.jboss.test.authentication;
 
 import java.lang.reflect.Method;
 import java.security.Principal;
-import java.security.acl.Group;
 import java.util.Collections;
+
+import org.apache.cxf.common.security.GroupPrincipal;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -99,10 +100,10 @@ public class JBossSecuritySubjectFactoryUnitTestCase extends TestCase
    public static class TestLoginModule1 extends UsernamePasswordLoginModule
    {
       @Override
-      protected Group[] getRoleSets()
+      protected GroupPrincipal[] getRoleSets()
       {
          SimpleGroup roles = new SimpleGroup("Roles");
-         Group[] roleSets = {roles};
+         GroupPrincipal[] roleSets = {roles};
          roles.addMember(new SimplePrincipal("TestRole"));
          roles.addMember(new SimplePrincipal("Role2"));
          return roleSets;
@@ -120,10 +121,10 @@ public class JBossSecuritySubjectFactoryUnitTestCase extends TestCase
    public static class TestLoginModule2 extends UsernamePasswordLoginModule
    {
       @Override
-      protected Group[] getRoleSets()
+      protected GroupPrincipal[] getRoleSets()
       {
          SimpleGroup roles = new SimpleGroup("Roles");
-         Group[] roleSets = {roles};
+         GroupPrincipal[] roleSets = {roles};
          roles.addMember(new SimplePrincipal("Role1"));
          return roleSets;
       }
@@ -167,12 +168,12 @@ public class JBossSecuritySubjectFactoryUnitTestCase extends TestCase
       
       JBossSecuritySubjectFactory subjectFactory = new JBossSecuritySubjectFactory();
       Subject subject = subjectFactory.createSubject();
-      Set<Group> groups = subject.getPrincipals(Group.class);
+      Set<GroupPrincipal> groups = subject.getPrincipals(GroupPrincipal.class);
       Principal scott = new SimplePrincipal("scott");
       assertTrue("Principals contains scott", subject.getPrincipals().contains(scott));
       assertTrue("Principals contains Roles", groups.contains(new SimpleGroup("Roles")));
       assertTrue("Principals contains CallerPrincipal", groups.contains(new SimpleGroup("CallerPrincipal")));
-      for (Group group : groups)
+      for (GroupPrincipal group : groups)
       {
          if (group.getName().equals("Roles"))
          {
@@ -204,12 +205,12 @@ public class JBossSecuritySubjectFactoryUnitTestCase extends TestCase
       
       JBossSecuritySubjectFactory subjectFactory = new JBossSecuritySubjectFactory();
       Subject subject = subjectFactory.createSubject("securityDomain");
-      Set<Group> groups = subject.getPrincipals(Group.class);
+      Set<GroupPrincipal> groups = subject.getPrincipals(GroupPrincipal.class);
       Principal scott = new SimplePrincipal("scott");
       assertTrue("Principals contains scott", subject.getPrincipals().contains(scott));
       assertTrue("Principals contains Roles", groups.contains(new SimpleGroup("Roles")));
       assertTrue("Principals contains CallerPrincipal", groups.contains(new SimpleGroup("CallerPrincipal")));
-      for (Group group : groups)
+      for (GroupPrincipal group : groups)
       {
          if (group.getName().equals("Roles"))
          {

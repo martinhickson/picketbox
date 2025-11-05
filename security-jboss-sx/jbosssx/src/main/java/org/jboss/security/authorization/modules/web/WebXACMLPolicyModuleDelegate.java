@@ -25,8 +25,8 @@ import java.security.Principal;
 import java.util.Map;
 
 import javax.security.auth.Subject;
-import javax.security.jacc.PolicyContext;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.security.jacc.PolicyContext;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.jboss.security.PicketBoxLogger;
 import org.jboss.security.PicketBoxMessages;

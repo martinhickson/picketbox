@@ -22,7 +22,6 @@
 package org.jboss.test;
 
 import java.security.Principal;
-import java.security.acl.Group;
 import java.util.Enumeration;
 import java.util.HashSet;
 
@@ -30,6 +29,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import org.apache.cxf.common.security.GroupPrincipal;
 import org.jboss.security.AnybodyPrincipal;
 import org.jboss.security.NestableGroup;
 import org.jboss.security.NobodyPrincipal;
@@ -45,7 +45,7 @@ import org.jboss.security.SimplePrincipal;
 */
 public class NestableGroupTestCase extends TestCase
 {
-    static Group[] groups = {
+    static GroupPrincipal[] groups = {
         new SimpleGroup("roles1"),
         new SimpleGroup("roles2"),
         new SimpleGroup("roles3"),
@@ -109,7 +109,7 @@ public class NestableGroupTestCase extends TestCase
         System.out.println("testAddMember");
         for(int g = 0; g < groups.length; g ++)
         {
-            Group grp = groups[g];
+            GroupPrincipal grp = groups[g];
             group.addMember(grp);
             testMembers(g);
         }

@@ -23,10 +23,11 @@ package org.jboss.security.jacc;
 
 import org.jboss.security.PicketBoxMessages;
 
-import javax.security.jacc.*;
+import jakarta.security.jacc.*;
 import java.security.*;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -309,6 +310,27 @@ public class DelegatingPolicy extends Policy
    {
       ContextPolicy policy = getContextPolicy(contextID);
       policy.addToExcludedPolicy(permissions);
+   }
+   
+   PermissionCollection getExcludedPermissions(String contextID)
+      throws PolicyContextException
+   {
+      ContextPolicy policy = getContextPolicy(contextID);
+      return policy.getExcludedPermissions();
+   }
+   
+   PermissionCollection getUncheckedPermissions(String contextID)
+      throws PolicyContextException
+   {
+      ContextPolicy policy = getContextPolicy(contextID);
+      return policy.getUncheckedPermissions();
+   }
+   
+   Map<String, PermissionCollection> getPerRolePermissions(String contextID)
+      throws PolicyContextException
+   {
+      ContextPolicy policy = getContextPolicy(contextID);
+      return policy.getPerRolePermissions();
    }
 
    void addToRole(String contextID, String roleName, Permission permission)

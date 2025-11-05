@@ -24,8 +24,9 @@ package org.jboss.security.authentication;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.security.Principal;
-import java.security.acl.Group;
 import java.util.Arrays;
+
+import org.apache.cxf.common.security.SimpleGroup;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
@@ -452,11 +453,11 @@ public class JBossCachedAuthenticationManager implements AuthenticationManager, 
       }
 
       // Get the Subject callerPrincipal by looking for a Group called 'CallerPrincipal'
-      Set<Group> subjectGroups = subject.getPrincipals(Group.class);
-      Iterator<Group> iter = subjectGroups.iterator();
+      Set<SimpleGroup> subjectGroups = subject.getPrincipals(SimpleGroup.class);
+      Iterator<SimpleGroup> iter = subjectGroups.iterator();
       while (iter.hasNext())
       {
-         Group grp = iter.next();
+         SimpleGroup grp = iter.next();
          String name = grp.getName();
          if (name.equals("CallerPrincipal"))
          {
@@ -477,7 +478,7 @@ public class JBossCachedAuthenticationManager implements AuthenticationManager, 
          while (iterPrincipals.hasNext())
          {
             Principal p = iterPrincipals.next();
-            if (!(p instanceof Group))
+            if (!(p instanceof SimpleGroup))
             {
                info.callerPrincipal = p;
                break;

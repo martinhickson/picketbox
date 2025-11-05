@@ -22,8 +22,8 @@
 package org.jboss.security.identity.extensions;
 
 import java.security.Principal;
-import java.security.acl.Group;
 
+import org.apache.cxf.common.security.SimpleGroup;
 import org.jboss.security.identity.IdentityFactory;
 import org.jboss.security.identity.Role;
  
@@ -80,7 +80,7 @@ public class CredentialIdentityFactory extends IdentityFactory
          {   
          }
 
-         public Group asGroup()
+         public SimpleGroup asGroup()
          { 
             return null;
          }

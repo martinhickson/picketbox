@@ -23,7 +23,7 @@ package org.jboss.security;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.message.MessageInfo;
+import jakarta.security.auth.message.MessageInfo;
 
 /**
  * AuthenticationManager with JSR-196 Semantics
@@ -35,8 +35,8 @@ public interface ServerAuthenticationManager extends AuthenticationManager
    /**
     * <p>Authenticate a Subject given the request response JSR-196(JASPI) messages.</p>
     *
-    * <p>If any {@link javax.security.auth.message.AuthException} is thrown during the processing it will be available
-    * through {@link SecurityContext} context data with a key <code>javax.security.auth.message.AuthException</code>.</p>
+    * <p>If any {@link jakarta.security.auth.message.AuthException} is thrown during the processing it will be available
+    * through {@link SecurityContext} context data with a key <code>jakarta.security.auth.message.AuthException</code>.</p>
     *
     * @param requestMessage 
     * @param clientSubject Pre-created or null subject
@@ -50,8 +50,8 @@ public interface ServerAuthenticationManager extends AuthenticationManager
    /**
     * <p>Authenticate a Subject given the request response JSR-196(JASPI) messages.</p>
     *
-    * <p>If any {@link javax.security.auth.message.AuthException} is thrown during the processing it will be available
-    * through {@link SecurityContext} context data with a key <code>javax.security.auth.message.AuthException</code>.</p>
+    * <p>If any {@link jakarta.security.auth.message.AuthException} is thrown during the processing it will be available
+    * through {@link SecurityContext} context data with a key <code>jakarta.security.auth.message.AuthException</code>.</p>
     * 
     * @param messageInfo the object that contains the request and response messages.
     * @param clientSubject the client subject.
@@ -68,8 +68,8 @@ public interface ServerAuthenticationManager extends AuthenticationManager
     * Secures the response encapsulated in the specified {@code MessageInfo} object.
     * </p>
     *
-    * <p>If any {@link javax.security.auth.message.AuthException} is thrown during the processing it will be available
-    * through {@link SecurityContext} context data with a key <code>javax.security.auth.message.AuthException</code>.</p>
+    * <p>If any {@link jakarta.security.auth.message.AuthException} is thrown during the processing it will be available
+    * through {@link SecurityContext} context data with a key <code>jakarta.security.auth.message.AuthException</code>.</p>
     *
     * @param messageInfo the object that contains the request and response messages.
     * @param serviceSubject an optional server {@code Subject} instance.

@@ -113,7 +113,7 @@ public class Util
    /**
     * <p>
     * Obtains an {@code Object} that can represent the specified resource uniquely. It first tries to find
-    * a {@code Field} annotated with a {@code javax.persistence.Id} annotation. If such field is found, the
+    * a {@code Field} annotated with a {@code jakarta.persistence.Id} annotation. If such field is found, the
     * method tries to read the field's value. If no annotated field is found, this method just tries to
     * invoke a {@code getId()} method on the resource.
     * </p>
@@ -126,10 +126,10 @@ public class Util
    {
       Class<? extends Resource> resourceClass = resource.getClass();
       Object resourceKey = null;
-      // first search for a field with a javax.persistence.Id annotation.
+      // first search for a field with a jakarta.persistence.Id annotation.
       for (Field field : resourceClass.getDeclaredFields())
       {
-         if (field.getAnnotation(javax.persistence.Id.class) != null)
+         if (field.getAnnotation(jakarta.persistence.Id.class) != null)
          {
             // found a field - try to get its value reflectively.
             try

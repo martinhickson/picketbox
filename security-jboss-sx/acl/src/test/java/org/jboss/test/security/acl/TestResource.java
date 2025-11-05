@@ -25,7 +25,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.persistence.Id;
+import jakarta.persistence.Id;
 
 import org.jboss.security.authorization.Resource;
 import org.jboss.security.authorization.ResourceType;

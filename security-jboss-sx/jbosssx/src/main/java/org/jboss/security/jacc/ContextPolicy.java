@@ -31,8 +31,9 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
-import javax.security.jacc.PolicyContextException;
+import jakarta.security.jacc.PolicyContextException;
 
 import org.jboss.security.PicketBoxLogger;
 
@@ -165,6 +166,21 @@ public class ContextPolicy
          Permission p = iter.nextElement();
          excludedPermissions.add(p);
       }
+   }
+   
+   PermissionCollection getExcludedPermissions()
+   {
+      return excludedPermissions;
+   }
+   
+   PermissionCollection getUncheckedPermissions()
+   {
+      return uncheckedPermissions;
+   }
+   
+   Map<String, PermissionCollection> getPerRolePermissions()
+   {
+      return new HashMap<String, PermissionCollection>(rolePermissions);
    }
 
    void addToRole(String roleName, Permission permission)

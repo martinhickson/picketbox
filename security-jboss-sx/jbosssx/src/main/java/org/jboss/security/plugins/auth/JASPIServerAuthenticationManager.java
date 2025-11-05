@@ -21,18 +21,20 @@
  */
 package org.jboss.security.plugins.auth;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.message.AuthException;
-import javax.security.auth.message.AuthStatus;
-import javax.security.auth.message.MessageInfo;
-import javax.security.auth.message.config.AuthConfigFactory;
-import javax.security.auth.message.config.AuthConfigProvider;
-import javax.security.auth.message.config.ServerAuthConfig;
-import javax.security.auth.message.config.ServerAuthContext;
-import javax.security.jacc.PolicyContext;
+import jakarta.security.auth.message.AuthException;
+import jakarta.security.auth.message.AuthStatus;
+import jakarta.security.auth.message.MessageInfo;
+import jakarta.security.auth.message.config.AuthConfigFactory;
+import jakarta.security.auth.message.config.AuthConfigProvider;
+import jakarta.security.auth.message.config.ServerAuthConfig;
+import jakarta.security.auth.message.config.ServerAuthContext;
+import jakarta.security.jacc.PolicyContext;
 
 import org.jboss.security.PicketBoxLogger;
 import org.jboss.security.PicketBoxMessages;
@@ -57,7 +59,7 @@ extends JaasSecurityManagerBase implements ServerAuthenticationManager
 
    /*
     * (non-Javadoc)
-    * @see org.jboss.security.ServerAuthenticationManager#isValid(javax.security.auth.message.MessageInfo, javax.security.auth.Subject, java.lang.String, javax.security.auth.callback.CallbackHandler)
+    * @see org.jboss.security.ServerAuthenticationManager#isValid(jakarta.security.auth.message.MessageInfo, javax.security.auth.Subject, java.lang.String, javax.security.auth.callback.CallbackHandler)
     */
    public boolean isValid(MessageInfo requestMessage,Subject clientSubject, String layer,
          CallbackHandler handler)
@@ -67,7 +69,7 @@ extends JaasSecurityManagerBase implements ServerAuthenticationManager
 
    /*
     * (non-Javadoc)
-    * @see org.jboss.security.ServerAuthenticationManager#isValid(javax.security.auth.message.MessageInfo, javax.security.auth.Subject, java.lang.String, java.lang.String, javax.security.auth.callback.CallbackHandler)
+    * @see org.jboss.security.ServerAuthenticationManager#isValid(jakarta.security.auth.message.MessageInfo, javax.security.auth.Subject, java.lang.String, java.lang.String, javax.security.auth.callback.CallbackHandler)
     */
    public boolean isValid(MessageInfo messageInfo, Subject clientSubject, String layer, String appContext, 
          CallbackHandler callbackHandler) 
@@ -90,8 +92,8 @@ extends JaasSecurityManagerBase implements ServerAuthenticationManager
          return false;
       }
       String authContextId = serverConfig.getAuthContextID(messageInfo);
-      Properties properties = new Properties();
-      properties.setProperty("security-domain", super.getSecurityDomain());
+      Map<String, Object> properties = new HashMap<String, Object>();
+      properties.put("security-domain", super.getSecurityDomain());
 
       ServerAuthContext sctx = null;
       try
@@ -125,7 +127,7 @@ extends JaasSecurityManagerBase implements ServerAuthenticationManager
    
    /*
     * (non-Javadoc)
-    * @see org.jboss.security.ServerAuthenticationManager#secureResponse(javax.security.auth.message.MessageInfo, javax.security.auth.Subject, java.lang.String, java.lang.String, javax.security.auth.callback.CallbackHandler)
+    * @see org.jboss.security.ServerAuthenticationManager#secureResponse(jakarta.security.auth.message.MessageInfo, javax.security.auth.Subject, java.lang.String, java.lang.String, javax.security.auth.callback.CallbackHandler)
     */
    public void secureResponse(MessageInfo messageInfo, Subject serviceSubject, String layer, String appContext, 
          CallbackHandler handler)
@@ -148,8 +150,8 @@ extends JaasSecurityManagerBase implements ServerAuthenticationManager
       }
 
       String authContextId = serverConfig.getAuthContextID(messageInfo);
-      Properties properties = new Properties();
-      properties.setProperty("security-domain", super.getSecurityDomain());
+      Map<String, Object> properties = new HashMap<String, Object>();
+      properties.put("security-domain", super.getSecurityDomain());
       if (serviceSubject == null)
          serviceSubject = new Subject();
       ServerAuthContext sctx = null;
@@ -196,8 +198,8 @@ extends JaasSecurityManagerBase implements ServerAuthenticationManager
        }
 
        String authContextId = serverConfig.getAuthContextID(messageInfo);
-       Properties properties = new Properties();
-       properties.setProperty("security-domain", super.getSecurityDomain());
+       Map<String, Object> properties = new HashMap<String, Object>();
+       properties.put("security-domain", super.getSecurityDomain());
        Subject serviceSubject = new Subject();
        ServerAuthContext sctx = null;
        try

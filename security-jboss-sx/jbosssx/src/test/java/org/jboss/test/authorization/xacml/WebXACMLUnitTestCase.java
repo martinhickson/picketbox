@@ -27,7 +27,7 @@ import java.io.InputStream;
 import java.security.Principal;
 import java.util.HashMap;
 import javax.security.auth.Subject;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.jboss.security.SecurityConstants;
 import org.jboss.security.SecurityContext;
