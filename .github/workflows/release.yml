@@ -92,21 +92,24 @@ jobs:
       - name: Update version in all POM files
         run: |
           VERSION="${{ github.event.inputs.version }}"
-          OLD_VERSION=$(grep -m 1 '<version>' pom.xml | sed 's/.*<version>\(.*\)<\/version>.*/\1/' | head -1)
           
-          echo "Updating version from $OLD_VERSION to $VERSION"
+          echo "Updating version to $VERSION"
           
-          # Update root pom.xml version
-          sed -i "s/<version>${OLD_VERSION}<\/version>/<version>${VERSION}<\/version>/" pom.xml
+          # Use Maven versions plugin to update version
+          # The versions plugin should only update project versions, not external parent POMs
+          mvn versions:set -DnewVersion=${VERSION} -DgenerateBackupPoms=false
+          
+          # Verify parent POM version wasn't changed (should still be 24)
+          PARENT_VERSION=$(grep -A 3 '<parent>' pom.xml | grep '<version>' | head -1 | sed 's/.*<version>\(.*\)<\/version>.*/\1/')
+          if [ "$PARENT_VERSION" != "24" ]; then
+            echo "ERROR: Parent POM version was incorrectly changed to $PARENT_VERSION. Reverting..."
+            sed -i "s|<version>$PARENT_VERSION</version>|<version>24</version>|" pom.xml
+            # Fix any other POMs that might have been affected
+            find . -name "pom.xml" -not -path "*/target/*" -not -path "*/.git/*" -exec sed -i "s|<version>$PARENT_VERSION</version>|<version>24</version>|" {} \;
+          fi
           
           # Update SCM tag in root pom.xml
           sed -i "s/<tag>.*<\/tag>/<tag>${VERSION}<\/tag>/" pom.xml
-          
-          # Update all parent version references in child modules
-          find . -name "pom.xml" -not -path "*/target/*" -not -path "*/.git/*" -not -path "./pom.xml" -exec sed -i "s/<version>${OLD_VERSION}<\/version>/<version>${VERSION}<\/version>/g" {} \;
-          
-          # Update dependency versions that reference project version
-          find . -name "pom.xml" -not -path "*/target/*" -not -path "*/.git/*" -exec sed -i "s/<version>\${project.version}<\/version>/<version>${VERSION}<\/version>/g" {} \;
           
           echo "Version update complete"
 
