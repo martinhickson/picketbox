@@ -1,0 +1,231 @@
+name: Release Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., 5.0.4.jdk17.1)'
+        required: true
+        type: string
+      base_branch:
+        description: 'Base branch to create release from (e.g., main, master, 5.0.3)'
+        required: false
+        type: string
+        default: 'main'
+      branch_name:
+        description: 'Branch name for release (e.g., release/5.0.4)'
+        required: true
+        type: string
+      release_tag:
+        description: 'Git tag for release (e.g., 5.0.4.jdk17.1)'
+        required: true
+        type: string
+      create_release:
+        description: 'Create GitHub Release'
+        required: false
+        type: boolean
+        default: true
+      publish_packages:
+        description: 'Publish to GitHub Packages'
+        required: false
+        type: boolean
+        default: true
+
+env:
+  MAVEN_OPTS: -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false
+  MAVEN_CACHE: ${{ github.workspace }}/.m2
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create release branch
+        run: |
+          BASE_BRANCH="${{ github.event.inputs.base_branch }}"
+          BRANCH_NAME="${{ github.event.inputs.branch_name }}"
+          
+          # Fetch all branches
+          git fetch origin
+          
+          # Checkout base branch
+          if git ls-remote --heads origin "$BASE_BRANCH" | grep -q "$BASE_BRANCH"; then
+            echo "Checking out base branch: $BASE_BRANCH"
+            git checkout "$BASE_BRANCH"
+            git pull origin "$BASE_BRANCH"
+          else
+            echo "Warning: Base branch $BASE_BRANCH not found, using current branch"
+          fi
+          
+          # Create or checkout release branch
+          if git ls-remote --heads origin "$BRANCH_NAME" | grep -q "$BRANCH_NAME"; then
+            echo "Branch $BRANCH_NAME already exists, checking it out"
+            git checkout "$BRANCH_NAME"
+            git pull origin "$BRANCH_NAME"
+          else
+            echo "Creating new branch $BRANCH_NAME from $BASE_BRANCH"
+            git checkout -b "$BRANCH_NAME"
+            git push -u origin "$BRANCH_NAME"
+          fi
+
+      - name: Update version in all POM files
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          OLD_VERSION=$(grep -m 1 '<version>' pom.xml | sed 's/.*<version>\(.*\)<\/version>.*/\1/' | head -1)
+          
+          echo "Updating version from $OLD_VERSION to $VERSION"
+          
+          # Update root pom.xml version
+          sed -i "s/<version>${OLD_VERSION}<\/version>/<version>${VERSION}<\/version>/" pom.xml
+          
+          # Update SCM tag in root pom.xml
+          sed -i "s/<tag>.*<\/tag>/<tag>${VERSION}<\/tag>/" pom.xml
+          
+          # Update all parent version references in child modules
+          find . -name "pom.xml" -not -path "*/target/*" -not -path "*/.git/*" -not -path "./pom.xml" -exec sed -i "s/<version>${OLD_VERSION}<\/version>/<version>${VERSION}<\/version>/g" {} \;
+          
+          # Update dependency versions that reference project version
+          find . -name "pom.xml" -not -path "*/target/*" -not -path "*/.git/*" -exec sed -i "s/<version>\${project.version}<\/version>/<version>${VERSION}<\/version>/g" {} \;
+          
+          echo "Version update complete"
+
+      - name: Commit version changes
+        run: |
+          git add -A
+          git commit -m "Update version to ${{ github.event.inputs.version }}" || echo "No changes to commit"
+          git push
+
+      - name: Build project
+        run: |
+          mvn clean install -DskipTests
+
+      - name: Run tests
+        run: |
+          mvn test
+
+      - name: Package artifacts
+        run: |
+          mvn package -DskipTests
+
+      - name: Configure Maven for GitHub Packages
+        if: github.event.inputs.publish_packages == 'true'
+        run: |
+          mkdir -p ~/.m2
+          cat > ~/.m2/settings.xml <<EOF
+          <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                    xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                    http://maven.apache.org/xsd/settings-1.0.0.xsd">
+            <servers>
+              <server>
+                <id>github</id>
+                <username>${{ github.actor }}</username>
+                <password>${{ secrets.GITHUB_TOKEN }}</password>
+              </server>
+            </servers>
+          </settings>
+          EOF
+
+      - name: Configure distributionManagement in POMs
+        if: github.event.inputs.publish_packages == 'true'
+        run: |
+          REPO_URL="https://maven.pkg.github.com/${{ github.repository }}"
+          
+          # Add distributionManagement to root pom.xml if not exists
+          if ! grep -q "<distributionManagement>" pom.xml; then
+            sed -i '/<\/project>/i\
+            <distributionManagement>\
+                <repository>\
+                    <id>github</id>\
+                    <name>GitHub ${{ github.repository_owner }} Apache Maven Packages</name>\
+                    <url>'"${REPO_URL}"'</url>\
+                </repository>\
+            </distributionManagement>
+            ' pom.xml
+          fi
+
+      - name: Publish to GitHub Packages
+        if: github.event.inputs.publish_packages == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mvn deploy -DskipTests \
+            -DrepositoryId=github \
+            -Durl=https://maven.pkg.github.com/${{ github.repository }}
+
+      - name: Create Git tag
+        run: |
+          TAG="${{ github.event.inputs.release_tag }}"
+          if git ls-remote --tags origin "$TAG" | grep -q "$TAG"; then
+            echo "Tag $TAG already exists remotely, skipping tag creation"
+          elif git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "Tag $TAG exists locally, pushing to remote"
+            git push origin "$TAG"
+          else
+            echo "Creating new tag $TAG"
+            git tag -a "$TAG" -m "Release ${{ github.event.inputs.version }}"
+            git push origin "$TAG"
+          fi
+
+      - name: Create GitHub Release
+        if: github.event.inputs.create_release == 'true'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.event.inputs.release_tag }}
+          name: Release ${{ github.event.inputs.version }}
+          body: |
+            ## Release ${{ github.event.inputs.version }}
+            
+            This release includes:
+            - All Maven artifacts published to GitHub Packages
+            - Tag: ${{ github.event.inputs.release_tag }}
+            - Branch: ${{ github.event.inputs.branch_name }}
+            
+            ### Installation
+            
+            Add the following to your `pom.xml`:
+            
+            ```xml
+            <repositories>
+              <repository>
+                <id>github</id>
+                <url>https://maven.pkg.github.com/${{ github.repository }}</url>
+              </repository>
+            </repositories>
+            ```
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: maven-artifacts-${{ github.event.inputs.version }}
+          path: |
+            **/target/*.jar
+            **/target/*.pom
+          retention-days: 30
+          if-no-files-found: warn
+
