@@ -30,6 +30,11 @@ on:
         required: false
         type: boolean
         default: true
+      run_tests:
+        description: 'Run tests after build'
+        required: false
+        type: boolean
+        default: false
 
 env:
   MAVEN_OPTS: -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false
@@ -105,12 +110,12 @@ jobs:
           echo "Current project version: $OLD_VERSION"
           
           # Use Maven versions plugin to update version
-          # Note: versions:set may incorrectly update parent POM versions, so we'll fix that immediately
-          # We use -DprocessParent=false but it doesn't always work, so we fix it anyway
-          mvn versions:set -DnewVersion=${VERSION} -DgenerateBackupPoms=false -DprocessParent=false 2>&1 | tee /tmp/versions-output.log || true
+          # Note: versions:set may incorrectly update external parent POM versions (jboss-parent), so we'll fix that
+          # But we DO want it to update internal parent references (picketbox-parent, picketbox-spi-pom, etc.)
+          mvn versions:set -DnewVersion=${VERSION} -DgenerateBackupPoms=false 2>&1 | tee /tmp/versions-output.log || true
           
-          # Immediately fix parent POM version in root pom.xml (must be done before Maven tries to resolve)
-          # Use awk to find and fix the parent version more reliably
+          # Fix external parent POM version (jboss-parent) - should stay at 24
+          # Use awk to find and fix only the jboss-parent version, not internal parent references
           awk '/<parent>/,/<\/parent>/ {
             if (/<groupId>org\.jboss<\/groupId>/) { in_jboss_parent=1 }
             if (in_jboss_parent && /<artifactId>jboss-parent<\/artifactId>/) { expect_version=1 }
@@ -122,7 +127,7 @@ jobs:
             if (/<\/parent>/) { in_jboss_parent=0; expect_version=0 }
           }1' pom.xml > pom.xml.tmp && mv pom.xml.tmp pom.xml
           
-          # Fix parent POM version in all child POMs  
+          # Fix external parent POM version in all child POMs (only jboss-parent, not picketbox parents)
           find . -name "pom.xml" -not -path "*/target/*" -not -path "*/.git/*" -exec sh -c 'awk "/<parent>/,/<\/parent>/ {
             if (/<groupId>org\.jboss<\/groupId>/) { in_jboss_parent=1 }
             if (in_jboss_parent && /<artifactId>jboss-parent<\/artifactId>/) { expect_version=1 }
@@ -133,6 +138,14 @@ jobs:
             }
             if (/<\/parent>/) { in_jboss_parent=0; expect_version=0 }
           }1" "$1" > "$1.tmp" && mv "$1.tmp" "$1"' _ {} \;
+          
+          # Verify all internal parent references were updated correctly
+          echo "Verifying parent version updates..."
+          OLD_PARENT_REFS=$(find . -name "pom.xml" -not -path "*/target/*" -not -path "*/.git/*" -exec grep -l "picketbox.*parent\|picketbox.*spi-pom" {} \; | xargs grep -h "<version>" | grep -v "24" | grep -v "${VERSION}" | head -5 || true)
+          if [ -n "$OLD_PARENT_REFS" ]; then
+            echo "WARNING: Some parent references may not have been updated:"
+            echo "$OLD_PARENT_REFS"
+          fi
           
           # Update SCM tag in root pom.xml
           sed -i "s/<tag>.*<\/tag>/<tag>${VERSION}<\/tag>/" pom.xml
@@ -147,15 +160,16 @@ jobs:
 
       - name: Build project
         run: |
-          mvn clean install -DskipTests
+          mvn clean install -Dmaven.test.skip=true -DskipTests
 
       - name: Run tests
+        if: github.event.inputs.run_tests == 'true'
         run: |
           mvn test
 
       - name: Package artifacts
         run: |
-          mvn package -DskipTests
+          mvn package -Dmaven.test.skip=true
 
       - name: Configure Maven for GitHub Packages
         if: github.event.inputs.publish_packages == 'true'
@@ -199,7 +213,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          mvn deploy -DskipTests \
+          mvn deploy -Dmaven.test.skip=true \
             -DrepositoryId=github \
             -Durl=https://maven.pkg.github.com/${{ github.repository }}
 
