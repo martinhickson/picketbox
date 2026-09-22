@@ -140,7 +140,7 @@ jobs:
 
       - name: Build project
         run: |
-          mvn clean install -DskipTests
+          mvn clean install -Dmaven.test.skip=true
 
       - name: Run tests
         if: github.event.inputs.run_tests == 'true'
@@ -149,7 +149,7 @@ jobs:
 
       - name: Package artifacts
         run: |
-          mvn package -DskipTests
+          mvn package -Dmaven.test.skip=true
 
       - name: Configure Maven for GitHub Packages
         if: github.event.inputs.publish_packages == 'true'
