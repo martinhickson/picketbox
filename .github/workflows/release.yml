@@ -194,7 +194,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set +e
-          mvn deploy -DskipTests \
+          mvn deploy -Dmaven.test.skip=true \
             -DrepositoryId=github \
             -Durl=https://maven.pkg.github.com/${{ github.repository }} | tee /tmp/gh-deploy.log
           code=${PIPESTATUS[0]}
@@ -260,7 +260,7 @@ jobs:
                 <password>${MAVEN_CENTRAL_PASSWORD}</password>\\
               </server>" ~/.m2/settings.xml
           echo "${MAVEN_CENTRAL_GPG_PRIVATE_KEY}" | gpg --batch --import --pinentry-mode loopback
-          mvn -B -ntp deploy -Pcentral-release -DskipTests \
+          mvn -B -ntp deploy -Pcentral-release -Dmaven.test.skip=true \
             -Dmaven.javadoc.failOnError=false \
             -Dgpg.passphrase="${MAVEN_CENTRAL_GPG_PASSPHRASE}"
           python3 - << 'PY'
