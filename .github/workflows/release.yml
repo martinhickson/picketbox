@@ -238,16 +238,21 @@ jobs:
           import os, pathlib, re
           group = os.environ["CENTRAL_GROUP_ID"]
           pat = re.compile(r'<groupId>org\.jboss\.security</groupId>(\s*)<artifactId>jbossxacml</artifactId>')
+          commons = re.compile(
+              r'<groupId>' + re.escape(group) + r'</groupId>(\s*)<artifactId>picketbox-commons</artifactId>'
+          )
           def repl(match):
               return f'<groupId>{group}</groupId>{match.group(1)}<artifactId>jbossxacml</artifactId>'
+          def keep_commons(match):
+              return f'<groupId>org.picketbox</groupId>{match.group(1)}<artifactId>picketbox-commons</artifactId>'
           for pom in pathlib.Path('.').rglob('pom.xml'):
               if '.git' in pom.parts or 'target' in pom.parts:
                   continue
               text = pom.read_text()
-              new = pat.sub(repl, text)
+              new = commons.sub(keep_commons, pat.sub(repl, text))
               if new != text:
                   pom.write_text(new)
-                  print('rewrote jbossxacml dependency in', pom)
+                  print('rewrote external coordinates in', pom)
           PY
           mkdir -p ~/.m2
           if [ ! -f ~/.m2/settings.xml ]; then
