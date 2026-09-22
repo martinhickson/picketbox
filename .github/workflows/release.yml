@@ -234,11 +234,12 @@ jobs:
           PY
           chmod +x .github/scripts/rewrite-group-id.sh
           .github/scripts/rewrite-group-id.sh org.picketbox "${CENTRAL_GROUP_ID}"
-          python3 - << PY
-          import pathlib, re
-          group = "${CENTRAL_GROUP_ID}"
+          python3 - << 'PY'
+          import os, pathlib, re
+          group = os.environ["CENTRAL_GROUP_ID"]
           pat = re.compile(r'<groupId>org\.jboss\.security</groupId>(\s*)<artifactId>jbossxacml</artifactId>')
-          repl = '<groupId>%s</groupId>\\1<artifactId>jbossxacml</artifactId>' % group
+          def repl(match):
+              return f'<groupId>{group}</groupId>{match.group(1)}<artifactId>jbossxacml</artifactId>'
           for pom in pathlib.Path('.').rglob('pom.xml'):
               if '.git' in pom.parts or 'target' in pom.parts:
                   continue
