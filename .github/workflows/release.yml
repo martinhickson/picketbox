@@ -195,8 +195,7 @@ jobs:
         run: |
           set +e
           mvn deploy -Dmaven.test.skip=true \
-            -DrepositoryId=github \
-            -Durl=https://maven.pkg.github.com/${{ github.repository }} | tee /tmp/gh-deploy.log
+            -DaltDeploymentRepository=github::default::https://maven.pkg.github.com/${{ github.repository }} | tee /tmp/gh-deploy.log
           code=${PIPESTATUS[0]}
           set -e
           if [ "$code" -ne 0 ]; then
