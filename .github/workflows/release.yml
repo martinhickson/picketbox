@@ -94,14 +94,13 @@ jobs:
             echo "Warning: Base branch $BASE_BRANCH not found, using current branch"
           fi
           
-          # Create or checkout release branch
+          # Cut the release branch from the maintenance tip. Never build an existing
+          # release/* branch; fixes belong on the maintenance branch only.
+          echo "Cutting $BRANCH_NAME from $BASE_BRANCH"
+          git checkout -B "$BRANCH_NAME"
           if git ls-remote --heads origin "$BRANCH_NAME" | grep -q "$BRANCH_NAME"; then
-            echo "Branch $BRANCH_NAME already exists, checking it out"
-            git checkout "$BRANCH_NAME"
-            git pull origin "$BRANCH_NAME"
+            git push --force-with-lease -u origin "$BRANCH_NAME"
           else
-            echo "Creating new branch $BRANCH_NAME from $BASE_BRANCH"
-            git checkout -b "$BRANCH_NAME"
             git push -u origin "$BRANCH_NAME"
           fi
 
