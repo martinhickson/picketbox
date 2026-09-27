@@ -95,8 +95,8 @@
             <artifactId>jboss-modules</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.jboss.security</groupId>
-            <artifactId>jbossxacml</artifactId>
+            <groupId>io.github.martinhickson</groupId>
+            <artifactId>jboss-xacml</artifactId>
             <scope>compile</scope>
         </dependency>
         <dependency>
