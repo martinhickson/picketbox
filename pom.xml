@@ -50,7 +50,7 @@
         <version.org.jboss.logging.jboss-logging>3.3.1.Final</version.org.jboss.logging.jboss-logging>
         <version.org.jboss.logging.jboss-logging-tools>2.2.1.Final</version.org.jboss.logging.jboss-logging-tools>
         <version.org.jboss.modules.jboss-modules>1.6.1.Final</version.org.jboss.modules.jboss-modules>
-        <version.org.jboss.security.jbossxacml>2.0.8.Final</version.org.jboss.security.jbossxacml>
+        <version.org.jboss.security.jbossxacml>5.2.1</version.org.jboss.security.jbossxacml>
         <version.jakarta.resource.jakarta-resource-api>2.1.0</version.jakarta.resource.jakarta-resource-api>
         <version.jakarta.authentication.jakarta-authentication-api>3.0.0</version.jakarta.authentication.jakarta-authentication-api>
         <version.jakarta.security.jacc.jakarta-authorization-api>2.1.0</version.jakarta.security.jacc.jakarta-authorization-api>
@@ -298,8 +298,8 @@
                 <scope>provided</scope>
             </dependency>
             <dependency>
-                <groupId>org.jboss.security</groupId>
-                <artifactId>jbossxacml</artifactId>
+                <groupId>io.github.martinhickson</groupId>
+                <artifactId>jboss-xacml</artifactId>
                 <version>${version.org.jboss.security.jbossxacml}</version>
             </dependency>
             <dependency>
@@ -351,6 +351,79 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <!--
+      Maven Central under io.github.martinhickson. Publishes the whole reactor.
+      mvn deploy -Pcentral-release
+    -->
+    <profiles>
+      <profile>
+        <id>central-release</id>
+        <distributionManagement>
+          <repository>
+            <id>central</id>
+            <url>https://central.sonatype.com/</url>
+          </repository>
+          <snapshotRepository>
+            <id>central</id>
+            <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+          </snapshotRepository>
+        </distributionManagement>
+        <build>
+          <plugins>
+            <plugin>
+              <groupId>org.sonatype.central</groupId>
+              <artifactId>central-publishing-maven-plugin</artifactId>
+              <version>0.11.0</version>
+              <extensions>true</extensions>
+              <configuration>
+                <publishingServerId>central</publishingServerId>
+                <autoPublish>true</autoPublish>
+                <waitUntil>published</waitUntil>
+              </configuration>
+            </plugin>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-javadoc-plugin</artifactId>
+              <version>3.11.2</version>
+              <configuration>
+                <doclint>none</doclint>
+                <failOnError>false</failOnError>
+                <failOnWarnings>false</failOnWarnings>
+              </configuration>
+              <executions>
+                <execution>
+                  <id>central-attach-javadocs</id>
+                  <goals>
+                    <goal>jar</goal>
+                  </goals>
+                </execution>
+              </executions>
+            </plugin>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-gpg-plugin</artifactId>
+              <version>3.2.7</version>
+              <executions>
+                <execution>
+                  <id>sign-artifacts</id>
+                  <phase>verify</phase>
+                  <goals>
+                    <goal>sign</goal>
+                  </goals>
+                  <configuration>
+                    <gpgArguments>
+                      <arg>--pinentry-mode</arg>
+                      <arg>loopback</arg>
+                    </gpgArguments>
+                  </configuration>
+                </execution>
+              </executions>
+            </plugin>
+          </plugins>
+        </build>
+      </profile>
+    </profiles>
 
     <repositories>
         <repository>
