@@ -17,5 +17,8 @@ find . -name pom.xml \
   -print0 |
 while IFS= read -r -d '' pom; do
   sed -i "s|<groupId>${FROM_GROUP}</groupId>|<groupId>${TO_GROUP}</groupId>|g" "${pom}"
+  # Shade artifactSet includes are group:artifact text, not a groupId element.
+  # Leave them on the old group and the Central package step shades an empty jar.
+  sed -i "s|<include>${FROM_GROUP}:|<include>${TO_GROUP}:|g" "${pom}"
 done
 echo "Root groupId line: $(grep -m1 '<groupId>' pom.xml || true)"
