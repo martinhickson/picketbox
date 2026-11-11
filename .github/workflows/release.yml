@@ -4,25 +4,25 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Release version (e.g., 5.0.3.1-javax-bravura-1)'
+        description: 'Release version (e.g., 5.0.3.5-javax-bravura-5)'
         required: true
         type: string
-        default: '5.0.3.1-javax-bravura-1'
+        default: '5.0.3.5-javax-bravura-5'
       base_branch:
         description: 'Base branch to create release from (e.g., maintenance-javax)'
         required: false
         type: string
         default: 'maintenance-javax'
       branch_name:
-        description: 'Branch name for release (e.g., release/5.0.3.1-javax)'
+        description: 'Branch name for release (e.g., release/5.0.3.5-javax)'
         required: true
         type: string
-        default: 'release/5.0.3.1-javax'
+        default: 'release/5.0.3.5-javax'
       release_tag:
-        description: 'Git tag for release (e.g., 5.0.3.1-javax-bravura-1)'
+        description: 'Git tag for release (e.g., 5.0.3.5-javax-bravura-5)'
         required: true
         type: string
-        default: '5.0.3.1-javax-bravura-1'
+        default: '5.0.3.5-javax-bravura-5'
       create_release:
         description: 'Create GitHub Release'
         required: false

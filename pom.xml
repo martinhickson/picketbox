@@ -57,6 +57,8 @@
         <version.org.picketbox.picketbox-commons>1.0.0.final</version.org.picketbox.picketbox-commons>
         <version.sleepcat.je>3.2.43</version.sleepcat.je>
         <version.sun-opens.OpenDS>1.0.0</version.sun-opens.OpenDS>
+        <!-- Empty on JDK 8. The jdk17-test-opens profile fills this in. -->
+        <surefire.jvm.opens></surefire.jvm.opens>
     </properties>
 
     <build>
@@ -309,5 +311,17 @@
             </releases>
         </repository>
     </repositories>
+
+    <profiles>
+        <profile>
+            <id>jdk17-test-opens</id>
+            <activation>
+                <jdk>[17,)</jdk>
+            </activation>
+            <properties>
+                <surefire.jvm.opens>--add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.lang.reflect=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED --add-opens java.base/java.security=ALL-UNNAMED</surefire.jvm.opens>
+            </properties>
+        </profile>
+    </profiles>
 
 </project>

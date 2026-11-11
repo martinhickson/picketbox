@@ -30,7 +30,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <surefire.jvm.args>-Xms512m -Xmx1024m</surefire.jvm.args>
+                <surefire.jvm.args>-Xms512m -Xmx1024m ${surefire.jvm.opens}</surefire.jvm.args>
             </properties>
             <modules>
                 <module>acl</module>
