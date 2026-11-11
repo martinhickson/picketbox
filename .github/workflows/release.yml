@@ -4,22 +4,25 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Release version (e.g., 5.0.4.jdk17.1)'
+        description: 'Release version (e.g., 5.0.3.1-javax-bravura-1)'
         required: true
         type: string
+        default: '5.0.3.1-javax-bravura-1'
       base_branch:
-        description: 'Base branch to create release from (e.g., main, master, 5.0.3)'
+        description: 'Base branch to create release from (e.g., maintenance-javax)'
         required: false
         type: string
-        default: 'main'
+        default: 'maintenance-javax'
       branch_name:
-        description: 'Branch name for release (e.g., release/5.0.4)'
+        description: 'Branch name for release (e.g., release/5.0.3.1-javax)'
         required: true
         type: string
+        default: 'release/5.0.3.1-javax'
       release_tag:
-        description: 'Git tag for release (e.g., 5.0.4.jdk17.1)'
+        description: 'Git tag for release (e.g., 5.0.3.1-javax-bravura-1)'
         required: true
         type: string
+        default: '5.0.3.1-javax-bravura-1'
       create_release:
         description: 'Create GitHub Release'
         required: false
@@ -92,22 +95,33 @@ jobs:
       - name: Update version in all POM files
         run: |
           VERSION="${{ github.event.inputs.version }}"
-          OLD_VERSION=$(grep -m 1 '<version>' pom.xml | sed 's/.*<version>\(.*\)<\/version>.*/\1/' | head -1)
-          
+          BASE_BRANCH="${{ github.event.inputs.base_branch }}"
+          # The first <version> in the root POM is jboss-parent, not the project version.
+          PARENT_VERSION=$(git show "origin/${BASE_BRANCH}:pom.xml" | sed -n '/<parent>/,/<\/parent>/p' | grep -m 1 '<version>' | sed 's/.*<version>\(.*\)<\/version>.*/\1/')
+          OLD_VERSION=$(sed -n '/<\/parent>/,$p' pom.xml | grep -m 1 '<version>' | sed 's/.*<version>\(.*\)<\/version>.*/\1/')
+
+          if [ -z "$PARENT_VERSION" ] || [ -z "$OLD_VERSION" ] || [ "$OLD_VERSION" = "$PARENT_VERSION" ]; then
+            echo "Refusing to rewrite version '${OLD_VERSION}' (jboss-parent is ${PARENT_VERSION})."
+            exit 1
+          fi
+
+          echo "Restoring jboss-parent to ${PARENT_VERSION}"
+          awk -v pv="$PARENT_VERSION" '
+            /<parent>/ { inparent=1 }
+            inparent && /<version>/ && !replaced {
+              sub(/<version>[^<]*<\/version>/, "<version>" pv "</version>")
+              replaced=1
+            }
+            /<\/parent>/ { inparent=0 }
+            { print }
+          ' pom.xml > pom.xml.fixed && mv pom.xml.fixed pom.xml
+
           echo "Updating version from $OLD_VERSION to $VERSION"
-          
-          # Update root pom.xml version
-          sed -i "s/<version>${OLD_VERSION}<\/version>/<version>${VERSION}<\/version>/" pom.xml
-          
-          # Update SCM tag in root pom.xml
-          sed -i "s/<tag>.*<\/tag>/<tag>${VERSION}<\/tag>/" pom.xml
-          
-          # Update all parent version references in child modules
-          find . -name "pom.xml" -not -path "*/target/*" -not -path "*/.git/*" -not -path "./pom.xml" -exec sed -i "s/<version>${OLD_VERSION}<\/version>/<version>${VERSION}<\/version>/g" {} \;
-          
-          # Update dependency versions that reference project version
-          find . -name "pom.xml" -not -path "*/target/*" -not -path "*/.git/*" -exec sed -i "s/<version>\${project.version}<\/version>/<version>${VERSION}<\/version>/g" {} \;
-          
+
+          find . -name "pom.xml" -not -path "*/target/*" -not -path "*/.git/*" -exec sed -i "s|<version>${OLD_VERSION}</version>|<version>${VERSION}</version>|g" {} \;
+          sed -i "s|<tag>.*</tag>|<tag>${VERSION}</tag>|" pom.xml
+          find . -name "pom.xml" -not -path "*/target/*" -not -path "*/.git/*" -exec sed -i "s|<version>\${project.version}</version>|<version>${VERSION}</version>|g" {} \;
+
           echo "Version update complete"
 
       - name: Commit version changes
