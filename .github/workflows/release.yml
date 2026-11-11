@@ -55,7 +55,8 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          # jboss-logging-processor needs javax.annotation.Generated, which JDK 11+ does not provide.
+          java-version: '8'
           distribution: 'temurin'
           cache: maven
 
