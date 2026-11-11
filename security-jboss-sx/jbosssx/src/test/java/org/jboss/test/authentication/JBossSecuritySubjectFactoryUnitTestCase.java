@@ -170,8 +170,8 @@ public class JBossSecuritySubjectFactoryUnitTestCase extends TestCase
       Set<GroupPrincipal> groups = subject.getPrincipals(GroupPrincipal.class);
       Principal scott = new SimplePrincipal("scott");
       assertTrue("Principals contains scott", subject.getPrincipals().contains(scott));
-      assertTrue("Principals contains Roles", groups.contains(new SimpleGroup("Roles")));
-      assertTrue("Principals contains CallerPrincipal", groups.contains(new SimpleGroup("CallerPrincipal")));
+      assertTrue("Principals contains Roles", containsGroup(groups, "Roles"));
+      assertTrue("Principals contains CallerPrincipal", containsGroup(groups, "CallerPrincipal"));
       for (GroupPrincipal group : groups)
       {
          if (group.getName().equals("Roles"))
@@ -207,8 +207,8 @@ public class JBossSecuritySubjectFactoryUnitTestCase extends TestCase
       Set<GroupPrincipal> groups = subject.getPrincipals(GroupPrincipal.class);
       Principal scott = new SimplePrincipal("scott");
       assertTrue("Principals contains scott", subject.getPrincipals().contains(scott));
-      assertTrue("Principals contains Roles", groups.contains(new SimpleGroup("Roles")));
-      assertTrue("Principals contains CallerPrincipal", groups.contains(new SimpleGroup("CallerPrincipal")));
+      assertTrue("Principals contains Roles", containsGroup(groups, "Roles"));
+      assertTrue("Principals contains CallerPrincipal", containsGroup(groups, "CallerPrincipal"));
       for (GroupPrincipal group : groups)
       {
          if (group.getName().equals("Roles"))
@@ -236,5 +236,16 @@ public class JBossSecuritySubjectFactoryUnitTestCase extends TestCase
 	   Subject subject = subjectFactory.createSubject("securityDomain");
 	   assertNotNull(subject);
 	   assertTrue(subject.getPrincipals().contains(new SimplePrincipal("guest")));
+   }
+
+   /** CXF SimpleGroup.equals includes members, so an empty group is not equal to the populated subject group. */
+   private static boolean containsGroup(Set<GroupPrincipal> groups, String name)
+   {
+      for (GroupPrincipal group : groups)
+      {
+         if (name.equals(group.getName()))
+            return true;
+      }
+      return false;
    }
 }

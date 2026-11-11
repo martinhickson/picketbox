@@ -366,8 +366,8 @@ protected void setUp() throws Exception
      Set<GroupPrincipal> groups = subject.getPrincipals(GroupPrincipal.class);
      Principal scott = new SimplePrincipal("scott");
      assertTrue("Principals contains scott", subject.getPrincipals().contains(scott));
-     assertTrue("Principals contains Roles", groups.contains(new SimpleGroup("Roles")));
-     assertTrue("Principals contains CallerPrincipal", groups.contains(new SimpleGroup("CallerPrincipal")));
+     assertTrue("Principals contains Roles", containsGroup(groups, "Roles"));
+     assertTrue("Principals contains CallerPrincipal", containsGroup(groups, "CallerPrincipal"));
      for (GroupPrincipal group : groups)
      {
         if (group.getName().equals("Roles"))
@@ -401,8 +401,8 @@ protected void setUp() throws Exception
      Set<GroupPrincipal> groups = subject.getPrincipals(GroupPrincipal.class);
      Principal scott = new SimplePrincipal("scott");
      assertTrue("Principals contains scott", subject.getPrincipals().contains(scott));
-     assertTrue("Principals contains Roles", groups.contains(new SimpleGroup("Roles")));
-     assertTrue("Principals contains CallerPrincipal", groups.contains(new SimpleGroup("CallerPrincipal")));
+     assertTrue("Principals contains Roles", containsGroup(groups, "Roles"));
+     assertTrue("Principals contains CallerPrincipal", containsGroup(groups, "CallerPrincipal"));
      for (GroupPrincipal group : groups)
      {
         if (group.getName().equals("Roles"))
@@ -437,8 +437,8 @@ protected void setUp() throws Exception
      Set<GroupPrincipal> groups = subject.getPrincipals(GroupPrincipal.class);
      Principal nobody = new SimplePrincipal("nobody");
      assertTrue("Principals contains nobody", subject.getPrincipals().contains(nobody));
-     assertTrue("Principals contains Roles", groups.contains(new SimpleGroup("Roles")));
-     assertTrue("Principals contains CallerPrincipal", groups.contains(new SimpleGroup("CallerPrincipal")));
+     assertTrue("Principals contains Roles", containsGroup(groups, "Roles"));
+     assertTrue("Principals contains CallerPrincipal", containsGroup(groups, "CallerPrincipal"));
      for (GroupPrincipal group : groups)
      {
         if (group.getName().equals("Roles"))
@@ -484,8 +484,8 @@ protected void setUp() throws Exception
      Set<GroupPrincipal> groups = subject.getPrincipals(GroupPrincipal.class);
      Principal stark = new SimplePrincipal("stark");
      assertTrue("Principals contains stark", subject.getPrincipals().contains(stark));
-     assertTrue("Principals contains Roles", groups.contains(new SimpleGroup("Roles")));
-     assertTrue("Principals contains CallerPrincipal", groups.contains(new SimpleGroup("CallerPrincipal")));
+     assertTrue("Principals contains Roles", containsGroup(groups, "Roles"));
+     assertTrue("Principals contains CallerPrincipal", containsGroup(groups, "CallerPrincipal"));
      for (GroupPrincipal group : groups)
      {
         if (group.getName().equals("Roles"))
@@ -520,8 +520,8 @@ protected void setUp() throws Exception
      Set<GroupPrincipal> groups = subject.getPrincipals(GroupPrincipal.class);
      Principal jduke = new SimplePrincipal("jduke");
      assertTrue("Principals contains jduke", subject.getPrincipals().contains(jduke));
-     assertTrue("Principals contains Roles", groups.contains(new SimpleGroup("Roles")));
-     assertTrue("Principals contains CallerPrincipal", groups.contains(new SimpleGroup("CallerPrincipal")));
+     assertTrue("Principals contains Roles", containsGroup(groups, "Roles"));
+     assertTrue("Principals contains CallerPrincipal", containsGroup(groups, "CallerPrincipal"));
      for (GroupPrincipal group : groups)
      {
         if (group.getName().equals("Roles"))
@@ -572,7 +572,7 @@ protected void setUp() throws Exception
   public void testValidateError() throws Exception
   {
      // test the configuration that doesn't set the throwValidateError flag.
-     LoginContext context = new LoginContext("testValidateError", new UsernamePasswordHandler(null, null));
+     LoginContext context = new LoginContext("testValidateError", new UsernamePasswordHandler("user", "secret".toCharArray()));
      try 
      {
         context.login();
@@ -584,7 +584,7 @@ protected void setUp() throws Exception
      }
      
      // test the configuration that sets the throwValidateError flag.
-     context = new LoginContext("testValidateErrorWithFlag", new UsernamePasswordHandler(null, null));
+     context = new LoginContext("testValidateErrorWithFlag", new UsernamePasswordHandler("user", "secret".toCharArray()));
      try 
      {
         context.login();
@@ -650,5 +650,16 @@ protected void setUp() throws Exception
         assertEquals("Username or password contains invalid tokens", le.getMessage());
      }
 
+  }
+
+  /** CXF SimpleGroup.equals includes members, so an empty group is not equal to the populated subject group. */
+  private static boolean containsGroup(Set<GroupPrincipal> groups, String name)
+  {
+     for (GroupPrincipal group : groups)
+     {
+        if (name.equals(group.getName()))
+           return true;
+     }
+     return false;
   }
 }
