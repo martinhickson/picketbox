@@ -11,12 +11,12 @@ a name of 'starksm' for testing the subject based policy permissions.
     </authentication>
     <authorization>
       <grant>
-        <principal code = "org.jboss.security.SimplePrincipal" name = "scott"/>
+        <principal code = "org.apache.cxf.common.security.SimplePrincipal" name = "scott"/>
           <permission code = "org.jboss.test.NamespacePermission" name = "Project1" actions = "rwxd"/>
           <permission code = "org.jboss.test.NamespacePermission" name = "Project1/Documents/Private" actions = "rw-d"/>
       </grant>
       <grant>
-          <principal code = "org.jboss.security.SimplePrincipal" name = "starksm"/>
+          <principal code = "org.apache.cxf.common.security.SimplePrincipal" name = "starksm"/>
 	  <permission code = "org.jboss.test.NamespacePermission" name = "Project1/Documents/Public" actions = "r---"/>
       </grant>
     </authorization>
@@ -29,7 +29,7 @@ a name of 'starksm' for testing the subject based policy permissions.
     <authentication>
       <login-module code = "org.jboss.security.srp.jaas.SRPLoginModule" flag = "required">
         <module-option name = "password-stacking">useFirstPass</module-option>
-	  <module-option name = "principalClassName">org.jboss.security.SimplePrincipal</module-option>
+	  <module-option name = "principalClassName">org.apache.cxf.common.security.SimplePrincipal</module-option>
 	  <module-option name = "srpServerJndiName">SRPServerInterface</module-option>
 	  <module-option name = "debug">true</module-option>
       </login-module>

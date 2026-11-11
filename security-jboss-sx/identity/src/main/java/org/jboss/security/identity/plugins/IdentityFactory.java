@@ -41,7 +41,7 @@ public class IdentityFactory
 {
    public static final String IDENTITY_CLASS = "org.jboss.security.identity.plugins.SimpleIdentity";
 
-   public static final String PRINCIPAL_CLASS = "org.jboss.security.SimplePrincipal";
+   public static final String PRINCIPAL_CLASS = "org.apache.cxf.common.security.SimplePrincipal";
 
    public static final String GROUP_CLASS = "org.apache.cxf.common.security.SimpleGroup";
    
