@@ -38,7 +38,7 @@ import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 
-import org.apache.cxf.common.security.SimpleGroup;
+import org.apache.cxf.common.security.GroupPrincipal;
 
 import org.jboss.security.AuthenticationManager;
 import org.jboss.security.CacheableManager;
@@ -453,11 +453,11 @@ public class JBossCachedAuthenticationManager implements AuthenticationManager, 
       }
 
       // Get the Subject callerPrincipal by looking for a Group called 'CallerPrincipal'
-      Set<SimpleGroup> subjectGroups = subject.getPrincipals(SimpleGroup.class);
-      Iterator<SimpleGroup> iter = subjectGroups.iterator();
+      Set<GroupPrincipal> subjectGroups = subject.getPrincipals(GroupPrincipal.class);
+      Iterator<GroupPrincipal> iter = subjectGroups.iterator();
       while (iter.hasNext())
       {
-         SimpleGroup grp = iter.next();
+         GroupPrincipal grp = iter.next();
          String name = grp.getName();
          if (name.equals("CallerPrincipal"))
          {
@@ -478,7 +478,7 @@ public class JBossCachedAuthenticationManager implements AuthenticationManager, 
          while (iterPrincipals.hasNext())
          {
             Principal p = iterPrincipals.next();
-            if (!(p instanceof SimpleGroup))
+            if (!(p instanceof GroupPrincipal))
             {
                info.callerPrincipal = p;
                break;

@@ -108,12 +108,13 @@ public class NestableGroup extends SimplePrincipal implements GroupPrincipal, Cl
     */
     public boolean isMember(Principal member)
     {
-        // CXF SimpleGroup membership is a set lookup. AnybodyPrincipal.equals is true for every
-        // argument, so it never matches that way. The removed JBoss SimpleGroup treated it as a member.
-        if (member instanceof AnybodyPrincipal)
-            return true;
         if( rolesStack.size() == 0 )
             return false;
+        // CXF SimpleGroup membership is a set lookup. AnybodyPrincipal.equals is true for every
+        // argument, so it never matches that way. The removed JBoss SimpleGroup treated it as a
+        // member of the active group.
+        if (member instanceof AnybodyPrincipal)
+            return true;
         GroupPrincipal activeGroup = (GroupPrincipal) rolesStack.getFirst();
         boolean isMember = activeGroup.isMember(member);
         return isMember;

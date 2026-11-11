@@ -26,7 +26,7 @@ import java.util.Set;
 
 import javax.security.auth.Subject;
 
-import org.apache.cxf.common.security.SimpleGroup;
+import org.apache.cxf.common.security.GroupPrincipal;
 
 import org.jboss.security.SecurityConstants;
 import org.jboss.security.identity.RoleGroup;
@@ -40,17 +40,17 @@ import org.jboss.security.identity.plugins.SimpleRoleGroup;
 public class PicketBoxUtil
 {
    /**
-    * Given a JAAS Subject, will look for {@code Group} principals
+    * Given a JAAS Subject, will look for {@code GroupPrincipal}s
     * with name "Roles" and return that in a {@code RoleGroup}
     * @param subject
     * @return a RoleGroup containing the roles
     */
    public static RoleGroup getRolesFromSubject(Subject subject)
    {
-      Set<SimpleGroup> groupPrincipals = subject.getPrincipals(SimpleGroup.class);
+      Set<GroupPrincipal> groupPrincipals = subject.getPrincipals(GroupPrincipal.class);
       if(groupPrincipals!= null)
       {
-         for(SimpleGroup groupPrincipal: groupPrincipals)
+         for(GroupPrincipal groupPrincipal: groupPrincipals)
          {
             if(SecurityConstants.ROLES_IDENTIFIER.equals(groupPrincipal.getName()))
                   return new SimpleRoleGroup(groupPrincipal);  
@@ -71,7 +71,7 @@ public class PicketBoxUtil
       {
          for(Principal p: principals)
          {
-            if(!(p instanceof SimpleGroup))
+            if(!(p instanceof GroupPrincipal))
                return p; 
          }
       }

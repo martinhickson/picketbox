@@ -31,7 +31,7 @@ import java.util.StringTokenizer;
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
 
-import org.apache.cxf.common.security.SimpleGroup;
+import org.apache.cxf.common.security.GroupPrincipal;
 
 import org.jboss.security.authorization.AuthorizationContext;
 import org.jboss.security.authorization.AuthorizationException;
@@ -88,9 +88,9 @@ public class PicketBoxAuthorizationModule implements AuthorizationModule
       Set<Principal> principals = subject.getPrincipals();
       for(Principal p: principals)
       {
-         if(p instanceof SimpleGroup)
+         if(p instanceof GroupPrincipal)
          {
-            SimpleGroup group = (SimpleGroup) p;
+            GroupPrincipal group = (GroupPrincipal) p;
             if(group.getName().equalsIgnoreCase("Roles"))
             {
                Enumeration<? extends Principal> roles = group.members();

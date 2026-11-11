@@ -127,6 +127,9 @@ public class NestableGroupTestCase extends TestCase
     public void testAnybody()
     {
         System.out.println("testAnybody");
+        NestableGroup empty = new NestableGroup("empty");
+        assertFalse("AnybodyPrincipal is not a member of an empty group",
+            empty.isMember(AnybodyPrincipal.ANYBODY_PRINCIPAL));
         group.addMember(groups[0]);
         boolean isMember = group.isMember(AnybodyPrincipal.ANYBODY_PRINCIPAL);
         assertTrue("AnybodyPrincipal.isMember", isMember);

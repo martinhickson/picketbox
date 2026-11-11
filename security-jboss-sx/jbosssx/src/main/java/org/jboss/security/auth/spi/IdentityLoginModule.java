@@ -37,13 +37,13 @@ import org.apache.cxf.common.security.SimplePrincipal;
  * A simple login module that simply associates the principal specified
  * in the module options with any subject authenticated against the module.
  * The type of Principal class used is
- * <code>org.jboss.security.SimplePrincipal.</code>
+ * <code>org.apache.cxf.common.security.SimplePrincipal.</code>
  * <p>
  * If no principal option is specified a principal with the name of 'guest'
  * is used.
  *
- * @see org.jboss.security.SimpleGroup
- * @see org.jboss.security.SimplePrincipal
+ * @see org.apache.cxf.common.security.SimpleGroup
+ * @see org.apache.cxf.common.security.SimplePrincipal
  *
  * @author Scott.Stark@jboss.org
  * @version $Revision$
