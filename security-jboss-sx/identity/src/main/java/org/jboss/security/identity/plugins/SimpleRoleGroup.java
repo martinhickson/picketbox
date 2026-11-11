@@ -28,7 +28,6 @@ import java.io.ObjectOutputStream;
 import java.io.ObjectOutputStream.PutField;
 import java.io.ObjectStreamField;
 import java.security.Principal;
-import java.security.acl.Group;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -36,6 +35,8 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import org.apache.cxf.common.security.SimpleGroup;
 
 import org.jboss.security.PicketBoxMessages;
 import org.jboss.security.identity.Role;
@@ -74,7 +75,7 @@ public class SimpleRoleGroup extends SimpleRole implements RoleGroup
       addAll(roles);
    }
 
-   public SimpleRoleGroup(Group rolesGroup)
+   public SimpleRoleGroup(SimpleGroup rolesGroup)
    {
       super(rolesGroup.getName());
       Enumeration<? extends Principal> principals = rolesGroup.members();

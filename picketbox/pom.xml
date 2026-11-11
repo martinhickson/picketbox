@@ -105,6 +105,12 @@
             <artifactId>picketbox-identity-impl</artifactId>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-core</artifactId>
+            <version>3.3.6</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
 </project>

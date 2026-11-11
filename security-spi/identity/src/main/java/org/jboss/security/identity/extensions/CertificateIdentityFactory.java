@@ -22,8 +22,9 @@
 package org.jboss.security.identity.extensions;
 
 import java.security.Principal;
-import java.security.acl.Group;
 import java.security.cert.X509Certificate;
+
+import org.apache.cxf.common.security.SimpleGroup;
 
 import org.jboss.security.identity.IdentityFactory;
 import org.jboss.security.identity.Role;
@@ -65,7 +66,7 @@ public class CertificateIdentityFactory extends IdentityFactory
          {
          }
 
-         public Group asGroup()
+         public SimpleGroup asGroup()
          { 
             return null;
          }

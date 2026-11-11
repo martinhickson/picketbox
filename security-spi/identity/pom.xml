@@ -17,6 +17,12 @@
             <groupId>org.picketbox</groupId>
             <artifactId>common-spi</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-core</artifactId>
+            <version>3.3.6</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <reporting>
