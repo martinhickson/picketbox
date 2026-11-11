@@ -1,7 +1,7 @@
 package org.jboss.test.authorization.jacc;
 
 import junit.framework.TestCase;
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimplePrincipal;
 import org.jboss.security.jacc.DelegatingPolicy;
 import org.jboss.security.jacc.JBossPolicyConfigurationFactory;
 import org.junit.Assert;

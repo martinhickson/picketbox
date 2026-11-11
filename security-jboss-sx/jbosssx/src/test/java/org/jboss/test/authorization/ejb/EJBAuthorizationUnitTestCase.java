@@ -30,7 +30,7 @@ import javax.security.auth.Subject;
 
 import junit.framework.TestCase;
 
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimplePrincipal;
 import org.jboss.security.auth.callback.AppCallbackHandler;
 import org.jboss.security.authorization.AuthorizationContext;
 import org.jboss.security.authorization.AuthorizationException;

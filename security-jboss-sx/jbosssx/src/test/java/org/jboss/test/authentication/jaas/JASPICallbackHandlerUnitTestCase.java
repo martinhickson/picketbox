@@ -34,6 +34,7 @@ import javax.security.auth.message.callback.CallerPrincipalCallback;
 import javax.security.auth.message.callback.GroupPrincipalCallback;
 import javax.security.auth.message.callback.PasswordValidationCallback;
 
+import org.apache.cxf.common.security.SimplePrincipal;
 import org.jboss.security.*;
 import org.jboss.security.auth.callback.JASPICallbackHandler;
 import org.jboss.security.identity.Identity;

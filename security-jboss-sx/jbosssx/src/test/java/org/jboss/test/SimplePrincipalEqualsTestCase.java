@@ -26,11 +26,12 @@ import java.security.Principal;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimplePrincipal;
 
-/** 
- * Tests of the org.jboss.security.SimplePrincipal.equals method
- * 
+/**
+ * Tests of org.apache.cxf.common.security.SimplePrincipal.equals.
+ * Equality requires another SimplePrincipal with the same name.
+ *
  * @author <a href="mmoyses@redhat.com">Marcus Moyses</a>
  * @version $Revision: 68749 $
  */
@@ -41,33 +42,18 @@ public class SimplePrincipalEqualsTestCase extends TestCase
 
    private static CustomPrincipal customPrincipal = new CustomPrincipal("test");
 
-   private static String OVERRIDE_EQUALS_BEHAVIOR = "org.jboss.security.simpleprincipal.equals.override";
-
    public SimplePrincipalEqualsTestCase(String name)
    {
       super(name);
    }
 
-   /**
-    * Test the normal behavior (compares only Principal.getName)
-    * 
-    * @throws Exception
-    */
-   public void testNormalBehavior() throws Exception
+   public void testSameName() throws Exception
    {
-      System.setProperty(OVERRIDE_EQUALS_BEHAVIOR, "false");
-      assertTrue("Principals should be equal", simplePrincipal.equals(customPrincipal));
+      assertTrue("Principals should be equal", simplePrincipal.equals(new SimplePrincipal("test")));
    }
 
-   /**
-    * Test using the system property to override the normal behavior
-    * (compares only instances of SimplePrincipals)
-    * 
-    * @throws Exception
-    */
-   public void testBehaviorOverridden() throws Exception
+   public void testDifferentPrincipalType() throws Exception
    {
-      System.setProperty(OVERRIDE_EQUALS_BEHAVIOR, "true");
       assertFalse("Principals should not be equal", simplePrincipal.equals(customPrincipal));
    }
 

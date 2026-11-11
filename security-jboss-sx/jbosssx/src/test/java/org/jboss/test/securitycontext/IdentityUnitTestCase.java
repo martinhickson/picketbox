@@ -22,7 +22,7 @@
 package org.jboss.test.securitycontext;
 
 import java.security.Principal;
-import java.security.acl.Group;
+import org.apache.cxf.common.security.SimpleGroup;
 import java.util.Set;
 
 import junit.framework.TestCase;
@@ -65,7 +65,7 @@ public class IdentityUnitTestCase extends TestCase
    { 
       private static final long serialVersionUID = 1L;
 
-      public Group asGroup()
+      public SimpleGroup asGroup()
       {
          return null;
       }
@@ -90,7 +90,7 @@ public class IdentityUnitTestCase extends TestCase
    {
       private static final long serialVersionUID = 1L;
 
-      public Group asGroup()
+      public SimpleGroup asGroup()
       {
          return null;
       }

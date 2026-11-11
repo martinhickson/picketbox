@@ -23,7 +23,8 @@ package org.jboss.security.identity;
 
 import java.io.Serializable;
 import java.security.Principal;
-import java.security.acl.Group;
+
+import org.apache.cxf.common.security.SimpleGroup;
 
 //$Id$
 
@@ -49,9 +50,9 @@ public interface Identity extends Serializable
    
    /**
     * Return a Group only if it has been set
-    * @return
+    * @return SimpleGroup (replaces java.security.acl.Group removed in JDK 17)
     */
-   public Group asGroup(); 
+   public SimpleGroup asGroup(); 
    
    /**
     * Returns a Principal only if it set

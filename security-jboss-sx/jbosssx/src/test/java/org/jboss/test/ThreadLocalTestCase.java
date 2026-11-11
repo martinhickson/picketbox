@@ -26,7 +26,7 @@ import java.security.Principal;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimplePrincipal;
 
 /** Tests of propagating the security identity across threads using
 InheritableThreadLocal.

@@ -43,7 +43,7 @@ import org.jboss.security.vault.SecurityVaultUtil;
  * connection request with the actual EIS connection requirements.
  *
  * The type of Principal class used is
- * <code>org.jboss.security.SimplePrincipal.</code>
+ * <code>org.apache.cxf.common.security.SimplePrincipal.</code>
  * <p>
  *
  * @see org.picketbox.datasource.security.ConfiguredIdentityLoginModule

@@ -29,7 +29,7 @@ import junit.framework.TestCase;
 
 import org.jboss.security.SecurityContext;
 import org.jboss.security.SecurityContextFactory;
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimplePrincipal;
 
 //$Id$
 

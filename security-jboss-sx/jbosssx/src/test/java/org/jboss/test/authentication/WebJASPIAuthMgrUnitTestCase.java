@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.jboss.security.SecurityContextAssociation;
 import org.jboss.security.ServerAuthenticationManager;
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimplePrincipal;
 import org.jboss.security.auth.callback.AppCallbackHandler;
 import org.jboss.security.auth.callback.JBossCallbackHandler;
 import org.jboss.security.auth.login.XMLLoginConfigImpl;

@@ -26,7 +26,7 @@ import static org.junit.Assert.fail;
 
 import java.security.GeneralSecurityException;
 import java.security.Principal;
-import java.security.acl.Group;
+import org.apache.cxf.common.security.GroupPrincipal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -38,8 +38,8 @@ import javax.security.jacc.PolicyContext;
 import javax.security.jacc.PolicyContextException;
 import javax.security.jacc.PolicyContextHandler;
 
-import org.jboss.security.SimpleGroup;
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimpleGroup;
+import org.apache.cxf.common.security.SimplePrincipal;
 import org.jboss.security.auth.callback.JBossCallbackHandler;
 import org.jboss.security.auth.spi.otp.JBossTimeBasedOTPLoginModule;
 import org.jboss.security.otp.TimeBasedOTP;
@@ -129,16 +129,16 @@ public class JBossTimeBasedOTPLoginModuleUnitTestCase
       options.put( "additionalRoles", "RoleA,RoleB" );
       
       //Add in a subject group principal
-      Group group = new SimpleGroup( "Roles" );
+      GroupPrincipal group = new SimpleGroup( "Roles" );
       subject.getPrincipals().add( group );
       
       JBossTimeBasedOTPLoginModule jtp = new JBossTimeBasedOTPLoginModule();
       jtp.initialize(subject, callbackHandler, sharedState, options); 
       jtp.login();
       
-      Set<Group> groups = subject.getPrincipals( Group.class );
+      Set<GroupPrincipal> groups = subject.getPrincipals( GroupPrincipal.class );
       assertTrue( "set has 1 group", groups.size() == 1 );
-      Group retrievedGroup = groups.iterator().next();
+      GroupPrincipal retrievedGroup = groups.iterator().next();
       assertTrue( retrievedGroup.isMember( new SimplePrincipal( "RoleA" )));
       assertTrue( retrievedGroup.isMember( new SimplePrincipal( "RoleB" )));
    }  

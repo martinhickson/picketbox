@@ -32,7 +32,7 @@ import junit.framework.TestCase;
 
 import org.jboss.security.AnybodyPrincipal;
 import org.jboss.security.SecurityConstants;
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimplePrincipal;
 import org.jboss.security.authorization.AuthorizationContext;
 import org.jboss.security.authorization.ResourceKeys;
 import org.jboss.security.authorization.modules.ejb.EJBPolicyModuleDelegate;

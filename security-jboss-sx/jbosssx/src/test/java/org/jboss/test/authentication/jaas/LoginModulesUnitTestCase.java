@@ -24,7 +24,7 @@ package org.jboss.test.authentication.jaas;
 import java.lang.reflect.Method;
 import java.security.MessageDigest;
 import java.security.Principal;
-import java.security.acl.Group;
+import org.apache.cxf.common.security.GroupPrincipal;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -41,8 +41,8 @@ import junit.framework.TestCase;
 import org.jboss.crypto.CryptoUtil;
 import org.jboss.logging.Logger;
 import org.jboss.security.SecurityContextAssociation;
-import org.jboss.security.SimpleGroup;
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimpleGroup;
+import org.apache.cxf.common.security.SimplePrincipal;
 import org.jboss.security.auth.callback.UsernamePasswordHandler;
 import org.jboss.security.auth.spi.UsernamePasswordLoginModule;
 
@@ -236,10 +236,10 @@ public class LoginModulesUnitTestCase extends TestCase
   public static class TestLoginModule extends UsernamePasswordLoginModule
   {
      @Override
-   protected Group[] getRoleSets()
+   protected GroupPrincipal[] getRoleSets()
      {
         SimpleGroup roles = new SimpleGroup("Roles");
-        Group[] roleSets = {roles};
+        GroupPrincipal[] roleSets = {roles};
         roles.addMember(new SimplePrincipal("TestRole"));
         roles.addMember(new SimplePrincipal("Role2"));
         return roleSets;
@@ -363,12 +363,12 @@ protected void setUp() throws Exception
      LoginContext lc = new LoginContext("testUsernamePassword", handler);
      lc.login();
      Subject subject = lc.getSubject();
-     Set<Group> groups = subject.getPrincipals(Group.class);
+     Set<GroupPrincipal> groups = subject.getPrincipals(GroupPrincipal.class);
      Principal scott = new SimplePrincipal("scott");
      assertTrue("Principals contains scott", subject.getPrincipals().contains(scott));
-     assertTrue("Principals contains Roles", groups.contains(new SimpleGroup("Roles")));
-     assertTrue("Principals contains CallerPrincipal", groups.contains(new SimpleGroup("CallerPrincipal")));
-     for (Group group : groups)
+     assertTrue("Principals contains Roles", containsGroup(groups, "Roles"));
+     assertTrue("Principals contains CallerPrincipal", containsGroup(groups, "CallerPrincipal"));
+     for (GroupPrincipal group : groups)
      {
         if (group.getName().equals("Roles"))
         {
@@ -398,12 +398,12 @@ protected void setUp() throws Exception
      LoginContext lc = new LoginContext("testUsernamePasswordHash", handler);
      lc.login();
      Subject subject = lc.getSubject();
-     Set<Group> groups = subject.getPrincipals(Group.class);
+     Set<GroupPrincipal> groups = subject.getPrincipals(GroupPrincipal.class);
      Principal scott = new SimplePrincipal("scott");
      assertTrue("Principals contains scott", subject.getPrincipals().contains(scott));
-     assertTrue("Principals contains Roles", groups.contains(new SimpleGroup("Roles")));
-     assertTrue("Principals contains CallerPrincipal", groups.contains(new SimpleGroup("CallerPrincipal")));
-     for (Group group : groups)
+     assertTrue("Principals contains Roles", containsGroup(groups, "Roles"));
+     assertTrue("Principals contains CallerPrincipal", containsGroup(groups, "CallerPrincipal"));
+     for (GroupPrincipal group : groups)
      {
         if (group.getName().equals("Roles"))
         {
@@ -434,12 +434,12 @@ protected void setUp() throws Exception
      LoginContext lc = new LoginContext("testAnon", handler);
      lc.login();
      Subject subject = lc.getSubject();
-     Set<Group> groups = subject.getPrincipals(Group.class);
+     Set<GroupPrincipal> groups = subject.getPrincipals(GroupPrincipal.class);
      Principal nobody = new SimplePrincipal("nobody");
      assertTrue("Principals contains nobody", subject.getPrincipals().contains(nobody));
-     assertTrue("Principals contains Roles", groups.contains(new SimpleGroup("Roles")));
-     assertTrue("Principals contains CallerPrincipal", groups.contains(new SimpleGroup("CallerPrincipal")));
-     for (Group group : groups)
+     assertTrue("Principals contains Roles", containsGroup(groups, "Roles"));
+     assertTrue("Principals contains CallerPrincipal", containsGroup(groups, "CallerPrincipal"));
+     for (GroupPrincipal group : groups)
      {
         if (group.getName().equals("Roles"))
         {
@@ -481,12 +481,12 @@ protected void setUp() throws Exception
      LoginContext lc = new LoginContext("testIdentity");
      lc.login();
      Subject subject = lc.getSubject();
-     Set<Group> groups = subject.getPrincipals(Group.class);
+     Set<GroupPrincipal> groups = subject.getPrincipals(GroupPrincipal.class);
      Principal stark = new SimplePrincipal("stark");
      assertTrue("Principals contains stark", subject.getPrincipals().contains(stark));
-     assertTrue("Principals contains Roles", groups.contains(new SimpleGroup("Roles")));
-     assertTrue("Principals contains CallerPrincipal", groups.contains(new SimpleGroup("CallerPrincipal")));
-     for (Group group : groups)
+     assertTrue("Principals contains Roles", containsGroup(groups, "Roles"));
+     assertTrue("Principals contains CallerPrincipal", containsGroup(groups, "CallerPrincipal"));
+     for (GroupPrincipal group : groups)
      {
         if (group.getName().equals("Roles"))
         {
@@ -517,12 +517,12 @@ protected void setUp() throws Exception
      LoginContext lc = new LoginContext("testSimple", handler);
      lc.login();
      Subject subject = lc.getSubject();
-     Set<Group> groups = subject.getPrincipals(Group.class);
+     Set<GroupPrincipal> groups = subject.getPrincipals(GroupPrincipal.class);
      Principal jduke = new SimplePrincipal("jduke");
      assertTrue("Principals contains jduke", subject.getPrincipals().contains(jduke));
-     assertTrue("Principals contains Roles", groups.contains(new SimpleGroup("Roles")));
-     assertTrue("Principals contains CallerPrincipal", groups.contains(new SimpleGroup("CallerPrincipal")));
-     for (Group group : groups)
+     assertTrue("Principals contains Roles", containsGroup(groups, "Roles"));
+     assertTrue("Principals contains CallerPrincipal", containsGroup(groups, "CallerPrincipal"));
+     for (GroupPrincipal group : groups)
      {
         if (group.getName().equals("Roles"))
         {
@@ -572,7 +572,7 @@ protected void setUp() throws Exception
   public void testValidateError() throws Exception
   {
      // test the configuration that doesn't set the throwValidateError flag.
-     LoginContext context = new LoginContext("testValidateError", new UsernamePasswordHandler(null, null));
+     LoginContext context = new LoginContext("testValidateError", new UsernamePasswordHandler("user", "secret".toCharArray()));
      try 
      {
         context.login();
@@ -584,7 +584,7 @@ protected void setUp() throws Exception
      }
      
      // test the configuration that sets the throwValidateError flag.
-     context = new LoginContext("testValidateErrorWithFlag", new UsernamePasswordHandler(null, null));
+     context = new LoginContext("testValidateErrorWithFlag", new UsernamePasswordHandler("user", "secret".toCharArray()));
      try 
      {
         context.login();
@@ -650,5 +650,16 @@ protected void setUp() throws Exception
         assertEquals("Username or password contains invalid tokens", le.getMessage());
      }
 
+  }
+
+  /** CXF SimpleGroup.equals includes members, so an empty group is not equal to the populated subject group. */
+  private static boolean containsGroup(Set<GroupPrincipal> groups, String name)
+  {
+     for (GroupPrincipal group : groups)
+     {
+        if (name.equals(group.getName()))
+           return true;
+     }
+     return false;
   }
 }

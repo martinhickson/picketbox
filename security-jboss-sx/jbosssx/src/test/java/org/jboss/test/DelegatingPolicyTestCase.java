@@ -27,7 +27,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.jboss.logging.Logger;
 import org.jboss.security.SecurityConstants;
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimplePrincipal;
 import org.jboss.security.jacc.DelegatingPolicy;
 import org.jboss.security.jacc.SubjectPolicyContextHandler;
 

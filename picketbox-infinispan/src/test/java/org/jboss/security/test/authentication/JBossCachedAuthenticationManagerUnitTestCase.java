@@ -36,7 +36,7 @@ import org.infinispan.manager.DefaultCacheManager;
 import org.infinispan.manager.EmbeddedCacheManager;
 import org.jboss.security.AuthenticationManager;
 import org.jboss.security.CacheableManager;
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimplePrincipal;
 import org.jboss.security.auth.callback.AppCallbackHandler;
 import org.jboss.security.authentication.JBossCachedAuthenticationManager;
 import org.jboss.security.authentication.JBossCachedAuthenticationManager.DomainInfo;

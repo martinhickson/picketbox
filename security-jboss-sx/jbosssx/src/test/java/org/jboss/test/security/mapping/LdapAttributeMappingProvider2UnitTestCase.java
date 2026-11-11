@@ -33,7 +33,7 @@ import junit.framework.TestSuite;
 import org.jboss.security.SecurityConstants;
 import org.jboss.security.SecurityContext;
 import org.jboss.security.SecurityContextFactory;
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimplePrincipal;
 import org.jboss.security.auth.login.XMLLoginConfigImpl;
 import org.jboss.security.config.ApplicationPolicy;
 import org.jboss.security.config.SecurityConfiguration;
