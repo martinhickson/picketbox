@@ -29,7 +29,7 @@ import java.security.Principal;
 
 import javax.security.auth.Subject;
 
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimplePrincipal;
 import org.jboss.security.identity.RoleGroup;
 import org.jboss.security.identity.plugins.SimpleRole;
 import org.junit.Test;

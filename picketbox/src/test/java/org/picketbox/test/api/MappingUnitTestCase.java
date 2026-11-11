@@ -30,7 +30,7 @@ import javax.security.auth.Subject;
 import junit.framework.TestCase;
 
 import org.jboss.security.AuthenticationManager;
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimplePrincipal;
 import org.jboss.security.identity.RoleGroup;
 import org.jboss.security.identity.plugins.SimpleRole;
 import org.jboss.security.mapping.MappingContext;
