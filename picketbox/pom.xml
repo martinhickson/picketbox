@@ -69,6 +69,11 @@
             <artifactId>jboss-logging-processor</artifactId>
         </dependency>
         <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.picketbox</groupId>
             <artifactId>acl-spi</artifactId>
             <scope>compile</scope>
