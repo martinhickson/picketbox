@@ -22,7 +22,7 @@
 package org.jboss.test.security.factories;
 
 import java.security.Principal;
-import java.security.acl.Group;
+import org.apache.cxf.common.security.GroupPrincipal;
 import java.util.Map;
 import java.util.Set;
 
@@ -77,7 +77,7 @@ public class SomeAuthorizationManager implements AuthorizationManager
       return null;
    }
 
-   public Group getTargetRoles(Principal targetPrincipal, Map<String, Object> contextMap)
+   public GroupPrincipal getTargetRoles(Principal targetPrincipal, Map<String, Object> contextMap)
    { 
       return null;
    }
@@ -94,7 +94,7 @@ public class SomeAuthorizationManager implements AuthorizationManager
    }
 
    public int authorize(Resource resource,  Subject subject,
-         Group roleGroup) throws AuthorizationException
+         GroupPrincipal roleGroup) throws AuthorizationException
    { 
       return 0;
    }

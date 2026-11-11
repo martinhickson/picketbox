@@ -22,7 +22,7 @@
 package org.jboss.test.security.securitycontext;
 
 import java.security.Principal;
-import java.security.acl.Group;
+import org.apache.cxf.common.security.SimpleGroup;
 import java.util.Set;
 
 import javax.security.auth.Subject;
@@ -100,7 +100,7 @@ public class SubjectInfoUnitTestCase extends TestCase
          {
          }
 
-         public Group asGroup()
+         public SimpleGroup asGroup()
          {
             return null;
          }

@@ -22,7 +22,7 @@
 package org.jboss.test.authentication.jaas.helpers;
 
 import java.security.Principal;
-import java.security.acl.Group;
+import org.apache.cxf.common.security.GroupPrincipal;
 
 import javax.security.auth.login.LoginException;
 
@@ -73,7 +73,7 @@ extends AbstractServerLoginModule
    }
 
    @Override
-   protected Group[] getRoleSets() throws LoginException
+   protected GroupPrincipal[] getRoleSets() throws LoginException
    {
       return null;
    }

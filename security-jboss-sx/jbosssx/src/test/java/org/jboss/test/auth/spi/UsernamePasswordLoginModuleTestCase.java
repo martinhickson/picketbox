@@ -25,7 +25,7 @@ package org.jboss.test.auth.spi;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.security.acl.Group;
+import org.apache.cxf.common.security.GroupPrincipal;
 
 import org.jboss.security.auth.spi.UsernamePasswordLoginModule;
 import org.junit.Before;
@@ -76,9 +76,9 @@ public class UsernamePasswordLoginModuleTestCase {
         }
 
         @Override
-        protected Group[] getRoleSets()
+        protected GroupPrincipal[] getRoleSets()
         {
-            return new Group[0];
+            return new GroupPrincipal[0];
         }
 
 
