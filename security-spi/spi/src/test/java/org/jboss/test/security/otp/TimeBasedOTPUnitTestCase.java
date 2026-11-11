@@ -114,12 +114,18 @@ public class TimeBasedOTPUnitTestCase
    
    @Test
    public void testTOTPValidity() throws Exception
-   {         
-      String totp = TimeBasedOTP.generateTOTP( seed, NUMBER_OF_DIGITS ); 
+   {
+      // A 2 second sleep can cross the 30 second TOTP step, so retry the check three times.
+      boolean valid = false;
+      for (int attempt = 1; attempt <= 3 && !valid; attempt++)
+      {
+         String totp = TimeBasedOTP.generateTOTP( seed, NUMBER_OF_DIGITS );
 
-      System.out.println( "We are going to sleep for " + SLEEP_TIME + " secs" );
-      Thread.sleep( SLEEP_TIME * 1000 ); //10 secs
-      
-      assertTrue( "TOTP validated", TimeBasedOTPUtil.validate( totp, seed.getBytes() , 8 ));
+         System.out.println( "We are going to sleep for " + SLEEP_TIME + " secs (attempt " + attempt + ")" );
+         Thread.sleep( SLEEP_TIME * 1000 );
+
+         valid = TimeBasedOTPUtil.validate( totp, seed.getBytes() , 8 );
+      }
+      assertTrue( "TOTP validated", valid );
    }
 }
