@@ -40,6 +40,8 @@
     <properties>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
+        <!-- 2.20's IsolatedClassLoader cannot see java.sql on JDK 17. -->
+        <version.surefire.plugin>2.22.2</version.surefire.plugin>
         <version.junit.junit>4.12</version.junit.junit>
         <version.org.hibernate>5.1.9.Final</version.org.hibernate>
         <version.org.hibernate.javax.persistence.hibernate-jpa-2.1-api>1.0.0.Final</version.org.hibernate.javax.persistence.hibernate-jpa-2.1-api>
@@ -58,6 +60,7 @@
         <version.sleepcat.je>3.2.43</version.sleepcat.je>
         <version.sun-opens.OpenDS>1.0.0</version.sun-opens.OpenDS>
         <!-- Empty on JDK 8. The jdk17-test-opens profile fills this in. -->
+        <surefire.jvm.args></surefire.jvm.args>
         <surefire.jvm.opens></surefire.jvm.opens>
     </properties>
 
@@ -83,7 +86,7 @@
                         <includes>
                             <include>**/**TestCase.java</include>
                         </includes>
-                        <argLine>${surefire.jvm.args}</argLine>
+                        <argLine>${surefire.jvm.args} ${surefire.jvm.opens}</argLine>
                         <useFile>false</useFile>
                         <trimStackTrace>false</trimStackTrace>
                     </configuration>
