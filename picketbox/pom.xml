@@ -2,14 +2,14 @@
     <parent>
         <groupId>org.picketbox</groupId>
         <artifactId>picketbox-parent</artifactId>
-        <version>5.0.3.jdk17.1</version>
+        <version>5.0.3.2-javax-bravura-2</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.picketbox</groupId>
     <artifactId>picketbox-bare</artifactId>
-    <version>5.0.3.jdk17.1</version>
+    <version>5.0.3.2-javax-bravura-2</version>
     <packaging>jar</packaging>
     <name>Picketbox</name>
     <url>http://jboss.org/picketbox</url>
@@ -81,7 +81,7 @@
         <dependency>
             <groupId>org.picketbox</groupId>
             <artifactId>identity-spi</artifactId>
-            <version>${project.version}</version>
+            <version>5.0.3.2-javax-bravura-2</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
