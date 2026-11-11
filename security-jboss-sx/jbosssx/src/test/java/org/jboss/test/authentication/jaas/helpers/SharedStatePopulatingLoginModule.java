@@ -30,7 +30,7 @@ import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.login.LoginException;
 
 import org.apache.cxf.common.security.SimpleGroup;
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimplePrincipal;
 import org.jboss.security.auth.spi.UsernamePasswordLoginModule;
 
 /**

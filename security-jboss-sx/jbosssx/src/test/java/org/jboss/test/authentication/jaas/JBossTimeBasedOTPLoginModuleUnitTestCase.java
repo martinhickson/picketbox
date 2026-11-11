@@ -39,7 +39,7 @@ import javax.security.jacc.PolicyContextException;
 import javax.security.jacc.PolicyContextHandler;
 
 import org.apache.cxf.common.security.SimpleGroup;
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimplePrincipal;
 import org.jboss.security.auth.callback.JBossCallbackHandler;
 import org.jboss.security.auth.spi.otp.JBossTimeBasedOTPLoginModule;
 import org.jboss.security.otp.TimeBasedOTP;

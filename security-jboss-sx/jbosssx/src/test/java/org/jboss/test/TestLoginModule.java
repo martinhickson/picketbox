@@ -28,7 +28,7 @@ import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimplePrincipal;
 
 public class TestLoginModule implements LoginModule
 {

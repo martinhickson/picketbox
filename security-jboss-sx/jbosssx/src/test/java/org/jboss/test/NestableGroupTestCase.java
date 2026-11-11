@@ -34,7 +34,7 @@ import org.jboss.security.AnybodyPrincipal;
 import org.jboss.security.NestableGroup;
 import org.jboss.security.NobodyPrincipal;
 import org.apache.cxf.common.security.SimpleGroup;
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimplePrincipal;
 
 /** Tests of the NestableGroup class.
 

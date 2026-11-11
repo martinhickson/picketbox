@@ -32,7 +32,7 @@ import javax.security.auth.callback.PasswordCallback;
 
 import junit.framework.TestCase;
 
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimplePrincipal;
 import org.jboss.security.auth.callback.JBossCallbackHandler;
 import org.jboss.security.auth.callback.ObjectCallback;
 import org.jboss.security.auth.callback.SecurityAssociationCallback;

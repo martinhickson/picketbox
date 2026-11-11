@@ -42,7 +42,7 @@ import org.jboss.crypto.CryptoUtil;
 import org.jboss.logging.Logger;
 import org.jboss.security.SecurityContextAssociation;
 import org.apache.cxf.common.security.SimpleGroup;
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimplePrincipal;
 import org.jboss.security.auth.callback.UsernamePasswordHandler;
 import org.jboss.security.auth.spi.UsernamePasswordLoginModule;
 

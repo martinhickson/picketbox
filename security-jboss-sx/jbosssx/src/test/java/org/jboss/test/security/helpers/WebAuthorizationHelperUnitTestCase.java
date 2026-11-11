@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import junit.framework.TestCase;
 
 import org.jboss.security.SecurityContext;
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimplePrincipal;
 import org.jboss.security.config.ApplicationPolicy;
 import org.jboss.security.identity.RoleGroup;
 import org.jboss.security.plugins.JBossPolicyRegistration;

@@ -26,7 +26,7 @@ import org.apache.cxf.common.security.GroupPrincipal;
 
 import javax.security.auth.login.LoginException;
 
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimplePrincipal;
 import org.jboss.security.auth.spi.AbstractServerLoginModule;
 
 /**

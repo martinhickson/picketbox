@@ -31,8 +31,8 @@ import junit.framework.TestSuite;
 import org.jboss.security.AnybodyPrincipal;
 import org.jboss.security.NestablePrincipal;
 import org.jboss.security.NobodyPrincipal;
-import org.jboss.security.SimpleGroup;
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimpleGroup;
+import org.apache.cxf.common.security.SimplePrincipal;
 
 /** Tests of the NestablePrincipal class.
 

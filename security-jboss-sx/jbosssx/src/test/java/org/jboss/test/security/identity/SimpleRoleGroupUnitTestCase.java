@@ -27,7 +27,7 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimplePrincipal;
 import org.jboss.security.identity.plugins.SimpleRoleGroup;
 
 //$Id$

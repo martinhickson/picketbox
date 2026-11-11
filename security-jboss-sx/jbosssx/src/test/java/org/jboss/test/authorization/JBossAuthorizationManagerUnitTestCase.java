@@ -34,7 +34,7 @@ import org.jboss.security.SecurityConstants;
 import org.jboss.security.SecurityContext;
 import org.jboss.security.SecurityContextAssociation;
 import org.jboss.security.SecurityContextFactory;
-import org.jboss.security.SimplePrincipal;
+import org.apache.cxf.common.security.SimplePrincipal;
 import org.jboss.security.authorization.config.AuthorizationModuleEntry;
 import org.jboss.security.authorization.resources.WebResource;
 import org.jboss.security.config.ApplicationPolicy;
